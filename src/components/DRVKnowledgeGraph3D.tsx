@@ -18,6 +18,11 @@ type NodeType =
   | 'gra'
   | 'standard'
   | 'chatapi'
+  | 'case'
+  | 'person'
+  | 'event'
+  | 'period'
+  | 'document'
 
 interface GraphNode {
   id: string
@@ -56,6 +61,11 @@ const NODE_COLORS: Record<NodeType, string> = {
   gra: '#f97316',
   standard: '#06b6d4',
   chatapi: '#22c55e',
+  case: '#ef4444',
+  person: '#f472b6',
+  event: '#a855f7',
+  period: '#38bdf8',
+  document: '#fbbf24',
 }
 
 const NODE_LABELS: Record<NodeType, string> = {
@@ -69,6 +79,11 @@ const NODE_LABELS: Record<NodeType, string> = {
   gra: '📋 GRA-Anweisung',
   standard: '🛡️ Standard',
   chatapi: '💬 Chat-API',
+  case: '📁 Sachbearbeiterfall',
+  person: '👩 Person',
+  event: '⚡ Ereignis',
+  period: '📅 Versicherungszeit',
+  document: '📝 Dokument',
 }
 
 // ────────────────────────────────────────────
@@ -150,6 +165,39 @@ function buildCaseData(): GraphData {
     { id: 'api_langchain', label: 'LangChain / LangServe', type: 'chatapi', description: 'Framework-Standard für RAG-Pipelines', details: { 'Protokoll': 'invoke / stream / batch Endpoints', 'RAG-Integration': 'Retriever → LLM → Output Parser', 'Deployment': 'LangServe (FastAPI-basiert)' } },
     { id: 'api_openapi', label: 'OpenAPI 3.1', type: 'chatapi', description: 'API-Beschreibungsstandard für REST-Schnittstellen', details: { 'Nutzen': 'Automatische Swagger/ReDoc-Dokumentation', 'CASSA': '/docs und /redoc Endpunkte', 'Tooling': 'Client-SDKs automatisch generierbar' } },
     { id: 'api_cassa', label: 'CASSA Chat API', type: 'chatapi', description: 'CASSA-eigene API: OpenAI-kompatibel + GraphRAG-Erweiterungen', details: { 'Endpunkte': '/api/v1/chat, /api/v1/search', 'Erweiterung': 'citations[], session_id, context{}', 'Kompatibilität': 'OpenAI messages[]-Format', 'Swagger': 'http://localhost:8000/docs' } },
+
+    // ────────────────────────────────────────────
+    // SACHBEARBEITER-FALL: Sabine Müller — Az. R 920/25-EM
+    // Komplexer Erwerbsminderungsrentenantrag mit Kindererziehungszeiten,
+    // Arbeitsunfall, Reha-Prüfung und Widerspruchsverfahren
+    // ────────────────────────────────────────────
+
+    // ── FALL & PERSON ──
+    { id: 'case_mueller', label: 'Fall Müller', type: 'case', description: 'Az. R 920/25-EM — Erwerbsminderungsrentenantrag mit multiplen Komplikationen: Beitragslücken, Kinderziehungszeiten, Arbeitsunfall, Reha-Vorgeschichte', details: { 'Aktenzeichen': 'R 920/25-EM', 'Eingang': '12.01.2025', 'Rentenart': 'Volle Erwerbsminderungsrente', 'Sachbearbeiter': 'Team DRV Bund / Ref. R2', 'Status': 'In Bearbeitung — Gutachtenauswertung', 'Priorität': 'Hoch (Fristdruck Widerspruch)' } },
+    { id: 'person_mueller', label: 'Sabine Müller', type: 'person', description: 'Versicherte, geb. 15.03.1968, Industriekauffrau, seit 2019 gesundheitlich eingeschränkt nach Arbeitsunfall', details: { 'Geburtsdatum': '15.03.1968', 'Versicherungsnr.': '12 150368 M 025', 'Beruf': 'Industriekauffrau', 'Familienstand': 'Geschieden, 2 Kinder', 'Wohnort': 'Essen (DRV Bund zuständig)', 'Arbeitsfähigkeit': '<3 Stunden täglich (seit 11/2024)' } },
+
+    // ── VERSICHERUNGSZEITEN (PERIODEN) ──
+    { id: 'per_ausbildung', label: '1984–1987 Ausbildung', type: 'period', description: 'Berufsausbildung Industriekauffrau bei Thyssen AG, Duisburg. Pflichtbeiträge, 36 Monate.', details: { 'Von': '01.09.1984', 'Bis': '31.08.1987', 'Art': 'Pflichtbeiträge (Ausbildung)', 'Monate': '36', 'EP geschätzt': '0,75 EP/Jahr (Azubi-Gehalt)' } },
+    { id: 'per_angestellt1', label: '1987–1993 Anstellung I', type: 'period', description: 'Vollzeit Industriekauffrau bei Thyssen AG, später Krupp-Thyssen. Durchschnittliches Einkommen.', details: { 'Von': '01.09.1987', 'Bis': '31.03.1993', 'Art': 'Pflichtbeiträge (Vollzeit)', 'Monate': '67', 'EP geschätzt': '~0,95 EP/Jahr' } },
+    { id: 'per_kez', label: '1993–1996 Kindererziehung', type: 'period', description: 'Kindererziehungszeit für 2 Kinder (geb. 04/1993 und 08/1995). 36 Monate pro Kind anrechenbar (§56 SGB VI).', details: { 'Von': '01.04.1993', 'Bis': '31.08.1996', 'Art': 'Kindererziehungszeit (KEZ)', 'Kinder': 'Leon (04/1993), Marie (08/1995)', 'Monate': '41 (überlappend)', 'EP': '1,0 EP/Jahr (Durchschnittsverdienst)', 'Wichtig': 'KEZ = Pflichtbeiträge! Zählt für Wartezeit UND 3/5-Regel' } },
+    { id: 'per_teilzeit1', label: '1996–2000 Teilzeit I', type: 'period', description: 'Teilzeit als Buchhalterin bei Mittelstandsfirma in Essen. Reduziertes Einkommen, halbe Beiträge.', details: { 'Von': '01.09.1996', 'Bis': '31.12.1999', 'Art': 'Pflichtbeiträge (Teilzeit)', 'Monate': '40', 'EP geschätzt': '~0,5 EP/Jahr (Teilzeit)' } },
+    { id: 'per_luecke', label: '2000–2002 Beitragslücke', type: 'period', description: 'Selbstständige Tätigkeit (Buchhaltungsbüro) ohne Pflichtversicherung. KRITISCH: Unterbricht Beitragskontinuität!', details: { 'Von': '01.01.2000', 'Bis': '31.03.2002', 'Art': 'KEINE Pflichtbeiträge', 'Monate': '27 Monate Lücke', 'Problem': 'Unterbricht ggf. 3-von-5-Jahre-Regel für §43 EM-Rente', 'Prüfung': 'Waren freiwillige Beiträge möglich? Nachzahlung?' } },
+    { id: 'per_angestellt2', label: '2002–2018 Anstellung II', type: 'period', description: 'Vollzeit Sachbearbeiterin bei Logistikunternehmen in Essen. Stabile Pflichtbeiträge, durchschnittliches Einkommen.', details: { 'Von': '01.04.2002', 'Bis': '14.09.2019', 'Art': 'Pflichtbeiträge (Vollzeit)', 'Monate': '209', 'EP geschätzt': '~0,9 EP/Jahr' } },
+    { id: 'per_reha', label: '2019–2020 Rehabilitation', type: 'period', description: 'Medizinische Rehabilitation nach Arbeitsunfall. 3 Wochen stationär + 6 Monate Nachsorge. DRV als Reha-Träger.', details: { 'Von': '15.11.2019', 'Bis': '30.06.2020', 'Art': 'Reha-Zeit (Anrechnungszeit)', 'Klinik': 'BG Klinik Bergmannsheil, Bochum', 'Ergebnis': 'Teilweise Besserung, weiterhin eingeschränkt', 'Überleitung': 'Reha-Entlassbericht → Leistungseinschätzung' } },
+    { id: 'per_teilzeit2', label: '2020–2024 Teilzeit II', type: 'period', description: 'Teilzeit (15h/Woche) aufgrund gesundheitlicher Einschränkungen nach Arbeitsunfall. Leidensgerechter Arbeitsplatz.', details: { 'Von': '01.07.2020', 'Bis': '30.11.2024', 'Art': 'Pflichtbeiträge (Teilzeit)', 'Monate': '53', 'EP geschätzt': '~0,35 EP/Jahr (Teilzeit 15h)', 'Hinweis': 'Ab 11/2024 arbeitsunfähig' } },
+
+    // ── EREIGNISSE ──
+    { id: 'evt_unfall', label: 'Arbeitsunfall 09/2019', type: 'event', description: 'Sturz am Arbeitsplatz am 15.09.2019 mit Wirbelsäulenverletzung (BWK 11/12 Fraktur). Anerkannt durch BG Logistik.', details: { 'Datum': '15.09.2019', 'Art': 'Arbeitsunfall (§8 SGB VII)', 'Verletzung': 'BWK 11/12 Kompressionsfraktur, chronisches Schmerzsyndrom', 'BG-Aktenzeichen': 'BG-2019-184723', 'Folge': 'Dauerhafte Einschränkung Heben/Tragen >5kg', 'Wichtig': 'Löst ggf. §53 SGB VI aus (vorzeitige Wartezeiterfüllung)' } },
+    { id: 'evt_antrag1', label: 'Erstantrag 03/2024', type: 'event', description: 'Erster Antrag auf Erwerbsminderungsrente, eingereicht über Auskunfts- und Beratungsstelle Essen.', details: { 'Datum': '15.03.2024', 'Az.': 'R 420/24-EM', 'Ergebnis': 'ABGELEHNT (07/2024)', 'Ablehnungsgrund': 'Fehlende AU-Bescheinigungen 2023, unvollständiges Versicherungskonto', 'Rechtsbehelfsbelehrung': '1 Monat Widerspruchsfrist (§84 SGB X)' } },
+    { id: 'evt_widerspruch', label: 'Widerspruch 08/2024', type: 'event', description: 'Widerspruch gegen Ablehnungsbescheid vom 12.07.2024, fristgerecht eingelegt am 05.08.2024.', details: { 'Datum': '05.08.2024', 'Frist eingehalten': 'Ja (Bescheid 12.07 → Widerspruch 05.08)', 'Begründung': 'Nachreichung AU-Bescheinigungen, Verweis auf Arbeitsunfall', 'Ergebnis': 'Neue Begutachtung angeordnet' } },
+    { id: 'evt_gutachten', label: 'Gutachten 11/2024', type: 'event', description: 'Sozialmedizinisches Gutachten durch Dr. med. Bergmann, Ärztlicher Dienst DRV Bund.', details: { 'Datum': '18.11.2024', 'Gutachter': 'Dr. med. K. Bergmann, Orthopädie/Unfallchirurgie', 'Ergebnis': 'Restleistungsvermögen <3 Stunden täglich', 'Diagnosen': 'Posttraumatische BWS-Instabilität, chronisches Schmerzsyndrom, Depression', 'Prognose': 'Dauerhaft, keine weitere Reha-Fähigkeit', 'Empfehlung': 'Volle Erwerbsminderung, befristet 3 Jahre' } },
+    { id: 'evt_neuantrag', label: 'Neuantrag 01/2025', type: 'event', description: 'Neuer vollständiger Antrag auf volle EM-Rente nach Widerspruchsverfahren und neuem Gutachten.', details: { 'Datum': '12.01.2025', 'Az.': 'R 920/25-EM', 'Unterlagen': 'Vollständig (Gutachten, AU-Bescheinigungen, BG-Akte, KEZ-Nachweise)', 'Status': 'In Bearbeitung', 'Ziel': 'Bescheid bis 04/2025' } },
+
+    // ── DOKUMENTE ──
+    { id: 'doc_gutachten', label: 'Gutachten Dr. Bergmann', type: 'document', description: 'Sozialmedizinisches Gutachten vom 18.11.2024 — bestätigt volle Erwerbsminderung (<3h/Tag)', details: { 'Typ': 'Sozialmedizinisches Gutachten', 'Ersteller': 'Dr. med. K. Bergmann', 'Datum': '18.11.2024', 'Kernaussage': '<3h leichte Tätigkeiten, kein Heben >5kg', 'Seiten': '28', 'Klassifikation': 'VS-NfD (Sozialdaten §67 SGB X)' } },
+    { id: 'doc_reha_bericht', label: 'Reha-Entlassbericht', type: 'document', description: 'Entlassbericht BG Klinik Bergmannsheil vom 30.06.2020 — teilweise Besserung, keine Vollbelastung', details: { 'Typ': 'Reha-Entlassbericht', 'Klinik': 'BG Klinik Bergmannsheil, Bochum', 'Datum': '30.06.2020', 'Empfehlung': 'Stufenweise Wiedereingliederung, leidensgerechter Arbeitsplatz', 'Nachsorge': '6 Monate ambulante Schmerztherapie' } },
+    { id: 'doc_bescheid', label: 'Ablehnungsbescheid', type: 'document', description: 'Bescheid vom 12.07.2024 — Ablehnung des EM-Rentenantrags wegen unvollständiger Unterlagen', details: { 'Typ': 'Verwaltungsakt (§31 SGB X)', 'Datum': '12.07.2024', 'Tenor': 'Antrag auf EM-Rente wird abgelehnt', 'Begründung': 'Versicherungskonto nicht vollständig geklärt, fehlende AU 2023', 'Rechtsmittel': '1 Monat Widerspruchsfrist' } },
+    { id: 'doc_konto', label: 'Versicherungskonto', type: 'document', description: 'Kontoauszug der Versicherungszeiten — 486 Monate gesamt, davon 432 Pflichtbeiträge, 27 Monate Lücke', details: { 'Typ': 'Versicherungskonto / Kontenklärung', 'Stand': '01.2025', 'Beitragsmonate gesamt': '459 (exkl. Lücke)', 'Pflichtbeiträge': '432 Monate', 'KEZ': '41 Monate (2 Kinder)', 'Lücke': '27 Monate (2000–2002)', 'Allg. Wartezeit (60 Mon.)': 'ERFÜLLT', 'EP gesamt geschätzt': '~28,5 EP' } },
   ]
 
   const links: GraphLink[] = [
@@ -234,6 +282,84 @@ function buildCaseData(): GraphData {
     { source: 'api_cassa', target: 'api_openapi', type: 'SR_COMPATIBLE', description: 'dokumentiert via' },
     { source: 'api_cassa', target: 'api_langchain', type: 'SR_COMPATIBLE', description: 'integrierbar mit' },
     { source: 'api_openai', target: 'api_anthropic', type: 'SR_SIMILAR', description: 'ähnliches Format' },
+
+    // ────────────────────────────────────────────
+    // FALL MÜLLER — Fallbezogene Verknüpfungen
+    // ────────────────────────────────────────────
+
+    // Fall → Person
+    { source: 'case_mueller', target: 'person_mueller', type: 'SR_BETRIFFT', description: 'Versicherte' },
+
+    // Person → Versicherungszeiten (chronologisch)
+    { source: 'person_mueller', target: 'per_ausbildung', type: 'SR_HAT_ZEIT', description: 'Ausbildungszeit' },
+    { source: 'person_mueller', target: 'per_angestellt1', type: 'SR_HAT_ZEIT', description: 'Beschäftigungszeit' },
+    { source: 'person_mueller', target: 'per_kez', type: 'SR_HAT_ZEIT', description: 'Kindererziehungszeit' },
+    { source: 'person_mueller', target: 'per_teilzeit1', type: 'SR_HAT_ZEIT', description: 'Teilzeitbeschäftigung' },
+    { source: 'person_mueller', target: 'per_luecke', type: 'SR_HAT_ZEIT', description: 'Beitragslücke!' },
+    { source: 'person_mueller', target: 'per_angestellt2', type: 'SR_HAT_ZEIT', description: 'Beschäftigungszeit' },
+    { source: 'person_mueller', target: 'per_reha', type: 'SR_HAT_ZEIT', description: 'Reha-Phase' },
+    { source: 'person_mueller', target: 'per_teilzeit2', type: 'SR_HAT_ZEIT', description: 'Teilzeit nach Unfall' },
+
+    // Zeitliche Abfolge der Perioden
+    { source: 'per_ausbildung', target: 'per_angestellt1', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_angestellt1', target: 'per_kez', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_kez', target: 'per_teilzeit1', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_teilzeit1', target: 'per_luecke', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_luecke', target: 'per_angestellt2', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_angestellt2', target: 'per_reha', type: 'SR_SEQUENCE', description: 'dann' },
+    { source: 'per_reha', target: 'per_teilzeit2', type: 'SR_SEQUENCE', description: 'dann' },
+
+    // Ereignisse → Fall
+    { source: 'case_mueller', target: 'evt_unfall', type: 'SR_EREIGNIS', description: 'auslösendes Ereignis' },
+    { source: 'case_mueller', target: 'evt_antrag1', type: 'SR_EREIGNIS', description: 'Erstantrag' },
+    { source: 'case_mueller', target: 'evt_widerspruch', type: 'SR_EREIGNIS', description: 'Widerspruch' },
+    { source: 'case_mueller', target: 'evt_gutachten', type: 'SR_EREIGNIS', description: 'Begutachtung' },
+    { source: 'case_mueller', target: 'evt_neuantrag', type: 'SR_EREIGNIS', description: 'Neuantrag' },
+
+    // Ereignis-Kette
+    { source: 'evt_unfall', target: 'evt_antrag1', type: 'SR_SEQUENCE', description: 'führt zu' },
+    { source: 'evt_antrag1', target: 'evt_widerspruch', type: 'SR_SEQUENCE', description: 'nach Ablehnung' },
+    { source: 'evt_widerspruch', target: 'evt_gutachten', type: 'SR_SEQUENCE', description: 'neue Begutachtung' },
+    { source: 'evt_gutachten', target: 'evt_neuantrag', type: 'SR_SEQUENCE', description: 'Neuantrag' },
+
+    // Dokumente → Fall/Ereignisse
+    { source: 'evt_gutachten', target: 'doc_gutachten', type: 'SR_ERZEUGT', description: 'erstellt' },
+    { source: 'per_reha', target: 'doc_reha_bericht', type: 'SR_ERZEUGT', description: 'erstellt' },
+    { source: 'evt_antrag1', target: 'doc_bescheid', type: 'SR_ERZEUGT', description: 'resultiert in' },
+    { source: 'case_mueller', target: 'doc_konto', type: 'SR_VERWENDET', description: 'Prüfgrundlage' },
+
+    // ── FALLBEZUG → GESETZLICHE GRUNDLAGEN (Graph-Stärke!) ──
+
+    // Fall prüft gegen §43 (EM-Rente)
+    { source: 'case_mueller', target: 'br_43_01', type: 'SR_PRUEFT', description: 'prüft volle EM' },
+    // Gutachten bestätigt <3h → volle EM
+    { source: 'doc_gutachten', target: 'br_43_01', type: 'SR_BESTAETIGT', description: 'bestätigt <3h' },
+    // Arbeitsunfall → §53 vorzeitige Wartezeit
+    { source: 'evt_unfall', target: 'br_53_01', type: 'SR_LOEST_AUS', description: 'löst §53 aus' },
+    // KEZ → §56 Anrechnung als Pflichtbeiträge
+    { source: 'per_kez', target: 'br_56_01', type: 'SR_ANGERECHNET', description: 'KEZ → Pflichtbeiträge' },
+    // Lücke → problematisch für Wartezeit
+    { source: 'per_luecke', target: 'br_50_01', type: 'SR_GEFAEHRDET', description: 'Lücke gefährdet 3/5-Regel' },
+    // Reha → Reha vor Rente Grundsatz erfüllt
+    { source: 'per_reha', target: 'br_reha_01', type: 'SR_ERFUELLT', description: 'Reha durchgeführt' },
+    // Widerspruch → §84 SGB X
+    { source: 'evt_widerspruch', target: 'sec_sgb10_84', type: 'SR_REFERENCES', description: 'gem. §84 SGB X' },
+    // Bescheid → Verwaltungsakt §31 SGB X
+    { source: 'doc_bescheid', target: 'sec_sgb10_31', type: 'SR_REFERENCES', description: 'Verwaltungsakt' },
+    // Versicherungskonto → EP-Berechnung
+    { source: 'doc_konto', target: 'task_ep_berechnung', type: 'SR_INPUT', description: 'Eingabe für EP-Rechnung' },
+    // Rentenformel anwenden
+    { source: 'case_mueller', target: 'br_63_01', type: 'SR_PRUEFT', description: 'berechnet Rentenhöhe' },
+    // Fall → Prozess Rentenantrag
+    { source: 'case_mueller', target: 'proc_rentenantrag', type: 'SR_DURCHLAEUFT', description: 'durchläuft' },
+    // Fall → Widerspruchsverfahren
+    { source: 'case_mueller', target: 'proc_widerspruch', type: 'SR_DURCHLAEUFT', description: 'durchläuft' },
+    // Gutachten-Dokument → Entität med. Gutachten
+    { source: 'doc_gutachten', target: 'ent_gutachten', type: 'SR_IST_TYP', description: 'ist ein' },
+    // Person → DRV-Versicherter
+    { source: 'person_mueller', target: 'ent_versicherter', type: 'SR_IST_TYP', description: 'ist Versicherte' },
+    // DSGVO Bezug
+    { source: 'doc_gutachten', target: 'std_dsgvo', type: 'SR_UNTERLIEGT', description: 'Sozialdatenschutz' },
   ]
 
   return { nodes, links }
@@ -274,6 +400,7 @@ export function DRVKnowledgeGraph3D() {
         const srcNode = graphData.nodes.find(n => n.id === src)
         const tgtNode = graphData.nodes.find(n => n.id === tgt)
         if (srcNode?.type === 'law' || tgtNode?.type === 'law') return 80
+        if (srcNode?.type === 'case' || tgtNode?.type === 'case') return 70
         if (link.type === 'SR_SEQUENCE') return 40
         return 55
       })
@@ -307,7 +434,7 @@ export function DRVKnowledgeGraph3D() {
   const nodeThreeObject = useCallback((node: GraphNode) => {
     const group = new THREE.Group()
     const color = NODE_COLORS[node.type] || '#999'
-    const size = node.type === 'law' ? 10 : node.type === 'section' ? 7 : node.type === 'rule' ? 6 : 5
+    const size = node.type === 'case' ? 11 : node.type === 'law' ? 10 : node.type === 'person' ? 8 : node.type === 'section' ? 7 : node.type === 'rule' ? 6 : node.type === 'event' ? 6 : 5
 
     const geometry = new THREE.SphereGeometry(size, 24, 24)
     const material = new THREE.MeshPhongMaterial({
@@ -319,8 +446,8 @@ export function DRVKnowledgeGraph3D() {
     const sphere = new THREE.Mesh(geometry, material)
     group.add(sphere)
 
-    // Glow effect for laws
-    if (node.type === 'law') {
+    // Glow effect for laws and case
+    if (node.type === 'law' || node.type === 'case') {
       const glowGeo = new THREE.SphereGeometry(size * 1.4, 24, 24)
       const glowMat = new THREE.MeshPhongMaterial({
         color: new THREE.Color(color),
@@ -332,7 +459,7 @@ export function DRVKnowledgeGraph3D() {
 
     const label = new SpriteText(node.label) as any
     label.color = '#e2e8f0'
-    label.textHeight = node.type === 'law' ? 5 : 3.5
+    label.textHeight = node.type === 'case' ? 5.5 : node.type === 'law' ? 5 : node.type === 'person' ? 4 : 3.5
     label.backgroundColor = 'rgba(15, 23, 42, 0.75)'
     label.padding = [2, 4]
     label.borderRadius = 3
@@ -354,6 +481,22 @@ export function DRVKnowledgeGraph3D() {
       case 'SR_SEQUENCE': return 'rgba(34, 197, 94, 0.6)'
       case 'SR_COMPATIBLE': return 'rgba(34, 197, 94, 0.5)'
       case 'SR_SIMILAR': return 'rgba(6, 182, 212, 0.4)'
+      // Case-specific relationship types
+      case 'SR_BETRIFFT': return 'rgba(244, 114, 182, 0.7)'
+      case 'SR_HAT_ZEIT': return 'rgba(56, 189, 248, 0.5)'
+      case 'SR_EREIGNIS': return 'rgba(168, 85, 247, 0.6)'
+      case 'SR_ERZEUGT': return 'rgba(251, 191, 36, 0.6)'
+      case 'SR_VERWENDET': return 'rgba(251, 191, 36, 0.4)'
+      case 'SR_PRUEFT': return 'rgba(239, 68, 68, 0.6)'
+      case 'SR_BESTAETIGT': return 'rgba(34, 197, 94, 0.7)'
+      case 'SR_LOEST_AUS': return 'rgba(168, 85, 247, 0.7)'
+      case 'SR_ANGERECHNET': return 'rgba(56, 189, 248, 0.6)'
+      case 'SR_GEFAEHRDET': return 'rgba(239, 68, 68, 0.7)'
+      case 'SR_ERFUELLT': return 'rgba(34, 197, 94, 0.6)'
+      case 'SR_INPUT': return 'rgba(251, 191, 36, 0.5)'
+      case 'SR_DURCHLAEUFT': return 'rgba(16, 185, 129, 0.6)'
+      case 'SR_IST_TYP': return 'rgba(148, 163, 184, 0.4)'
+      case 'SR_UNTERLIEGT': return 'rgba(6, 182, 212, 0.5)'
       default: return 'rgba(148, 163, 184, 0.3)'
     }
   }, [])

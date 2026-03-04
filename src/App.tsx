@@ -41,14 +41,21 @@ import {
   Bot,
   Layers,
   Link2,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
 } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { DRVKnowledgeGraph3D } from "@/components/DRVKnowledgeGraph3D"
 
 function App() {
   const [selectedLayer, setSelectedLayer] = useState<number | null>(null)
   const [activeScenario, setActiveScenario] = useState<number>(0)
   const [showIntroGuide, setShowIntroGuide] = useState<boolean>(true)
+  const [isPlayingNarration, setIsPlayingNarration] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const architectureRef = useRef<HTMLDivElement>(null)
 
   const { scrollYProgress } = useScroll()
@@ -58,6 +65,34 @@ function App() {
     const timer = setTimeout(() => setShowIntroGuide(false), 5000)
     return () => clearTimeout(timer)
   }, [])
+
+  // ── Audio narration ──
+  useEffect(() => {
+    const audio = new Audio(`${import.meta.env.BASE_URL}audio/drv_fall_mueller.mp3`)
+    audio.volume = 0.8
+    audio.addEventListener('ended', () => setIsPlayingNarration(false))
+    audioRef.current = audio
+    return () => {
+      audio.pause()
+      audio.removeEventListener('ended', () => setIsPlayingNarration(false))
+    }
+  }, [])
+
+  const toggleNarration = useCallback(() => {
+    if (!audioRef.current) return
+    if (isPlayingNarration) {
+      audioRef.current.pause()
+    } else {
+      audioRef.current.play()
+    }
+    setIsPlayingNarration(!isPlayingNarration)
+  }, [isPlayingNarration])
+
+  const toggleMute = useCallback(() => {
+    if (!audioRef.current) return
+    audioRef.current.muted = !isMuted
+    setIsMuted(!isMuted)
+  }, [isMuted])
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -332,6 +367,9 @@ function App() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('architecture')} className="hidden md:flex">
               Architektur
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-mueller')} className="hidden md:flex">
+              Fall Müller
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('graph-rag')} className="hidden md:flex">
               Graph vs Vector RAG
@@ -654,6 +692,256 @@ function App() {
               className="sticky top-24 h-[700px]"
             >
               <DRVKnowledgeGraph3D />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SECTION: Fall Müller — Sachbearbeiterfall ── */}
+      <section id="fall-mueller" className="py-32 bg-background relative overflow-hidden">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 bg-red-600 text-white text-base px-4 py-2">
+              <FileText className="h-4 w-4 mr-2" />
+              Praxisbeispiel: Komplexer Sachbearbeiterfall
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Fall Sabine Müller — Az. R 920/25-EM
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Ein realer Erwerbsminderungsrentenantrag mit Kindererziehungszeiten, Arbeitsunfall, 
+              Beitragslücken und Widerspruchsverfahren — 6 Paragraphen, 3 Sozialgesetzbücher, 1 Fall.
+            </p>
+          </motion.div>
+
+          {/* Audio Player Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="max-w-3xl mx-auto mb-16"
+          >
+            <Card className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-primary/20">
+              <CardContent className="py-5 px-6">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={toggleNarration}
+                    className="flex-shrink-0 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg"
+                  >
+                    {isPlayingNarration ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-foreground">Fall Müller — Narration</p>
+                    <p className="text-sm text-muted-foreground">
+                      {isPlayingNarration ? 'Spielt...' : 'Hören Sie die Fallanalyse (ca. 6 Min.)'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={toggleMute}
+                    className="flex-shrink-0 p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Case Timeline */}
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Left: Person & Case Info */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 rounded-xl bg-pink-500/10">
+                        <Users className="h-6 w-6 text-pink-500" />
+                      </div>
+                      <div>
+                        <CardTitle>Sabine Müller</CardTitle>
+                        <CardDescription>geb. 15.03.1968, Industriekauffrau, Essen</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="bg-muted/50 rounded-lg p-3">
+                        <div className="text-muted-foreground text-xs">Versicherungsnr.</div>
+                        <div className="font-mono font-medium">12 150368 M 025</div>
+                      </div>
+                      <div className="bg-muted/50 rounded-lg p-3">
+                        <div className="text-muted-foreground text-xs">Aktenzeichen</div>
+                        <div className="font-mono font-medium">R 920/25-EM</div>
+                      </div>
+                      <div className="bg-muted/50 rounded-lg p-3">
+                        <div className="text-muted-foreground text-xs">Rentenart</div>
+                        <div className="font-medium">Volle EM-Rente</div>
+                      </div>
+                      <div className="bg-muted/50 rounded-lg p-3">
+                        <div className="text-muted-foreground text-xs">Arbeitsfähigkeit</div>
+                        <div className="font-medium text-red-500">&lt;3 Std./Tag</div>
+                      </div>
+                    </div>
+                    <div className="bg-muted/50 rounded-lg p-3 text-sm">
+                      <div className="text-muted-foreground text-xs mb-1">Entgeltpunkte (geschätzt)</div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-primary/20 rounded-full h-2">
+                          <div className="bg-primary h-2 rounded-full" style={{ width: '57%' }} />
+                        </div>
+                        <span className="font-mono font-medium">~28,5 EP</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">Geschätzte Bruttorente: ca. 1.120 EUR/Monat</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Right: Complexity Indicators */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="border-red-500/20 bg-red-500/5">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 rounded-xl bg-red-500/10">
+                        <AlertTriangle className="h-6 w-6 text-red-500" />
+                      </div>
+                      <div>
+                        <CardTitle>Warum ist dieser Fall so komplex?</CardTitle>
+                        <CardDescription>6 Paragraphen, 3 SGBs, 8 Versicherungsperioden</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {[
+                      { label: '27 Monate Beitragslücke (2000-2002)', desc: 'Gefährdet 3-von-5-Jahre-Regel für §43', color: 'text-red-500' },
+                      { label: 'Arbeitsunfall löst §53 aus', desc: 'Vorzeitige Wartezeiterfüllung — Spezialregel', color: 'text-purple-500' },
+                      { label: 'KEZ nach §56 rettet Wartezeit', desc: 'Kindererziehungszeiten = Pflichtbeiträge', color: 'text-blue-500' },
+                      { label: 'Reha vor Rente bereits erfüllt', desc: '§9 SGB VI + §49 SGB IX — Grundsatz beachtet', color: 'text-green-500' },
+                      { label: 'Widerspruch nach §84 SGB X', desc: 'Erstantrag abgelehnt, fristgerechter Widerspruch', color: 'text-amber-500' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-start gap-3 text-sm">
+                        <span className={`${item.color} font-bold text-lg leading-none mt-0.5`}>!</span>
+                        <div>
+                          <div className="font-medium">{item.label}</div>
+                          <div className="text-muted-foreground text-xs">{item.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+
+            {/* Timeline Strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5 text-primary" />
+                    Versicherungsverlauf — 40 Jahre im Überblick
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { period: '1984–87', label: 'Ausbildung', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
+                      { period: '1987–93', label: 'Vollzeit I', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
+                      { period: '1993–96', label: 'KEZ', color: 'bg-pink-500', type: '§56 Kindererziehung' },
+                      { period: '1996–00', label: 'Teilzeit I', color: 'bg-sky-400', type: 'Pflichtbeiträge (red.)' },
+                      { period: '2000–02', label: 'LÜCKE', color: 'bg-red-500', type: 'Keine Pflichtversicherung!' },
+                      { period: '2002–19', label: 'Vollzeit II', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
+                      { period: '09/2019', label: 'Unfall', color: 'bg-purple-500', type: 'Arbeitsunfall BWK 11/12' },
+                      { period: '2019–20', label: 'Reha', color: 'bg-green-500', type: 'Med. Rehabilitation' },
+                      { period: '2020–24', label: 'Teilzeit II', color: 'bg-sky-400', type: 'Nach Unfall (15h/Wo)' },
+                      { period: '11/2024', label: '<3h', color: 'bg-red-600', type: 'Volle Erwerbsminderung' },
+                    ].map((item, i) => (
+                      <TooltipProvider key={i}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <div className={`${item.color} text-white rounded-lg px-3 py-2 text-xs font-medium cursor-help transition-transform hover:scale-105`}>
+                              <div className="font-bold">{item.period}</div>
+                              <div className="opacity-80">{item.label}</div>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="font-medium">{item.label}</p>
+                            <p className="text-xs text-muted-foreground">{item.type}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Graph traversal explanation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8"
+            >
+              <Card className="border-primary/20 bg-primary/5">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Network className="h-5 w-5 text-primary" />
+                    Graph-Traversierung: Die Prüfkette im Knowledge Graph
+                  </CardTitle>
+                  <CardDescription>
+                    So navigiert CASSA durch 6 Paragraphen in 3 Sozialgesetzbüchern — automatisch und nachvollziehbar
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap items-center gap-2 text-sm">
+                    {[
+                      { text: 'Fall Müller', color: 'bg-red-500' },
+                      { text: '§43 EM-Rente', color: 'bg-indigo-500' },
+                      { text: '§50 Wartezeit', color: 'bg-indigo-500' },
+                      { text: '§53 Vorzeitig (Unfall)', color: 'bg-purple-500' },
+                      { text: '§56 KEZ = Pflichtbeiträge', color: 'bg-pink-500' },
+                      { text: '§9 Reha vor Rente', color: 'bg-green-500' },
+                      { text: '§63 Rentenformel', color: 'bg-amber-500' },
+                      { text: '§84 SGB X Widerspruch', color: 'bg-cyan-500' },
+                    ].map((node, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <Badge className={`${node.color} text-white border-0`}>
+                          {node.text}
+                        </Badge>
+                        {i < 7 && <ArrowRight className="h-4 w-4 text-muted-foreground" />}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                    Ein Vector RAG findet vielleicht §43. Aber nur der Knowledge Graph traversiert die vollständige Kette: 
+                    von der EM-Prüfung über die Wartezeit-Ausnahme bei Arbeitsunfall bis zur Anrechnung der 
+                    Kindererziehungszeiten als Pflichtbeiträge — und validiert dabei automatisch den Reha-vor-Rente-Grundsatz.
+                  </p>
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
         </div>
