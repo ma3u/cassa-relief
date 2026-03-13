@@ -1,9 +1,11 @@
-# Project Guidelines — CASSA Polizei Knowledge Graph
+# Project Guidelines — CASSA DRV / RELIEF
 
 ## Overview
-Sopra Steria CASSA landing page with interactive 3D police knowledge graph ("Operation Hydra"). All UI text is **German**. Domain: law enforcement, legal references (StPO, StGB, BtMG, GwG, BSIG, NIS2, DSGVO).
+Sopra Steria CASSA landing page with interactive 3D knowledge graph for the **Deutsche Rentenversicherung (DRV)**. All UI text is **German**. Domain: social law (SGB I–XII), DRV processes, GRA-Anweisungen, Chat-API, GraphRAG.
 
-Deployed at: `https://<user>.github.io/cassa/` (base path `/cassa/`)
+Deployed at: `https://ma3u.github.io/cassa-drv/` (base path `/cassa-drv/`)
+
+**Next project: CASSA RELIEF** — AI-assisted E-AKTE management for SGB II (Grundsicherung für Arbeitsuchende / gemeinsame Einrichtungen). See `RELIEF_DEMO_PLAN.md` for project brief.
 
 ## Tech Stack
 - **React 19** + **TypeScript 5.7** + **Vite 7** (SWC plugin, `@vitejs/plugin-react-swc`)
@@ -36,26 +38,20 @@ npm run optimize  # vite optimize (pre-bundle deps)
 │   ├── copilot-instructions.md    # This file
 │   ├── dependabot.yml
 │   └── workflows/deploy.yml      # GitHub Pages deploy
-├── input/                         # Graph source data (JSON, CSV, Cypher)
-│   ├── hydra_graph_data (1).json  # Enriched: 88 nodes, 113 rels, STIX/XPolizei/standards
-│   ├── hydra_graph_data.json      # Original graph data
-│   ├── hydra_neo4j_import*.cypher # Neo4j import scripts
-│   ├── hydra_nodes*.csv           # Node CSVs (original + enriched)
-│   └── hydra_relationships*.csv   # Relationship CSVs (original + enriched)
-├── public/audio/                  # Static audio assets
-│   ├── hydra_briefing.mp3         # ElevenLabs narration (Otto voice, warm German male, current)
-│   ├── hydra_erklaerung.mp3       # Legacy narration (unused)
-│   └── hydra_narration.mp3        # Legacy narration (unused)
+├── input/                         # Legacy graph source data (hydra/police project)
+├── public/audio/
+│   └── drv_fall_mueller.mp3       # ElevenLabs narration (Alice voice, current)
 ├── scripts/                       # Python helper scripts (see below)
 ├── src/
-│   ├── App.tsx                    # Main SPA (~1271 lines), all scroll sections + narration
+│   ├── App.tsx                    # Main SPA, all scroll sections + narration
 │   ├── ErrorFallback.tsx          # Error boundary fallback UI
 │   ├── main.tsx                   # createRoot, ErrorBoundary, CSS imports
 │   ├── main.css                   # Tailwind v4 entry, @theme inline, design tokens
 │   ├── index.css                  # Custom oklch colors, hero-pattern, network-pattern
 │   ├── vite-end.d.ts              # Vite + Spark runtime type declarations
 │   ├── components/
-│   │   ├── PoliceKnowledgeGraph3D.tsx  # 3D force-graph (~1002 lines)
+│   │   ├── DRVKnowledgeGraph3D.tsx # 3D force-graph — case Fall Müller (EM-Rente)
+│   │   ├── DataModelGraph3D.tsx   # 3D schema/ontology graph — DRV meta-model
 │   │   └── ui/                    # 45 shadcn/ui components (accordion → tooltip)
 │   ├── hooks/
 │   │   └── use-mobile.ts          # useIsMobile() — breakpoint 768px
@@ -63,14 +59,15 @@ npm run optimize  # vite optimize (pre-bundle deps)
 │   │   └── utils.ts               # cn() = twMerge(clsx(...))
 │   └── styles/
 │       └── theme.css              # Radix color scales, Spark theme vars
+├── RELIEF_DEMO_PLAN.md            # CASSA RELIEF project brief (SGB II / E-AKTE)
+├── PRD.md                         # Product requirements document
 ├── check-console.mjs             # Playwright: console error/warning logger
 ├── test-graph.mjs                # Playwright: headless screenshot + pixel analysis
 ├── components.json               # shadcn/ui config
 ├── runtime.config.json           # Spark app ID
 ├── spark.meta.json               # Spark metadata
 ├── tailwind.config.js            # Radix color scale integration, spacing
-├── theme.json                    # Empty (theming via CSS)
-├── vite.config.ts                # base: '/cassa/', plugins, path alias
+├── vite.config.ts                # base: '/cassa-drv/', plugins, path alias
 └── tsconfig.json                 # ES2020, strictNullChecks, bundler resolution
 ```
 
@@ -81,9 +78,10 @@ All scripts use Python 3 and `urllib` (no external deps unless noted). API key f
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| `find_voices.py` | Query ElevenLabs API for German voices | `python3 scripts/find_voices.py` |
-| `generate_narration.py` | Generate narration MP3 with ElevenLabs "Lucius" voice | `python3 scripts/generate_narration.py` |
-| `generate_hydra_voice.py` | Extended TTS generation with `--login` flag | `python3 scripts/generate_hydra_voice.py` |
+| `generate_drv_narration.py` | Generate DRV narration MP3 — Fall Müller (Alice voice) | `python3 scripts/generate_drv_narration.py` |
+| `find_voices.py` | Query ElevenLabs API for voices | `python3 scripts/find_voices.py` |
+| `generate_narration.py` | Legacy narration generator (Lucius voice) | `python3 scripts/generate_narration.py` |
+| `generate_hydra_voice.py` | Legacy hydra TTS generation | `python3 scripts/generate_hydra_voice.py` |
 | `generate_graph_code.py` | Convert enriched JSON → TypeScript `buildCaseData()` code | `python3 scripts/generate_graph_code.py` |
 
 ### Playwright Test Scripts (root)
@@ -98,8 +96,8 @@ Require `@playwright/test` + Chromium: `npx playwright install chromium`
 
 ### Single-Page App
 - **No router** — one `App.tsx` with scroll-based sections, using `scrollToSection(id)` helper
-- **Sections** (in order): Hero → Architecture (4-Layer Ontology) → Features → Knowledge Graph (3D) → Scenarios → Standards & Compliance → Best Practices → Cross-Border Cooperation → CTA
-- **Narration**: `HTMLAudioElement` playing `public/audio/hydra_briefing.mp3` (ElevenLabs "Lucius" German male voice)
+- **Sections** (in order): Hero → Challenges → Architecture (4-Layer Ontology) → Fall Müller (EM case) → GraphRAG vs Vector RAG → Chat-API → Scenarios → Standards → Graph Detail
+- **Narration**: `HTMLAudioElement` playing `public/audio/drv_fall_mueller.mp3` (ElevenLabs "Alice" voice — professional female, multilingual v2)
 
 ### State Management
 React hooks only (`useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`) — no external state library.
@@ -124,31 +122,30 @@ Key state in `App.tsx`:
 - Icons from `lucide-react` — primary icon library in components
 - Also available: `@heroicons/react`, `@phosphor-icons/react` (Spark icon proxy)
 
-## Graph Component Conventions (`PoliceKnowledgeGraph3D.tsx`)
+## Graph Component Conventions
 
-### 18 Node Types
-`suspect`, `victim`, `witness`, `case`, `evidence`, `location`, `communication`, `law`, `organization`, `account`, `vehicle`, `weapon`, `drug`, `digital`, `regulation`, `process`, `sop`, `anzeige`
+### Two Graph Components
+- **`DRVKnowledgeGraph3D`** — case-level graph for Fall Müller (EM-Rente), 65+ nodes / 90+ rels
+- **`DataModelGraph3D`** — meta-model / ontology schema graph showing node type hierarchy
+
+### DRV Node Types (15)
+`law`, `section`, `component`, `rule`, `process`, `task`, `entity`, `gra`, `standard`, `chatapi`, `case`, `person`, `event`, `period`, `document`
+
+### Schema Node Types (11 in `DataModelGraph3D`)
+`law`, `section`, `core_component`, `business_rule`, `process`, `goal`, `task`, `entity`, `gra_instruction`, `standard`, `chatapi`
 
 ### Data Architecture
-- Each type needs entries in `NODE_COLORS` (oklch) and `NODE_LABELS` (emoji + German label)
-- `SOURCE_REGISTRY` maps source keys to URLs
-- Node data built in `buildCaseData()` → returns `{ nodes: GraphNode[], links: GraphLink[] }`
-- **88 nodes** and **113 relationships** in current dataset
+- Each type needs entries in `NODE_COLORS` (hex or oklch) and `NODE_LABELS` (emoji + German label)
+- Node data built in `buildCaseData()` or `buildSchemaData()` → returns `{ nodes, links }`
 - Links: `{ source, target, type, description? }` — source/target are string node IDs
-- Detail panel groups relationships by connected node type: law → regulation → process → sop → anzeige → other
+- Detail panel shows node description + related link descriptions on click
 
-### Graph Data Enrichment
-Every node in the enriched JSON (`input/hydra_graph_data (1).json`) carries:
-- `sources[]` — keys referencing `metadata.sources` (OFAC, TRM, DOJ, ELLIPTIC, etc.)
-- `stix_type` — STIX 2.1 SDO mapping (e.g., `threat-actor`, `infrastructure`, `identity`)
-- `xpolizei_type` — XPolizei 2.0 type (optional)
-- `applicable_standards[]` — ISO 27037, ISO 27042, NIST 800-86, EO 13694, etc.
-
-### German Legal Formats
-- Aktenzeichen: `Az. XXXX Js XXXXX/22`
-- Asservat-Nr: `ASS-2022-XXXX-XXXX`
-- Paragraph references: `§100a StPO`, `§261 StGB`
-- Addresses redacted with `XXX` — never use real addresses
+### German Legal Formats (SGB domain)
+- Aktenzeichen: `R XXX/XX EM` pattern
+- Paragraph references: `§43 SGB VI`, `§56 SGB VI`, `§9 SGB VI i.V.m. §49 SGB IX`
+- SGB law references: SGB I, IV, VI, IX, X, XI, XII (full name in German)
+- GRA references: `GRA zu §43 SGB VI`
+- Addresses anonymised — never use real personal data
 
 ## CSS & Theming
 - **Tailwind v4** with `@theme inline` in `src/main.css` — all design tokens as CSS custom properties
@@ -169,19 +166,38 @@ Every node in the enriched JSON (`input/hydra_graph_data (1).json`) carries:
 
 ## Narration / Audio
 - **Always use ElevenLabs** for text-to-speech generation — **never** use the Web Speech API (`SpeechSynthesis`)
-- Voice: **male, warm friendly tone, native German** (currently ElevenLabs voice ID `FTNCalFNG5bRnkkaP5Ug` "Otto")
+- Voice: **Alice** — clear, professional female educator (ElevenLabs voice ID `Xb7hH8MSUJpSbSDYk0k2`)
 - Model: `eleven_multilingual_v2`
 - API key is read from `.env` (`ELEVENLABS_API_KEY`) — never hardcode it
-- Generate script: `python3 scripts/generate_narration.py` → outputs `public/audio/hydra_briefing.mp3`
-- The **player in `App.tsx` always uses the stored MP3 file** (`HTMLAudioElement` with `public/audio/hydra_briefing.mp3`) — never inline `SpeechSynthesisUtterance`
+- Generate script: `python3 scripts/generate_drv_narration.py` → outputs `public/audio/drv_fall_mueller.mp3`
+- The **player in `App.tsx` always uses the stored MP3 file** (`HTMLAudioElement` with `${import.meta.env.BASE_URL}audio/drv_fall_mueller.mp3`) — never inline `SpeechSynthesisUtterance`
 - When the narration text changes, **regenerate the MP3** by running the generate script before committing
 
 ## Security
 - Report vulnerabilities via `opensource-security@github.com`, not public issues
-- All case data is fictional — keep addresses redacted, use fake Aktenzeichen
-- DSGVO/NIS2 references must be legally accurate when added
+- All case data is fictional (Fall Müller) — keep personal data anonymised, use fake Aktenzeichen
+- SGB / DSGVO legal references must be accurate when added
 - Never commit `.env` or API keys
-- ElevenLabs API key is only used by Python scripts at build time, not at runtime
+- ElevenLabs API key is only used by Python scripts at generate time, not at runtime
+
+## Domain Knowledge
+
+### CASSA DRV — 4-Layer Ontology
+| Layer | Name | Content |
+|-------|------|---------|
+| 1 | Normative Schicht | SGB I–XII law hierarchy, EU directives, GRA |
+| 2 | Zeitliche Dimension | Transition rules (§235 SGB VI), pension adjustments |
+| 3 | Prozedurale Schicht | DRV business processes: Rentenantrag, EM-Prüfung, Reha |
+| 4 | Fallbezogener Overlay | Versichertendaten: Entgeltpunkte, Wartezeiten, Bescheide |
+
+### GraphRAG vs Vector RAG
+The app demonstrates four concrete failure cases where Vector RAG cannot reliably trace cross-paragraph chains (e.g., §43 → §50 → §53 SGB VI for EM-Rente with Arbeitsunfall). This is the core sales argument for GraphRAG.
+
+### CASSA RELIEF (SGB II — upcoming)
+- Domain: Grundsicherung für Arbeitsuchende, gemeinsame Einrichtungen (gE)
+- Goal: AI-assisted E-AKTE management — classification, metadata correction, sorting, redaction
+- Key document types: Kontoauszüge, Lohnabrechnungen, Mietverträge, Nebenkostenabrechnungen
+- See `RELIEF_DEMO_PLAN.md` for full context
 
 ## Key Dependencies (34 production, 10 dev)
 
@@ -216,7 +232,8 @@ Every node in the enriched JSON (`input/hydra_graph_data (1).json`) carries:
 - `isolatedModules: true`, `noFallthroughCasesInSwitch: true`
 
 ## Vite Configuration
-- **Base**: `/cassa/` (subpath deployment)
+- **Base**: `/cassa-drv/` (subpath deployment)
 - **Plugins**: react-swc, tailwindcss, Spark icon proxy, Spark plugin
 - **Alias**: `@` → `src/`
+- Use `${import.meta.env.BASE_URL}` prefix for all `public/` asset references (audio, images)
 - Known build warnings: CSS `@media` Tailwind v4 artifacts (harmless), bundle >500KB (expected for three.js)

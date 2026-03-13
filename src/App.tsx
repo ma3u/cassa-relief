@@ -47,7 +47,7 @@ import {
   VolumeX,
 } from "lucide-react"
 import { useState, useEffect, useRef, useCallback } from "react"
-import { DRVKnowledgeGraph3D } from "@/components/DRVKnowledgeGraph3D"
+import { RELIEFKnowledgeGraph3D } from "@/components/RELIEFKnowledgeGraph3D"
 import { DataModelGraph3D } from "@/components/DataModelGraph3D"
 
 function App() {
@@ -69,7 +69,7 @@ function App() {
 
   // ── Audio narration ──
   useEffect(() => {
-    const audio = new Audio(`${import.meta.env.BASE_URL}audio/drv_fall_mueller.mp3`)
+    const audio = new Audio(`${import.meta.env.BASE_URL}audio/relief_fall_becker.mp3`)
     audio.volume = 0.8
     audio.addEventListener('ended', () => setIsPlayingNarration(false))
     audioRef.current = audio
@@ -104,227 +104,227 @@ function App() {
   // ────────────────────────────────────────────
   const challenges = [
     {
-      icon: ScrollText,
-      title: "Komplexe Gesetzeslandschaft",
-      stat: "5+",
-      statLabel: "Sozialgesetzbücher",
-      description: "SGB I, IV, VI, IX, X — über 870 Paragraphen bilden die Rechtsgrundlage der gesetzlichen Rentenversicherung. Querverweise, Übergangsregelungen und Sonderfälle machen die Anwendung hochkomplex.",
-      trend: "870+ §§",
+      icon: FileText,
+      title: "Dokumentenflut in der E-AKTE",
+      stat: "47+",
+      statLabel: "Dokumente pro Antrag",
+      description: "Bürgergeld-Anträge erzeugen Dutzende Nachweise: Kontoauszüge, Mietverträge, Lohnabrechnungen, Nebenkostenabrechnungen — eingereicht als Fotos, Scans und Screenshots. Die E-AKTE wird zum Chaos.",
+      trend: "Steigend",
       color: "oklch(0.45 0.15 245)"
     },
     {
-      icon: Clock,
-      title: "Bearbeitungszeiten & Rückstände",
-      stat: "3–6",
-      statLabel: "Monate Bearbeitungszeit",
-      description: "Rentenanträge durchlaufen aufwändige Prüfungen: Kontenklärung, Wartezeitberechnung, Entgeltpunkte. Mitarbeitende müssen Dutzende Querverweise manuell prüfen.",
-      trend: "Ziel: <3 Mon.",
+      icon: AlertTriangle,
+      title: "Fehlklassifikation & fehlende Metadaten",
+      stat: "30%",
+      statLabel: "falsch zugeordnet",
+      description: "Dokumente werden als „Sonstiges“ klassifiziert, Metadaten fehlen, Freitexte existieren nicht. Sachbearbeitende müssen jedes Dokument einzeln sichten, um den Inhalt zu verstehen.",
+      trend: "Kritisch",
       color: "oklch(0.55 0.20 55)"
     },
     {
-      icon: Users,
-      title: "Fachkräftemangel & Wissenstransfer",
-      stat: "56.000",
-      statLabel: "DRV-Beschäftigte",
-      description: "Erfahrene Sachbearbeiter gehen in den Ruhestand — ihr implizites Wissen über Sonderfälle, GRA-Anweisungen und Berechnungsdetails lässt sich kaum dokumentieren.",
-      trend: "Kritisch",
+      icon: Shield,
+      title: "Datenschutz-Risiken",
+      stat: "§67",
+      statLabel: "SGB X Sozialdatenschutz",
+      description: "Gesundheitsdaten (Arztbriefe), Kontonummern und Geburtsdaten landen ungeschwärzt in der Leistungsakte. Fehlende automatische Schwärzung verstößt gegen DSGVO Art. 9 und §67 SGB X.",
+      trend: "DSGVO-Risiko",
       color: "oklch(0.50 0.18 25)"
     },
     {
-      icon: Link2,
-      title: "Gesetzesübergreifende Abhängigkeiten",
-      stat: "100+",
-      statLabel: "Querverweise",
-      description: "SGB VI verweist auf SGB IV (Versicherungspflicht), SGB X (Verwaltungsverfahren), SGB IX (Rehabilitation). Fehler bei Querverweisen führen zu falschen Bescheiden.",
-      trend: "Komplex",
+      icon: Users,
+      title: "Fachkräftemangel in den gE",
+      stat: "75.000",
+      statLabel: "Beschäftigte in gE",
+      description: "Aktenerschließung und Aktenpflege binden erhebliche Arbeitszeit der Fachkräfte. Jede Minute für manuelle Aktenarbeit fehlt bei der eigentlichen Leistungsbemessung.",
+      trend: "Entlastung nötig",
       color: "oklch(0.45 0.12 200)"
     }
   ]
 
   // ────────────────────────────────────────────
-  // Data: 4-Layer Ontology (DRV)
+  // Data: 4-Layer Document AI Pipeline (RELIEF)
   // ────────────────────────────────────────────
   const layers = [
     {
       number: 1,
       title: "Normative Schicht",
-      subtitle: "Gesetzeshierarchie",
-      description: "Hierarchie der Rechtsquellen: EU-Recht → Grundgesetz → Sozialgesetzbücher → Rechtsverordnungen → GRA-Anweisungen. Das System versteht die Normenhierarchie und traversiert sie konsistent.",
+      subtitle: "Gesetzeshierarchie SGB II",
+      description: "Rechtsgrundlagen der Grundsicherung: SGB II (Leistungen), SGB I (Mitwirkung), SGB X (Sozialdatenschutz), DSGVO. Jeder Paragraph definiert Regeln für die Aktenführung und Leistungsbemessung.",
       icon: Shield,
       color: "oklch(0.35 0.12 245)",
-      examples: ["SGB I–XII", "GRA-Anweisungen", "EU-DSGVO", "Rechtsverordnungen"]
+      examples: ["SGB II §7–§41a", "§60/§66 SGB I", "§67 SGB X", "DSGVO Art. 9"]
     },
     {
       number: 2,
-      title: "Zeitliche Dimension",
-      subtitle: "Validität & Übergangsregelungen",
-      description: "Zeitliche Gültigkeit jeder Rechtsgrundlage: Übergangsregelungen (§235 SGB VI), stufenweise Anhebung der Altersgrenze, Rentenanpassungen zum 1. Juli. Das System kennt die korrekte Fassung zu jedem Stichtag.",
-      icon: Clock,
+      title: "Dokumenten-Schicht",
+      subtitle: "Klassifikation & Extraktion",
+      description: "KI-gestützte Dokumentenerkennung: Kontoauszüge, Mietverträge, Lohnabrechnungen werden automatisch klassifiziert. OCR extrahiert Text aus Fotos und Scans, Metadaten werden zugeordnet.",
+      icon: FileText,
       color: "oklch(0.45 0.15 200)",
-      examples: ["Regelaltersgrenze 65→67", "Mütterrente Erweiterung", "Rentenanpassung 2025", "Beitragssätze"]
+      examples: ["Dokumentenklassifikation", "OCR/Texterkennung", "Metadaten-Extraktion", "Qualitätsbewertung"]
     },
     {
       number: 3,
       title: "Prozedurale Schicht",
-      subtitle: "Geschäftsprozesse & Workflows",
-      description: "DRV-Geschäftsprozesse als formale Abläufe: Rentenantrag, Kontenklärung, EM-Prüfung, Reha-Bewilligung. Proaktive Vorschläge für nächste Schritte und Fristüberwachung.",
+      subtitle: "Aktenerschließung & Aktenpflege",
+      description: "Geschäftsprozesse der gE: Antragsaufnahme, BG-Prüfung, Einkommensprüfung, KdU-Berechnung. RELIEF ordnet Dokumente den richtigen Prüfschritten zu und prüft Vollständigkeit.",
       icon: ChartBar,
       color: "oklch(0.50 0.18 160)",
-      examples: ["Rentenantrag", "EM-Prüfung", "Reha vor Rente", "Widerspruchsverfahren"]
+      examples: ["Antragsaufnahme", "BG-Prüfung", "Einkommensprüfung", "KdU-Berechnung"]
     },
     {
       number: 4,
       title: "Fallbezogener Overlay",
-      subtitle: "Versichertenkontext",
-      description: "Konkreter Versicherungsfall: Beitragszeiten, Entgeltpunkte, Kindererziehungszeiten, medizinische Gutachten. Alle Daten im Kontext der Normenhierarchie und Geschäftsregeln.",
+      subtitle: "Bedarfsgemeinschaft & Nachweise",
+      description: "Konkreter Fall: Familie Becker — 5 Personen, 47 Dokumente, schwankendes Einkommen, Unterhaltszahlungen. Alle Nachweise werden den Personen und Prüfschritten im Knowledge Graph zugeordnet.",
       icon: Database,
       color: "oklch(0.55 0.20 55)",
-      examples: ["Entgeltpunkte", "Wartezeiten", "Kindererziehung", "Gutachten"]
+      examples: ["Bedarfsgemeinschaft", "Einkommensnachweise", "KdU-Dokumente", "Datenschutz-Prüfung"]
     }
   ]
 
   // ────────────────────────────────────────────
-  // Data: Scenarios (from DRV_DEMO_PLAN §4)
+  // Data: Scenarios (from RELIEF_DEMO_PLAN)
   // ────────────────────────────────────────────
   const scenarios = [
     {
-      title: "Compliance-Analyse",
-      description: "Schnell die bindende Geschäftsregel für einen Leistungstyp finden und gegen den Quell-Paragraphen verifizieren — z. B. Regelaltersrente (§35 SGB VI) mit allen Querverweisen.",
+      title: "Aktenerschließung",
+      description: "Sachbearbeiterin öffnet E-AKTE mit 47 Dokumenten — RELIEF klassifiziert, sortiert und beschriftet automatisch. Statt 45 Minuten manuellem Sichten sind alle Dokumente in Sekunden erschlossen.",
       benefits: [
-        "Automatische Auflösung aller Querverweise: §35 → §50 (Wartezeit) → §235 (Altersgrenze) → §56 (Kindererziehung)",
-        "Chatbot mit Graph-Kontext: Frage stellen und Antwort mit §-Zitaten erhalten",
-        "GRA-Anweisungen direkt verlinkt: Von der Geschäftsregel zur Handlungsanweisung in einem Klick",
-        "Automatische Prüfung gegen aktuelle Gesetzeslage — kein Risiko veralteter Informationen"
+        "Automatische Klassifikation: Kontoauszüge, Mietvertrag, Lohnabrechnungen, Kindergeldbescheid sofort erkannt",
+        "OCR-Texterkennung für Fotos und Scans — auch handschriftliche Notizen",
+        "Metadaten-Extraktion: Datum, Absender, zugehörige Person der BG automatisch zugeordnet",
+        "Freitextgenerierung: „Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3“"
       ],
       icon: FileText,
       color: "oklch(0.45 0.15 245)",
-      impact: "Sachbearbeiter Recht: Recherche von Stunden auf Sekunden"
+      impact: "Aktenerschließung von 45 Min. auf Sekunden"
     },
     {
-      title: "Prozess-Engineering",
-      description: "Geschäftsregeln auf DRV-Prozesse abbilden — z. B. den Rentenantragsprozess von der Antragstellung bis zum Bescheid mit allen Abhängigkeiten visualisieren.",
+      title: "Aktenpflege",
+      description: "Unsortierte Einzelseiten, falsche Dokumententypen, fehlende Seiten — RELIEF bereinigt die E-AKTE und stellt eine sachlogische Ordnung her.",
       benefits: [
-        "Prozessgraph: Aufgaben, Sequenzfluss und Entscheidungspunkte als verknüpfte Knoten",
-        "Fristen automatisch verknüpft: §17 SGB I (rechtzeitige Erbringung), §84 SGB X (Widerspruchsfrist)",
-        "Chatbot: 'Welche Fristen gelten für die Bearbeitung eines Rentenantrags?' — Antwort zitiert §99, §17, §26",
-        "Export als strukturierte Daten für BPMN-Modellierung (zukünftige Funktion)"
+        "Einzelseiten-Zusammenführung: 15 Mietvertrag-Fotos → ein vollständiges Dokument",
+        "Chronologische und sachliche Sortierung: Dokumente nach Prüfschritt und Zeitraum geordnet",
+        "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung automatisch erkannt → Mitwirkungsanforderung",
+        "Reklassifikation: „Sonstiges“-Dokumente werden korrekt als Nebenkostenabrechnung, Insolvenzbekanntmachung etc. erkannt"
       ],
       icon: Workflow,
       color: "oklch(0.50 0.18 160)",
-      impact: "Prozessoptimierung mit vollständiger Regelabdeckung"
+      impact: "Geordnete, vollständige Akte in Minuten statt Stunden"
     },
     {
-      title: "Gesetzesfolgen-Analyse",
-      description: "Impact-Analyse bei Gesetzesänderungen — z. B. 'Was ändert sich durch den neuen §33 für die Erwerbsminderungsrente?' Alle betroffenen Regeln und Prozesse identifizieren.",
+      title: "Datenschutz-Compliance",
+      description: "DSGVO Art. 9, §67 SGB X — Gesundheitsdaten und sensible Informationen müssen identifiziert und geschützt werden. RELIEF erkennt kritische Inhalte automatisch.",
       benefits: [
-        "Semantische Ähnlichkeitssuche über alle verknüpften Geschäftsregeln",
-        "Automatische Identifikation aller betroffenen Prozesse und Aufgaben",
-        "Ranking der Auswirkungen nach Abhängigkeitsgrad im Graphen",
-        "Chatbot-gestützte Q&A: Gezielte Fragen zur Auswirkung der Änderung"
+        "Arztbrief Sophie als Gesundheitsdaten erkannt → darf nicht in Leistungsakte → automatisches Flag",
+        "Kontonummern und Geburtsdaten auf Unterhaltsurkunde → Schwärzungsvorschlag",
+        "Prüfung gegen §67 SGB X und DSGVO Art. 9 im Knowledge Graph verankert",
+        "Audit-Trail: Jede Schwärzung und jedes Flag wird dokumentiert und ist nachvollziehbar"
       ],
-      icon: GitCompare,
+      icon: Shield,
       color: "oklch(0.55 0.20 55)",
-      impact: "Gesetzesänderungsfolgen in Minuten statt Wochen analysieren"
+      impact: "Automatische DSGVO-Compliance statt manueller Prüfung"
     },
     {
       title: "Onboarding & Wissenstransfer",
-      description: "Neue Mitarbeitende verstehen DRV-Zuständigkeiten und Gesetzesgrundlagen — ohne 300+ Seiten Gesetzestext lesen zu müssen.",
+      description: "Neue Mitarbeitende in der gE verstehen Aktenstrukturen, Dokumententypen und Prüfschritte — interaktiv im Knowledge Graph statt mit 200-Seiten-Handbüchern.",
       benefits: [
-        "Chatbot erklärt komplexe Sachverhalte in einfacher Sprache mit §-Verweisen",
-        "Navigierbarer Wissensgraph: Von der Übersicht ins Detail durch interaktive Exploration",
-        "GRA-Anweisungen als Handlungsleitfaden direkt verknüpft mit Paragraphen",
-        "Häufige Fragen mit Standardantworten und Quellennachweis — kein Halluzinationsrisiko"
+        "Navigierbarer Wissensgraph: Von §7 BG-Definition über Prüfschritte bis zum konkreten Dokument explorieren",
+        "Verknüpfung sichtbar: Warum braucht die KdU-Prüfung den Mietvertrag? Graph zeigt die Verbindung",
+        "E-AKTE-Probleme und deren RELIEF-Lösungen als verknüpfte Knoten — Lerneffekt bei der Arbeit",
+        "Standards (TR-RESISCAN, xdomea) als Kontext — warum bestimmte Qualitätsanforderungen gelten"
       ],
       icon: Users,
       color: "oklch(0.45 0.12 200)",
-      impact: "Einarbeitungszeit von Monaten auf Wochen reduzieren"
+      impact: "Einarbeitungszeit von Wochen auf Tage reduzieren"
     }
   ]
 
   // ────────────────────────────────────────────
-  // Data: Graph RAG vs Vector RAG comparison
+  // Data: KI-gestützt vs. Manuelle Aktenarbeit
   // ────────────────────────────────────────────
   const ragComparisons = [
     {
-      title: "Multi-Hop-Reasoning: Rentenanspruch",
-      question: "Hat Frau Müller (62 Jahre, 38 Beitragsjahre, 3 Kinder geb. 1993, 1996, 1999) Anspruch auf Regelaltersrente?",
+      title: "Dokumentenklassifikation: 47 Eingänge",
+      question: "Wie werden 47 eingereichte Dokumente (Fotos, Scans, PDFs) korrekt klassifiziert und der Akte zugeordnet?",
       graphAnswer: {
-        result: "Korrekte Antwort mit vollständiger Begründung",
-        explanation: "Graph RAG traversiert: §35 SGB VI → §50 (Wartezeit ✓: 38 Jahre > 5 Jahre) → §235 (Regelaltersgrenze für Jg. 1964: 67 Jahre → mit 62 noch nicht erreicht) → §56 (Kindererziehungszeiten: 3×36 = 108 Monate zusätzlich). Ergebnis: Noch kein Anspruch, da Altersgrenze nicht erreicht — aber Wartezeit für Altersrente für besonders langjährig Versicherte (45 Jahre) wäre mit KEZ potenziell erfüllt."
+        result: "Automatisch klassifiziert in Sekunden",
+        explanation: "RELIEF traversiert den Knowledge Graph: Bildanalyse → OCR → Dokumententyp-Erkennung → Person-Zuordnung via BG-Graph (§7 SGB II). 12 Kontoauszüge werden als zusammengehörig erkannt, dem richtigen BG-Mitglied zugeordnet und chronologisch sortiert. 3 „Sonstiges“-Dokumente werden als Nebenkostenabrechnung, Insolvenzbekanntmachung und Arbeitgeberbescheinigung reklassifiziert."
       },
       vectorAnswer: {
-        result: "Unvollständige oder falsche Antwort",
-        explanation: "Vector RAG findet §35 (Regelaltersrente) per Ähnlichkeitssuche, aber verknüpft nicht automatisch §50 (Wartezeit), §235 (Übergangsregelungen für ihr Geburtsjahr) und §56 (Kindererziehungszeiten). Ohne Graph-Traversierung fehlt die systematische Prüfung aller Voraussetzungen."
+        result: "Manuelle Sichtung: 45+ Minuten",
+        explanation: "Sachbearbeiterin muss jedes der 47 Dokumente einzeln öffnen, den Inhalt lesen, den Dokumententyp im System auswählen und die zugehörige Person manuell zuordnen. Bei Fotos von Kontoauszügen ist die Reihenfolge unklar, Zusammenhänge fehlen. 3 Dokumente bleiben als „Sonstiges“ liegen."
       }
     },
     {
-      title: "Gesetzesübergreifende Abhängigkeit",
-      question: "Welche Fristen gelten bei einem abgelehnten Reha-Antrag?",
+      title: "Datenschutz: Gesundheitsdaten in der Akte",
+      question: "Arztbrief Sophie (14) wurde mit den Unterlagen eingereicht — enthält Gesundheitsdaten. Darf er in die Leistungsakte?",
       graphAnswer: {
-        result: "Vollständige Fristenkette über 3 Gesetze",
-        explanation: "Graph RAG traversiert: SGB IX §49 (Reha-Leistung) → SGB VI §9 (DRV als Reha-Träger) → SGB X §31 (Bescheid als Verwaltungsakt) → SGB X §84 (Widerspruchsfrist: 1 Monat) → SGG §87 (Klagefrist: 1 Monat nach Widerspruchsbescheid). Liefert die komplette Rechtsmittelkette."
+        result: "Automatisch erkannt und geflaggt",
+        explanation: "RELIEF erkennt via OCR + NER: „Arztbrief“, „Diagnose“, Personenname Sophie. Knowledge Graph: Dokument → Typ „Arztbrief“ → verknüpft mit §67 SGB X (Sozialdatenschutz) + DSGVO Art. 9 (besondere Kategorien). Ergebnis: Automatisches Flag „Gesundheitsdaten — nicht in Leistungsakte“. Schwärzungsvorschlag für sensible Daten auf der Unterhaltsurkunde (Kontonummern, Geburtsdaten)."
       },
       vectorAnswer: {
-        result: "Nur Teilantwort, fehlende Verknüpfung",
-        explanation: "Vector RAG findet Texte zu Rehabilitation, kennt aber nicht den systematischen Pfad über SGB X (Verwaltungsverfahren) zum SGG (Sozialgerichtsgesetz). Widerspruchsfristen stehen in einem anderen Gesetz und werden per Vektorähnlichkeit nicht zuverlässig gefunden."
+        result: "Risiko: Verstoß übersehen",
+        explanation: "Manuell muss die Sachbearbeiterin erkennen, dass ein Arztbrief nicht in die Leistungsakte gehört — besonders wenn er zwischen 46 anderen Dokumenten liegt. Ohne systematische Prüfung besteht das Risiko, dass Gesundheitsdaten eines Kindes unrechtmäßig gespeichert werden. §67 SGB X und DSGVO Art. 9 werden nicht automatisch geprüft."
       }
     },
     {
-      title: "Ausnahmeregel: Vorzeitige Wartezeit",
-      question: "Welche Wartezeit gilt für Erwerbsminderungsrente bei einem Arbeitsunfall?",
+      title: "Vollständigkeitsprüfung: Fehlende Nachweise",
+      question: "Wurden alle für die Leistungsbemessung erforderlichen Nachweise eingereicht?",
       graphAnswer: {
-        result: "Erkennt die Ausnahme sofort",
-        explanation: "Graph RAG traversiert: §43 SGB VI (EM-Rente, Normalfall: 5 Jahre Wartezeit + 3/5 Pflichtbeiträge) → erkennt verknüpfte Ausnahmeregel §53 SGB VI (vorzeitige Wartezeiterfüllung bei Arbeitsunfall) → Wartezeit gilt als sofort erfüllt. Die Graph-Kante SR_REFERENCES verbindet §43 direkt mit §53."
+        result: "Fehlende Dokumente sofort identifiziert",
+        explanation: "RELIEF traversiert den Prüfgraph: §11 SGB II (Einkommen) → benötigt Arbeitgeberbescheinigung → nicht in 47 Dokumenten vorhanden → automatische Mitwirkungsanforderung nach §60 SGB I. Nebenkostenabrechnung unvollständig (2 von 4 Seiten) → KI erkennt fehlende Seiten. Kindergeldbescheid mit veraltetem Datum → Aktualisierung angefordert."
       },
       vectorAnswer: {
-        result: "Gibt nur die Standardregel zurück",
-        explanation: "Vector RAG ruft §43 per Vektorsuche ab (hohe Ähnlichkeit zu 'Erwerbsminderungsrente') und antwortet mit der 5-Jahres-Wartezeit. §53 (vorzeitige Wartezeit bei Arbeitsunfall) hat geringere Vektorähnlichkeit zum Query und wird nicht in den Top-K-Ergebnissen gefunden. Die Ausnahme wird übersehen."
+        result: "Lücken erst bei Bearbeitung entdeckt",
+        explanation: "Sachbearbeiterin bemerkt fehlende Arbeitgeberbescheinigung erst bei der Einkommensprüfung — Wochen nach Antragseingang. Unvollständige Nebenkostenabrechnung fällt möglicherweise gar nicht auf. Veralteter Kindergeldbescheid wird ggf. nicht als Problem erkannt. Jede Nachforderung verlängert die Bearbeitungszeit um Wochen."
       }
     },
     {
-      title: "Temporale Validität: Regelaltersgrenze",
-      question: "Gilt für einen 1960 Geborenen noch die Altersgrenze 65?",
+      title: "Einzelseiten-Zusammenführung",
+      question: "15 Fotoaufnahmen eines Mietvertrags — wie werden sie zu einem Dokument?",
       graphAnswer: {
-        result: "Exakte Antwort mit Übergangsregelung",
-        explanation: "Graph RAG traversiert: §35 → §235 SGB VI (Übergangsregelungen) mit temporalen Metadaten → Jahrgang 1960 = 66 Jahre + 4 Monate. Der Graph speichert die stufenweise Anhebung als strukturierte Daten pro Jahrgang und kann die exakte Altersgrenze berechnen."
+        result: "Automatische Erkennung und Zusammenführung",
+        explanation: "RELIEF analysiert: Ähnliches Layout, fortlaufende Seitenzahlen, gleicher Briefkopf → gehören zusammen. OCR extrahiert Vertragsbeginn, Kaltmiete (780 €), Nebenkosten (220 €) → Metadaten für KdU-Prüfung (§22 SGB II) automatisch zugeordnet. Freitext: „Mietvertrag, Wohnung Dortmund-Hörde, 90m², 1.000 € warm, Familie Becker“."
       },
       vectorAnswer: {
-        result: "Gibt generische 67 Jahre an",
-        explanation: "Vector RAG findet allgemeine Texte zur Regelaltersgrenze (67 Jahre), hat aber keine strukturierten temporalen Daten. Die Übergangsregelungen in §235 mit der differenzierten Tabelle pro Geburtsjahrgang werden nicht als zusammenhängende Struktur erfasst. Ergebnis: Falsche Altersgrenze."
+        result: "15 Einzelseiten bleiben lose in der Akte",
+        explanation: "Ohne KI bleiben die 15 Fotos als separate Einträge in der E-AKTE. Sachbearbeiterin muss manuell erkennen, dass sie zusammengehören, die Reihenfolge bestimmen und den Mietvertrag gedanklich rekonstruieren. Die Mietdaten müssen manuell aus den Fotos abgelesen und in die KdU-Berechnung übernommen werden."
       }
     }
   ]
 
   // ────────────────────────────────────────────
-  // Data: Chat API Standards
+  // Data: RELIEF Document AI API
   // ────────────────────────────────────────────
   const chatApiStandards = [
     {
-      name: "OpenAI Chat Completions",
-      endpoint: "POST /v1/chat/completions",
-      description: "De-facto-Industriestandard für Chat-KI. messages[]-Array mit Rollen (system, user, assistant). Streaming via SSE.",
-      adoptedBy: "OpenAI, Azure OpenAI, LiteLLM, vLLM, Ollama, Groq, Together AI",
+      name: "Dokumenten-Klassifikation",
+      endpoint: "POST /api/v1/classify",
+      description: "Automatische Erkennung des Dokumententyps: Kontoauszug, Mietvertrag, Lohnabrechnung, Bescheid etc. Rückgabe mit Confidence-Score.",
+      adoptedBy: "Document AI, Azure Form Recognizer, Custom Vision",
       color: "#10b981"
     },
     {
-      name: "Anthropic Messages API",
-      endpoint: "POST /v1/messages",
-      description: "System-Prompt als separater Top-Level-Parameter. Content-Blocks für multimodales Messaging. Streaming via delta-Events.",
-      adoptedBy: "Anthropic Claude, AWS Bedrock (Claude)",
+      name: "OCR & Extraktion",
+      endpoint: "POST /api/v1/extract",
+      description: "Texterkennung aus Fotos, Scans, Screenshots. Strukturierte Datenextraktion: Beträge, Daten, Namen, Adressen.",
+      adoptedBy: "Tesseract OCR, Azure Cognitive Services, AWS Textract",
       color: "#8b5cf6"
     },
     {
-      name: "LangChain / LangServe",
-      endpoint: "POST /invoke, /stream, /batch",
-      description: "Framework-Standard für RAG-Pipelines. Retriever → LLM → Output Parser. Deployment als FastAPI-Service.",
-      adoptedBy: "LangChain, LangGraph, LangSmith",
+      name: "Schwärzung & Compliance",
+      endpoint: "POST /api/v1/redact",
+      description: "Automatische Erkennung und Schwärzung sensibler Daten: Kontonummern, Geburtsdaten, Gesundheitsdaten. DSGVO-konform.",
+      adoptedBy: "Pattern-Matching, NER-Modelle, Presidio",
       color: "#f59e0b"
     },
     {
-      name: "OpenAPI 3.1 / Swagger",
-      endpoint: "GET /openapi.json",
-      description: "API-Beschreibungsstandard. Automatische Swagger-UI und ReDoc-Dokumentation. Client-SDK-Generierung.",
-      adoptedBy: "Universeller Standard — FastAPI, Spring, Express, etc.",
+      name: "Knowledge Graph API",
+      endpoint: "POST /api/v1/graph/query",
+      description: "Abfrage des RELIEF-Wissensgraphen: Verknüpfungen zwischen Dokumenten, Gesetzen, Personen und Prüfschritten. Cypher-basiert.",
+      adoptedBy: "Neo4j, GraphRAG, LangChain Graph",
       color: "#3b82f6"
     }
   ]
@@ -363,20 +363,20 @@ function App() {
           <div className="flex items-center gap-3">
             <SopraLogo />
             <Separator orientation="vertical" className="h-8 hidden md:block" />
-            <span className="text-sm font-medium text-muted-foreground hidden md:block">CASSA · DRV</span>
+            <span className="text-sm font-medium text-muted-foreground hidden md:block">CASSA · RELIEF</span>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('architecture')} className="hidden md:flex">
               Architektur
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-mueller')} className="hidden md:flex">
-              Fall Müller
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-becker')} className="hidden md:flex">
+              Fall Becker
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('graph-rag')} className="hidden md:flex">
-              Graph vs Vector RAG
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('ki-vs-manuell')} className="hidden md:flex">
+              KI vs. Manuell
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('chat-api')} className="hidden md:flex">
-              Chat API
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('document-ai')} className="hidden md:flex">
+              Document AI
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('scenarios')} className="hidden md:flex">
               Szenarien
@@ -404,16 +404,17 @@ function App() {
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
               <Badge className="mb-6 bg-accent text-accent-foreground text-base px-4 py-2">
                 <Zap className="h-4 w-4 mr-2" />
-                Compliance Knowledge Graph + GraphRAG
+                KI-gestützte E-AKTE-Erschließung + Knowledge Graph
               </Badge>
             </motion.div>
             
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
-              Digitaler Wissens&shy;assistent für die Renten&shy;versicherung
+              KI-Assistent für die E-AKTE der Grund&shy;sicherung
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed">
-              Wie ein Knowledge Graph mit GraphRAG die Komplexität des Sozialrechts beherrschbar macht — und warum Vector RAG bei gesetzesübergreifenden Fragen versagt.
+              Wie RELIEF mit Document AI und einem Knowledge Graph die Aktenarbeit in den gemeinsamen Einrichtungen 
+              transformiert — automatische Klassifikation, Schwärzung und Sortierung statt manueller Sichtung.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -456,11 +457,11 @@ function App() {
               Schritt 1: Das Problem verstehen
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Die Herausforderungen der Rentenversicherung
+              Die Herausforderungen der E-AKTE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              56.000 DRV-Beschäftigte verarbeiten jährlich Millionen von Rentenanträgen — auf Basis eines
-              Rechtsrahmens mit über 870 Paragraphen in 5+ Sozialgesetzbüchern.
+              75.000 Beschäftigte in den gemeinsamen Einrichtungen bearbeiten jährlich Millionen Bürgergeld-Anträge —
+              mit Dutzenden Nachweisen pro Fall, die in der E-AKTE strukturiert geführt werden müssen.
             </p>
           </motion.div>
 
@@ -531,33 +532,33 @@ function App() {
           >
             <Badge className="mb-4 bg-destructive/10 text-destructive border-destructive/20 text-base px-4 py-2">
               <AlertTriangle className="h-4 w-4 mr-2" />
-              Schritt 2: Warum reine LLMs nicht genügen
+              Schritt 2: Warum manuelle Aktenarbeit nicht skaliert
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              ChatGPT & Co. für das Sozialrecht ungeeignet
+              Manuelle E-AKTE-Pflege am Limit
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Large Language Models sind probabilistisch — Rentenberechnung ist deterministisch. 
-              Halluzinierte Paragraphen, fehlende Querverweise und temporale Blindheit machen reine LLMs für die DRV unbrauchbar.
+              Aktenerschließung und Aktenpflege sind Voraussetzung für die Leistungsbemessung — aber kein eigenständiger 
+              Gegenstand der Wertschöpfung. Die manuelle Bearbeitung bindet erhebliche Arbeitszeit und ist fehleranfällig.
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {[
               {
-                title: "Halluzinierte Paragraphen",
-                description: "Ein LLM erfindet plausibel klingende §-Angaben: '§37a SGB VI' existiert nicht, aber ein LLM kann diesen selbstbewusst zitieren. Falsche Rechtsauskunft kann zu fehlerhaften Bescheiden führen.",
+                title: "Einzelseiten ohne Zusammenhang",
+                description: "15 Fotoaufnahmen eines Mietvertrags liegen als separate Einträge in der E-AKTE. Sachbearbeitende müssen manuell erkennen, dass sie zusammengehören, die Reihenfolge bestimmen und den Vertrag gedanklich rekonstruieren.",
+                icon: FileText
+              },
+              {
+                title: "Fehlklassifikation verschleiert Inhalte",
+                description: "Dokumente als „Sonstiges“ klassifiziert — Sachbearbeitende müssen jedes Dokument öffnen, um den Inhalt zu erkennen. Bei 47 Eingängen summiert sich das zu erheblichem Zeitverlust.",
                 icon: AlertTriangle
               },
               {
-                title: "Temporale Blindheit",
-                description: "Kein Verständnis für Übergangsregelungen: Welche Altersgrenze gilt für Jahrgang 1960? LLMs kennen nicht die stufenweise Anhebung und antworten generisch mit '67 Jahre' — falsch.",
-                icon: Clock
-              },
-              {
-                title: "Fehlende Querverweise",
-                description: "§43 EM-Rente verweist auf §53 (Ausnahme bei Arbeitsunfall) — LLMs erkennen diese Spezialregel nicht, weil sie Beziehungen zwischen Normen nicht systematisch traversieren können.",
-                icon: Database
+                title: "Datenschutz-Verstöße vorprogrammiert",
+                description: "Gesundheitsdaten (Arztbrief), Kontonummern und Geburtsdaten liegen ungeschwärzt in der Akte. Ohne automatische Erkennung werden DSGVO Art. 9 und §67 SGB X systematisch verletzt.",
+                icon: Shield
               }
             ].map((problem, index) => {
               const Icon = problem.icon
@@ -599,14 +600,14 @@ function App() {
           >
             <Badge className="mb-4 bg-primary text-primary-foreground text-base px-4 py-2">
               <BrainCircuit className="h-4 w-4 mr-2" />
-              Schritt 3: Die CASSA-Lösung
+              Schritt 3: Die RELIEF-Lösung
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Multi-Layered Ontologie-Architektur
+              Document AI Pipeline + Knowledge Graph
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-              Structure-Aware Temporal Graph RAG (SAT-Graph RAG) in Neo4j-Graphdatenbank — 
-              alle Sozialgesetzbücher, Geschäftsregeln und Prozesse als navigierbarer Knowledge Graph.
+              RELIEF kombiniert Document AI (Klassifikation, OCR, Schwärzung) mit einem Neo4j-Wissensgraphen — 
+              Gesetze, Prozesse, Dokumente und KI-Funktionen als navigierbarer Knowledge Graph.
             </p>
             <p className="text-base text-primary font-semibold">
               👆 Klicken Sie auf die Schichten, um mehr zu erfahren
@@ -692,7 +693,7 @@ function App() {
               transition={{ duration: 0.6 }}
               className="sticky top-24 h-[700px] relative"
             >
-              <DRVKnowledgeGraph3D />
+              <RELIEFKnowledgeGraph3D />
               {/* Narration Play Button — overlaying the 3D graph */}
               <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3">
                 <button
@@ -700,7 +701,7 @@ function App() {
                   className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all hover:scale-105 backdrop-blur-sm"
                 >
                   {isPlayingNarration ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
-                  <span className="text-sm font-medium">{isPlayingNarration ? 'Pause' : 'Fall Müller anhören'}</span>
+                  <span className="text-sm font-medium">{isPlayingNarration ? 'Pause' : 'Fall Becker anhören'}</span>
                 </button>
                 {isPlayingNarration && (
                   <button
@@ -716,8 +717,8 @@ function App() {
         </div>
       </section>
 
-      {/* ── SECTION: Fall Müller — Sachbearbeiterfall ── */}
-      <section id="fall-mueller" className="py-32 bg-background relative overflow-hidden">
+      {/* ── SECTION: Fall Becker — E-AKTE-Fall ── */}
+      <section id="fall-becker" className="py-32 bg-background relative overflow-hidden">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -728,14 +729,14 @@ function App() {
           >
             <Badge className="mb-4 bg-red-600 text-white text-base px-4 py-2">
               <FileText className="h-4 w-4 mr-2" />
-              Praxisbeispiel: Komplexer Sachbearbeiterfall
+              Praxisbeispiel: Komplexer E-AKTE-Fall
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Fall Sabine Müller — Az. R 920/25-EM
+              Fall Familie Becker — BG-Nr. 412K-078263-B
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Ein realer Erwerbsminderungsrentenantrag mit Kindererziehungszeiten, Arbeitsunfall, 
-              Beitragslücken und Widerspruchsverfahren — 6 Paragraphen, 3 Sozialgesetzbücher, 1 Fall.
+              Ein Bürgergeld-Antrag mit 5-Personen-Bedarfsgemeinschaft, 47 eingereichten Dokumenten,
+              schwankendem Einkommen und Datenschutz-Problematik — 14 Prüfpunkte, 5 Sozialgesetzbücher, 1 E-AKTE.
             </p>
           </motion.div>
 
@@ -757,7 +758,7 @@ function App() {
                     {isPlayingNarration ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
                   </button>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-foreground">Fall Müller — Narration</p>
+                    <p className="font-semibold text-foreground">Fall Becker — Narration</p>
                     <p className="text-sm text-muted-foreground">
                       {isPlayingNarration ? 'Spielt...' : 'Hören Sie die Fallanalyse (ca. 6 Min.)'}
                     </p>
@@ -790,39 +791,39 @@ function App() {
                         <Users className="h-6 w-6 text-pink-500" />
                       </div>
                       <div>
-                        <CardTitle>Sabine Müller</CardTitle>
-                        <CardDescription>geb. 15.03.1968, Industriekauffrau, Essen</CardDescription>
+                        <CardTitle>Bedarfsgemeinschaft Becker</CardTitle>
+                        <CardDescription>BG-Nr. 412K-078263-B, Dortmund-Hörde</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div className="bg-muted/50 rounded-lg p-3">
-                        <div className="text-muted-foreground text-xs">Versicherungsnr.</div>
-                        <div className="font-mono font-medium">12 150368 M 025</div>
+                        <div className="text-muted-foreground text-xs">Antragsteller</div>
+                        <div className="font-medium">Thomas Becker (45)</div>
                       </div>
                       <div className="bg-muted/50 rounded-lg p-3">
-                        <div className="text-muted-foreground text-xs">Aktenzeichen</div>
-                        <div className="font-mono font-medium">R 920/25-EM</div>
+                        <div className="text-muted-foreground text-xs">Partnerin</div>
+                        <div className="font-medium">Leila Becker geb. Kaya (37)</div>
                       </div>
                       <div className="bg-muted/50 rounded-lg p-3">
-                        <div className="text-muted-foreground text-xs">Rentenart</div>
-                        <div className="font-medium">Volle EM-Rente</div>
+                        <div className="text-muted-foreground text-xs">Kinder in der BG</div>
+                        <div className="font-medium">Sophie (14), Can (6), Emma (9 Mo.)</div>
                       </div>
                       <div className="bg-muted/50 rounded-lg p-3">
-                        <div className="text-muted-foreground text-xs">Arbeitsfähigkeit</div>
-                        <div className="font-medium text-red-500">&lt;3 Std./Tag</div>
+                        <div className="text-muted-foreground text-xs">Wohnung</div>
+                        <div className="font-medium">90m², 1.000 € warm</div>
                       </div>
                     </div>
                     <div className="bg-muted/50 rounded-lg p-3 text-sm">
-                      <div className="text-muted-foreground text-xs mb-1">Entgeltpunkte (geschätzt)</div>
+                      <div className="text-muted-foreground text-xs mb-1">Eingereichte Nachweise</div>
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-primary/20 rounded-full h-2">
-                          <div className="bg-primary h-2 rounded-full" style={{ width: '57%' }} />
+                          <div className="bg-primary h-2 rounded-full" style={{ width: '85%' }} />
                         </div>
-                        <span className="font-mono font-medium">~28,5 EP</span>
+                        <span className="font-mono font-medium">47 Dokumente</span>
                       </div>
-                      <div className="text-xs text-muted-foreground mt-1">Geschätzte Bruttorente: ca. 1.120 EUR/Monat</div>
+                      <div className="text-xs text-muted-foreground mt-1">Fotos, Scans, PDFs über jobcenter.digital und Post</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -842,18 +843,18 @@ function App() {
                         <AlertTriangle className="h-6 w-6 text-red-500" />
                       </div>
                       <div>
-                        <CardTitle>Warum ist dieser Fall so komplex?</CardTitle>
-                        <CardDescription>6 Paragraphen, 3 SGBs, 8 Versicherungsperioden</CardDescription>
+                        <CardTitle>E-AKTE-Probleme im Fall Becker</CardTitle>
+                        <CardDescription>12 Probleme in 47 Dokumenten, 14 Prüfpunkte</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {[
-                      { label: '27 Monate Beitragslücke (2000-2002)', desc: 'Gefährdet 3-von-5-Jahre-Regel für §43', color: 'text-red-500' },
-                      { label: 'Arbeitsunfall löst §53 aus', desc: 'Vorzeitige Wartezeiterfüllung — Spezialregel', color: 'text-purple-500' },
-                      { label: 'KEZ nach §56 rettet Wartezeit', desc: 'Kindererziehungszeiten = Pflichtbeiträge', color: 'text-blue-500' },
-                      { label: 'Reha vor Rente bereits erfüllt', desc: '§9 SGB VI + §49 SGB IX — Grundsatz beachtet', color: 'text-green-500' },
-                      { label: 'Widerspruch nach §84 SGB X', desc: 'Erstantrag abgelehnt, fristgerechter Widerspruch', color: 'text-amber-500' },
+                      { label: '12 Kontoauszüge als unsortierte Fotos', desc: 'Keine chronologische Reihenfolge, kein Dokumentenzusammenhang', color: 'text-red-500' },
+                      { label: 'Arztbrief Sophie = Gesundheitsdaten', desc: 'Darf nicht in Leistungsakte → §67 SGB X, DSGVO Art. 9', color: 'text-purple-500' },
+                      { label: 'Mietvertrag: 15 Einzelseiten', desc: 'Fotoaufnahmen ohne automatische Zusammenführung', color: 'text-blue-500' },
+                      { label: 'Arbeitgeberbescheinigung fehlt', desc: 'Vollständigkeitsprüfung → §60 SGB I Mitwirkungspflicht', color: 'text-amber-500' },
+                      { label: '3 Dokumente als „Sonstiges“', desc: 'Fehlklassifikation verhindert sachgerechte Aktenführung', color: 'text-green-500' },
                     ].map((item, i) => (
                       <div key={i} className="flex items-start gap-3 text-sm">
                         <span className={`${item.color} font-bold text-lg leading-none mt-0.5`}>!</span>
@@ -879,22 +880,22 @@ function App() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-primary" />
-                    Versicherungsverlauf — 40 Jahre im Überblick
+                    Dokumenten-Eingang — 47 Nachweise im Überblick
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { period: '1984–87', label: 'Ausbildung', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
-                      { period: '1987–93', label: 'Vollzeit I', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
-                      { period: '1993–96', label: 'KEZ', color: 'bg-pink-500', type: '§56 Kindererziehung' },
-                      { period: '1996–00', label: 'Teilzeit I', color: 'bg-sky-400', type: 'Pflichtbeiträge (red.)' },
-                      { period: '2000–02', label: 'LÜCKE', color: 'bg-red-500', type: 'Keine Pflichtversicherung!' },
-                      { period: '2002–19', label: 'Vollzeit II', color: 'bg-blue-500', type: 'Pflichtbeiträge' },
-                      { period: '09/2019', label: 'Unfall', color: 'bg-purple-500', type: 'Arbeitsunfall BWK 11/12' },
-                      { period: '2019–20', label: 'Reha', color: 'bg-green-500', type: 'Med. Rehabilitation' },
-                      { period: '2020–24', label: 'Teilzeit II', color: 'bg-sky-400', type: 'Nach Unfall (15h/Wo)' },
-                      { period: '11/2024', label: '<3h', color: 'bg-red-600', type: 'Volle Erwerbsminderung' },
+                      { period: '12×', label: 'Kontoauszüge', color: 'bg-blue-500', type: 'Fotos, unsortiert, 3 Monate' },
+                      { period: '15×', label: 'Mietvertrag', color: 'bg-indigo-500', type: 'Einzelseiten, Fotoaufnahmen' },
+                      { period: '3×', label: 'Lohnabrechnungen', color: 'bg-sky-400', type: 'Leila, schwankendes Layout' },
+                      { period: '2/4', label: 'NK-Abrechnung', color: 'bg-amber-500', type: 'Unvollständig! 2 Seiten fehlen' },
+                      { period: '1×', label: 'Kindergeldbescheid', color: 'bg-green-500', type: 'Veraltet (2024 statt 2026)' },
+                      { period: '1×', label: 'Unterhaltsurkunde', color: 'bg-pink-500', type: 'Sensible Daten sichtbar!' },
+                      { period: '1×', label: 'Arztbrief', color: 'bg-red-500', type: 'Gesundheitsdaten! Nicht in Akte!' },
+                      { period: '1×', label: 'Insolvenz-Screenshot', color: 'bg-purple-500', type: 'Screenshot statt Dokument' },
+                      { period: '0×', label: 'AG-Bescheinigung', color: 'bg-red-600', type: 'FEHLT! §60 SGB I' },
+                      { period: '3×', label: '„Sonstiges“', color: 'bg-gray-500', type: 'Fehlklassifiziert' },
                     ].map((item, i) => (
                       <TooltipProvider key={i}>
                         <Tooltip>
@@ -928,23 +929,23 @@ function App() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Network className="h-5 w-5 text-primary" />
-                    Graph-Traversierung: Die Prüfkette im Knowledge Graph
+                    RELIEF-Pipeline: Die Verarbeitungskette im Knowledge Graph
                   </CardTitle>
                   <CardDescription>
-                    So navigiert CASSA durch 6 Paragraphen in 3 Sozialgesetzbüchern — automatisch und nachvollziehbar
+                    So verarbeitet RELIEF die 47 Dokumente — automatisch, nachvollziehbar und DSGVO-konform
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap items-center gap-2 text-sm">
                     {[
-                      { text: 'Fall Müller', color: 'bg-red-500' },
-                      { text: '§43 EM-Rente', color: 'bg-indigo-500' },
-                      { text: '§50 Wartezeit', color: 'bg-indigo-500' },
-                      { text: '§53 Vorzeitig (Unfall)', color: 'bg-purple-500' },
-                      { text: '§56 KEZ = Pflichtbeiträge', color: 'bg-pink-500' },
-                      { text: '§9 Reha vor Rente', color: 'bg-green-500' },
-                      { text: '§63 Rentenformel', color: 'bg-amber-500' },
-                      { text: '§84 SGB X Widerspruch', color: 'bg-cyan-500' },
+                      { text: 'E-AKTE Becker', color: 'bg-red-500' },
+                      { text: 'Klassifikation', color: 'bg-indigo-500' },
+                      { text: 'OCR & Extraktion', color: 'bg-purple-500' },
+                      { text: 'Metadaten-Zuordnung', color: 'bg-blue-500' },
+                      { text: 'Schwärzung (§67 SGB X)', color: 'bg-pink-500' },
+                      { text: 'Sortierung & Zusammenführung', color: 'bg-green-500' },
+                      { text: 'Vollständigkeitsprüfung', color: 'bg-amber-500' },
+                      { text: 'Freitextgenerierung', color: 'bg-cyan-500' },
                     ].map((node, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <Badge className={`${node.color} text-white border-0`}>
@@ -955,9 +956,9 @@ function App() {
                     ))}
                   </div>
                   <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                    Ein Vector RAG findet vielleicht §43. Aber nur der Knowledge Graph traversiert die vollständige Kette: 
-                    von der EM-Prüfung über die Wartezeit-Ausnahme bei Arbeitsunfall bis zur Anrechnung der 
-                    Kindererziehungszeiten als Pflichtbeiträge — und validiert dabei automatisch den Reha-vor-Rente-Grundsatz.
+                    Manuelle Aktenarbeit erfordert sequenzielles Sichten aller 47 Dokumente. RELIEF parallelisiert die Verarbeitung: 
+                    Klassifikation und OCR laufen gleichzeitig, der Knowledge Graph verknüpft jedes Dokument automatisch mit 
+                    dem zugehörigen Prüfschritt und der betroffenen Person — und prüft dabei DSGVO-Compliance in Echtzeit.
                   </p>
                 </CardContent>
               </Card>
@@ -966,8 +967,8 @@ function App() {
         </div>
       </section>
 
-      {/* ── SECTION: Graph RAG vs Vector RAG ── */}
-      <section id="graph-rag" className="py-32 bg-background">
+      {/* ── SECTION: KI-gestützt vs. Manuelle Aktenarbeit ── */}
+      <section id="ki-vs-manuell" className="py-32 bg-background">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -978,14 +979,14 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <GitCompare className="h-4 w-4 mr-2" />
-              Schritt 4: Warum Graph RAG?
+              Schritt 4: Warum KI-gestützte Aktenarbeit?
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Graph RAG vs. Vector RAG
+              RELIEF KI vs. manuelle Aktenarbeit
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Vector RAG findet ähnliche Textpassagen — Graph RAG versteht <strong>Beziehungen</strong> zwischen Normen.
-              Bei gesetzesübergreifenden Fragen versagt Vector RAG systematisch. Hier sind konkrete Beispiele.
+              Manuelle Aktenarbeit ist zeitaufwändig und fehleranfällig — RELIEF automatisiert die <strong>Aktenerschließung und Aktenpflege</strong>.
+              Hier sind konkrete Beispiele aus dem Fall Familie Becker.
             </p>
           </motion.div>
 
@@ -995,16 +996,16 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <XCircle className="h-5 w-5 text-destructive" />
-                  Vector RAG — Limitierungen
+                  Manuelle Aktenarbeit — Limitierungen
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  "Findet nur textlich ähnliche Passages — keine strukturellen Verbindungen",
-                  "Übersieht Ausnahmeregeln in anderen Paragraphen (§53 bei §43-Suche)",
-                  "Keine temporalen Metadaten — kann Übergangsregelungen nicht auswerten",
-                  "Kein Multi-Hop: Kann nicht über 3+ Gesetze hinweg Schlüsse ziehen",
-                  "Kein Verständnis für Normenhierarchie oder Vorrang-/Spezialitätsregeln"
+                  "Jedes Dokument einzeln öffnen, lesen, zuordnen — 47 Dokumente = 45+ Minuten",
+                  "Zusammengehörige Einzelseiten (Mietvertrag: 15 Fotos) werden nicht automatisch erkannt",
+                  "Sensible Daten (Gesundheit, Kontonummern) werden bei Zeitdruck leicht übersehen",
+                  "Fehlende Nachweise fallen erst bei der Bearbeitung auf — Wochen nach Antragseingang",
+                  "Kein systematischer DSGVO-Check: §67 SGB X und Art. 9 DSGVO nicht automatisch geprüft"
                 ].map((item, i) => (
                   <div key={i} className="flex gap-3 text-sm">
                     <XCircle className="h-4 w-4 text-destructive flex-shrink-0 mt-0.5" />
@@ -1018,16 +1019,16 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <CircleCheck className="h-5 w-5 text-green-600" />
-                  Graph RAG — Vorteile
+                  RELIEF KI — Vorteile
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  "Traversiert Gesetz → Paragraph → Regel → Prozess über explizite Kanten",
-                  "Folgt Querverweisen (SR_REFERENCES) und Ausnahmen (SR_DEPENDS_ON)",
-                  "Temporale Metadaten an jedem Knoten — exakte Gültigkeit pro Stichtag",
-                  "Multi-Hop über beliebig viele verknüpfte Gesetze, Regeln und Entitäten",
-                  "Normenhierarchie als Graph-Struktur — automatische Vorrangprüfung"
+                  "Automatische Klassifikation aller 47 Dokumente in Sekunden — mit Confidence-Score",
+                  "Einzelseiten-Erkennung: 15 Mietvertrag-Fotos → ein zusammengeführtes Dokument",
+                  "Datenschutz-Flags: Arztbrief, Kontonummern, Geburtsdaten sofort erkannt und markiert",
+                  "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung sofort identifiziert",
+                  "Knowledge Graph verknüpft jedes Dokument mit §§, Prüfschritten und Personen der BG"
                 ].map((item, i) => (
                   <div key={i} className="flex gap-3 text-sm">
                     <CircleCheck className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
@@ -1039,7 +1040,7 @@ function App() {
           </div>
 
           {/* Concrete failure examples */}
-          <h3 className="text-2xl font-bold text-center mb-8">Konkrete Beispiele: Wo Vector RAG versagt</h3>
+          <h3 className="text-2xl font-bold text-center mb-8">Konkrete Beispiele: RELIEF vs. manuelle Bearbeitung</h3>
           <div className="space-y-8 max-w-5xl mx-auto">
             {ragComparisons.map((comp, index) => (
               <motion.div
@@ -1065,20 +1066,20 @@ function App() {
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-                      {/* Graph RAG */}
+                      {/* RELIEF KI */}
                       <div className="p-6">
                         <div className="flex items-center gap-2 mb-3">
                           <CircleCheck className="h-5 w-5 text-green-600" />
-                          <span className="font-bold text-green-700">Graph RAG</span>
+                          <span className="font-bold text-green-700">RELIEF KI</span>
                           <Badge className="bg-green-100 text-green-800 text-xs">{comp.graphAnswer.result}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">{comp.graphAnswer.explanation}</p>
                       </div>
-                      {/* Vector RAG */}
+                      {/* Manuell */}
                       <div className="p-6 bg-destructive/3">
                         <div className="flex items-center gap-2 mb-3">
                           <XCircle className="h-5 w-5 text-destructive" />
-                          <span className="font-bold text-destructive">Vector RAG</span>
+                          <span className="font-bold text-destructive">Manuell</span>
                           <Badge className="bg-red-100 text-red-800 text-xs">{comp.vectorAnswer.result}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">{comp.vectorAnswer.explanation}</p>
@@ -1092,8 +1093,8 @@ function App() {
         </div>
       </section>
 
-      {/* ── SECTION: Chat API Standards ── */}
-      <section id="chat-api" className="py-32 bg-muted/30 relative">
+      {/* ── SECTION: Document AI Standards ── */}
+      <section id="document-ai" className="py-32 bg-muted/30 relative">
         <div className="container mx-auto px-6 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -1104,14 +1105,14 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <MessageSquare className="h-4 w-4 mr-2" />
-              Schritt 5: Chat API Standards
+              Schritt 5: RELIEF Document AI API
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Chatbot API nach Industriestandards
+              Document AI API für die E-AKTE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              CASSA implementiert die gängigen Chat-API-Standards. Jedes Frontend, jeder Chatbot-Client 
-              kann sich direkt integrieren — OpenAI-kompatibel mit GraphRAG-Erweiterungen.
+              RELIEF implementiert eine modulare API-Architektur: Dokumentenklassifikation, OCR-Extraktion, 
+              automatische Schwärzung und Knowledge-Graph-Abfragen — als REST-Endpunkte für die gE-Systeme.
             </p>
           </motion.div>
 
@@ -1154,10 +1155,10 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Bot className="h-6 w-6 text-primary" />
-                  CASSA Chat API — OpenAI-kompatibel + GraphRAG
+                  RELIEF Document AI — Klassifikation + Knowledge Graph
                 </CardTitle>
                 <CardDescription>
-                  Die CASSA API folgt dem OpenAI messages[]-Format und erweitert es um Zitationen und Sitzungsverwaltung.
+                  Die RELIEF API verarbeitet Dokumente und verknüpft sie automatisch mit dem Knowledge Graph der gE.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1165,37 +1166,41 @@ function App() {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <Search className="h-4 w-4" />
-                      POST /api/v1/chat
+                      POST /api/v1/classify
                     </h4>
                     <div className="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto">
                       <pre>{`{
-  "message": "Welche Voraussetzungen
-    gelten für Altersrente?",
-  "session_id": null,
+  "document": "base64_encoded_image",
+  "bg_id": "412K-078263-B",
   "context": {
-    "gesetz": "SGB VI",
-    "paragraph": "§ 35"
-  },
-  "top_k": 10
+    "person": "Thomas Becker",
+    "expected_types": [
+      "Kontoauszug",
+      "Mietvertrag"
+    ]
+  }
 }`}</pre>
                     </div>
                   </div>
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <MessageSquare className="h-4 w-4" />
-                      Response mit Zitationen
+                      Response mit Metadaten
                     </h4>
                     <div className="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto">
                       <pre>{`{
-  "session_id": "a3f1b2c4...",
-  "answer": "Nach § 35 SGB VI haben
-    Versicherte Anspruch auf...",
-  "citations": [{
-    "source": "SGB VI",
-    "core_component": "Regelaltersrente",
-    "br_name": "BR_SGB6_35_01",
-    "score": 0.93
-  }]
+  "doc_type": "Kontoauszug",
+  "confidence": 0.96,
+  "person": "Thomas Becker",
+  "metadata": {
+    "bank": "Sparkasse Dortmund",
+    "period": "01/2026",
+    "page": "1/3"
+  },
+  "flags": [],
+  "freitext": "Kontoauszug Sparkasse
+    Dortmund, Thomas Becker,
+    Januar 2026, Seite 1 von 3"
 }`}</pre>
                     </div>
                   </div>
@@ -1205,11 +1210,11 @@ function App() {
 
                 <div className="grid md:grid-cols-3 gap-4">
                   {[
-                    { label: "POST /api/v1/chat", desc: "Multi-Turn Chat mit Session (Redis, 8h TTL)" },
-                    { label: "POST /api/v1/search", desc: "Single-Turn Search — stateless, keine Session" },
-                    { label: "DELETE /api/v1/chat/{id}", desc: "Session löschen" },
-                    { label: "GET /…/history", desc: "Konversationsverlauf abrufen" },
-                    { label: "GET /docs", desc: "Swagger UI — interaktive API-Dokumentation" },
+                    { label: "POST /api/v1/classify", desc: "Dokumentenklassifikation mit Confidence-Score" },
+                    { label: "POST /api/v1/extract", desc: "OCR + strukturierte Datenextraktion" },
+                    { label: "POST /api/v1/redact", desc: "Automatische Schwärzung sensibler Daten" },
+                    { label: "POST /api/v1/graph/query", desc: "Knowledge Graph Abfrage (Cypher)" },
+                    { label: "GET /api/v1/completeness/{bg_id}", desc: "Vollständigkeitsprüfung für BG" },
                     { label: "GET /health", desc: "Health Check Endpoint" },
                   ].map((ep, i) => (
                     <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
@@ -1239,10 +1244,10 @@ function App() {
               Schritt 6: Praxis erleben
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Praxisszenarien für die DRV
+              Praxisszenarien für die gE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Konkrete Anwendungsfälle zeigen, wie CASSA die tägliche Arbeit in der Rentenversicherung unterstützt.
+              Konkrete Anwendungsfälle zeigen, wie RELIEF die tägliche Aktenarbeit in den gemeinsamen Einrichtungen unterstützt.
             </p>
           </motion.div>
 
@@ -1295,7 +1300,7 @@ function App() {
                       </CardHeader>
                       <CardContent>
                         <Separator className="mb-6" />
-                        <h4 className="font-semibold text-lg mb-4">CASSA-Funktionen für diesen Fall:</h4>
+                        <h4 className="font-semibold text-lg mb-4">RELIEF-Funktionen für diesen Fall:</h4>
                         <div className="grid md:grid-cols-2 gap-4">
                           {scenario.benefits.map((benefit, i) => (
                             <motion.div
@@ -1338,8 +1343,8 @@ function App() {
               Gesetzliche Grundlagen im Knowledge Graph
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die DRV arbeitet auf Basis eines komplexen Geflechts aus Sozialgesetzbüchern, 
-              EU-Verordnungen und internen Handlungsanweisungen. CASSA bildet sie alle als Graph ab.
+              Die Grundsicherung nach SGB II basiert auf einem komplexen Geflecht aus Sozialgesetzbüchern, 
+              Datenschutzregulierung und E-AKTE-Standards. RELIEF bildet sie alle als Graph ab.
             </p>
           </motion.div>
 
@@ -1350,35 +1355,35 @@ function App() {
                 title: "Sozialgesetzbücher",
                 color: "oklch(0.45 0.15 245)",
                 standards: [
-                  { name: "SGB VI — Rentenversicherung", desc: "Primärgesetz: ~323 §§ — Beiträge, Leistungen, Alters-/Erwerbsminderungsrente, Rehabilitation" },
-                  { name: "SGB IV — Gemeinsame Vorschriften", desc: "Versicherungspflicht, Beitragsbemessung, Meldeverfahren — Grundlage aller Sozialversicherungen" },
-                  { name: "SGB I — Allgemeiner Teil", desc: "Framework: Leistungsansprüche, Fristen, Zuständigkeiten — gilt übergreifend für alle SGBs" },
-                  { name: "SGB IX — Rehabilitation", desc: "DRV als Reha-Träger — medizinische Rehabilitation und Teilhabe am Arbeitsleben" },
-                  { name: "SGB X — Verwaltungsverfahren", desc: "Verwaltungsakte, Widerspruchsverfahren, Sozialdatenschutz — Verfahrensrecht" },
+                  { name: "SGB II — Grundsicherung", desc: "Primärgesetz: Leistungsberechtigung (§7), Einkommen (§11), Vermögen (§12), KdU (§22), BuT (§28)" },
+                  { name: "SGB I — Allgemeiner Teil", desc: "Mitwirkungspflichten (§60), Folgen bei Pflichtverletzung (§66) — Grundlage für Nachforderungen" },
+                  { name: "SGB III — Arbeitsförderung", desc: "Sperrzeit (§159), Arbeitslosmeldung — Prüfpunkt bei Kündigung/Insolvenz" },
+                  { name: "SGB X — Verwaltungsverfahren", desc: "Sozialdatenschutz (§67ff.), Verwaltungsakte (§31), Aufhebung (§45/48)" },
+                  { name: "SGB XII — Sozialhilfe", desc: "Subsidiarität und Abgrenzung zu SGB II — wann greift welches Gesetz?" },
                 ]
               },
               {
                 icon: Landmark,
-                title: "EU-Recht & Datenschutz",
+                title: "Datenschutz & IT-Sicherheit",
                 color: "oklch(0.50 0.18 200)",
                 standards: [
-                  { name: "DSGVO (EU 2016/679)", desc: "Datenschutz-Grundverordnung — Rechtsrahmen für die Verarbeitung personenbezogener Sozialdaten" },
-                  { name: "EU-VO 883/2004", desc: "Koordinierung der Systeme der sozialen Sicherheit — grenzüberschreitende Rentenansprüche" },
-                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard — Pflicht für DRV als Behörde mit kritischer Infrastruktur" },
-                  { name: "AAÜG — Anwartschaftsüberführung", desc: "Post-Vereinigungspension: Überführung von DDR-Rentenanwartschaften" },
-                  { name: "VersAusglG — Versorgungsausgleich", desc: "Scheidungsbedingter Rentenausgleich zwischen Ehepartnern" },
+                  { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)" },
+                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur" },
+                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente" },
+                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung" },
+                  { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum" },
                 ]
               },
               {
                 icon: ScrollText,
-                title: "DRV-Anweisungen (GRA)",
+                title: "E-AKTE & Records Management",
                 color: "oklch(0.55 0.20 55)",
                 standards: [
-                  { name: "GRA SGB VI", desc: "Gemeinsame Rechtliche Anweisungen zur Rentenversicherung — Auslegungshinweise zu allen §§" },
-                  { name: "GRA SGB IV", desc: "Anweisungen zu Versicherungspflicht, Beiträgen und Meldeverfahren" },
-                  { name: "GRA SGB IX", desc: "Anweisungen zur Rehabilitation — DRV als zuständiger Leistungsträger" },
-                  { name: "GRA Fremdrentenrecht", desc: "Spezialanweisungen für ausländische Versicherungszeiten und Spätaussiedler" },
-                  { name: "rvRecht® Portal", desc: "Öffentlich zugängliches DRV-Rechtsportal mit allen GRA — Quelle für CASSA-Import" },
+                  { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen" },
+                  { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen" },
+                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE" },
+                  { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung" },
+                  { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
                 ]
               }
             ].map((category, catIndex) => {
@@ -1425,12 +1430,12 @@ function App() {
                 <div className="flex items-start gap-4">
                   <ShieldCheck className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-xl font-bold mb-2">CASSA-Integration</h3>
+                    <h3 className="text-xl font-bold mb-2">RELIEF-Integration</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      Alle genannten Gesetze und Anweisungen sind direkt im Knowledge Graph verankert. 
-                      Jeder Paragraph enthält seine Geschäftsregeln, jede Regel verweist auf die relevanten Prozesse und Entitäten.
-                      Die zeitliche Dimension speichert die Gültigkeit jeder Fassung — von der Übergangsregelung bis zur aktuellen Rentenanpassung.
-                      GRA-Anweisungen des rvRecht®-Portals sind als eigene Knotentypen verknüpft und liefern praxisnahe Auslegungshinweise.
+                      Alle genannten Gesetze und Standards sind direkt im Knowledge Graph verankert. 
+                      Jeder Paragraph definiert Regeln für Dokumententypen und Prüfschritte — die KI-Pipeline 
+                      verknüpft jedes eingereichte Dokument automatisch mit den relevanten §§ und Complianceanforderungen.
+                      BSI-Richtlinien und xdomea-Standards gewährleisten die Beweiswerterhaltung und interoperable Aktenführung.
                     </p>
                   </div>
                 </div>
@@ -1458,7 +1463,7 @@ function App() {
               Knowledge Graph — Datenmodell
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die vollständige DRV-Graphstruktur: von Gesetzen über Geschäftsregeln bis zu Prozessen und Entitäten.
+              Die RELIEF-Graphstruktur: von Dokumententypen über §§ SGB II bis zu KI-Verarbeitungsschritten und Compliance-Regeln.
             </p>
           </motion.div>
 
@@ -1469,9 +1474,9 @@ function App() {
 
             <div className="grid md:grid-cols-3 gap-4 mt-8">
               {[
-                { label: "~4.500+", desc: "Knoten im vollständigen Graph", icon: Database },
-                { label: "~8.000+", desc: "Beziehungen zwischen Knoten", icon: Network },
-                { label: "5+ SGBs", desc: "Verknüpfte Gesetze mit Querverweisen", icon: Link2 },
+                { label: "~75+", desc: "Knoten im Demo-Graph (skalierbar)", icon: Database },
+                { label: "~100+", desc: "Beziehungen zwischen Entitäten", icon: Network },
+                { label: "5 SGBs", desc: "SGB II, I, III, IX, X verknüpft", icon: Link2 },
               ].map((stat, i) => {
                 const StatIcon = stat.icon
                 return (
@@ -1508,11 +1513,11 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-              Bereit für den digitalen Wissensassistenten?
+              Bereit für KI-gestützte Aktenarbeit?
             </h2>
             <p className="text-xl text-primary-foreground/90 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Erfahren Sie mehr über CASSA und wie ein Knowledge Graph mit GraphRAG 
-              die Komplexität des Sozialrechts beherrschbar macht — rechtskonform und transparent.
+              Erfahren Sie, wie CASSA RELIEF mit Document AI und Knowledge Graph 
+              die E-AKTE-Bearbeitung in der Grundsicherung revolutioniert — compliant, transparent und effizient.
             </p>
             <Button 
               asChild 
