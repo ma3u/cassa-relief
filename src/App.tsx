@@ -2086,10 +2086,13 @@ function App() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground leading-relaxed mb-4">{model.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {model.highlights.map((h, j) => (
-                          <Badge key={j} variant="secondary" className="text-xs">{h}</Badge>
-                        ))}
+                      <div className="text-sm text-foreground/85">
+                        <p className="font-medium mb-2">Kernpunkte</p>
+                        <ul className="space-y-1 text-muted-foreground leading-relaxed">
+                          {model.highlights.map((h, j) => (
+                            <li key={j}>• {h}</li>
+                          ))}
+                        </ul>
                       </div>
                     </CardContent>
                   </Card>
