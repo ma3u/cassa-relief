@@ -556,6 +556,36 @@ export function RELIEFKnowledgeGraph3D() {
       : 1
   }, [])
 
+  const linkThreeObject = useCallback((link: GraphLink) => {
+    if (!selectedNode || !isLinkConnectedToSelected(link)) return null
+
+    const relationText = link.description && link.description.trim().length > 0
+      ? link.description
+      : link.type.replace('SR_', '').replace(/_/g, ' ')
+
+    const label = new SpriteText(relationText) as any
+    label.color = '#f8fafc'
+    label.textHeight = 3.6
+    label.backgroundColor = 'rgba(15, 23, 42, 0.9)'
+    label.padding = [1.5, 3]
+    label.borderRadius = 2
+    if (label.material) {
+      label.material.depthTest = false
+      label.material.depthWrite = false
+    }
+    label.renderOrder = 1000
+    return label
+  }, [isLinkConnectedToSelected, selectedNode])
+
+  const linkPositionUpdate = useCallback((sprite: THREE.Object3D, coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } }) => {
+    const middlePos = {
+      x: coords.start.x + (coords.end.x - coords.start.x) * 0.5,
+      y: coords.start.y + (coords.end.y - coords.start.y) * 0.5,
+      z: coords.start.z + (coords.end.z - coords.start.z) * 0.5,
+    }
+    Object.assign(sprite.position, middlePos)
+  }, [])
+
   // Build adjacency for detail panel
   const nodeLinks = useMemo(() => {
     const map = new Map<string, Array<{ link: GraphLink; otherNode: GraphNode }>>()
@@ -640,6 +670,8 @@ export function RELIEFKnowledgeGraph3D() {
         linkColor={linkColor}
         linkWidth={linkWidth}
         linkOpacity={0.7}
+        linkThreeObject={linkThreeObject}
+        linkPositionUpdate={linkPositionUpdate}
         linkDirectionalArrowLength={4}
         linkDirectionalArrowRelPos={0.85}
         linkDirectionalParticles={linkDirectionalParticles}
