@@ -510,11 +510,12 @@ export function RELIEFKnowledgeGraph3D() {
 
     const label = new SpriteText(node.label) as any
     label.color = '#e2e8f0'
-    label.textHeight = node.type === 'case' ? 7 : node.type === 'law' ? 6.5 : node.type === 'ai' ? 6 : node.type === 'person' ? 5.5 : 5
+    label.textHeight = node.type === 'case' ? 6.2 : node.type === 'law' ? 5.8 : node.type === 'ai' ? 5.4 : node.type === 'person' ? 5 : 4.6
     label.backgroundColor = isSelected ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.88)'
-    label.padding = [3.5, 6]
+    label.padding = [2.5, 5]
     label.borderRadius = 3
-    label.position.y = -(size + 9)
+    label.position.y = size + 6
+    label.position.z = size * 0.45
     if (label.material) {
       label.material.depthTest = false
       label.material.depthWrite = false
@@ -578,8 +579,8 @@ export function RELIEFKnowledgeGraph3D() {
   }, [isLinkConnectedToSelected, selectedNode])
 
   const linkWidth = useCallback((link: GraphLink) => {
-    if (!selectedNode) return 2.9
-    return isLinkConnectedToSelected(link) ? 5.2 : 0.6
+    if (!selectedNode) return 3.4
+    return isLinkConnectedToSelected(link) ? 7.2 : 0.9
   }, [isLinkConnectedToSelected, selectedNode])
 
   const linkDirectionalParticles = useCallback((link: GraphLink) => {
@@ -592,7 +593,7 @@ export function RELIEFKnowledgeGraph3D() {
   }, [isLinkConnectedToSelected, selectedNode])
 
   const linkThreeObject = useCallback((link: GraphLink) => {
-    const showLabel = !selectedNode || isLinkConnectedToSelected(link)
+    const showLabel = !!selectedNode && isLinkConnectedToSelected(link)
     if (!showLabel) return null
 
     const relationText = link.description && link.description.trim().length > 0
@@ -601,9 +602,9 @@ export function RELIEFKnowledgeGraph3D() {
 
     const label = new SpriteText(relationText) as any
     label.color = '#f8fafc'
-    label.textHeight = selectedNode ? 4.5 : 3.6
-    label.backgroundColor = selectedNode ? 'rgba(15, 23, 42, 0.98)' : 'rgba(15, 23, 42, 0.9)'
-    label.padding = selectedNode ? [2.2, 4.2] : [1.8, 3.4]
+    label.textHeight = 3.8
+    label.backgroundColor = 'rgba(15, 23, 42, 0.92)'
+    label.padding = [1.6, 3.2]
     label.borderRadius = 2
     if (label.material) {
       label.material.depthTest = false
@@ -707,6 +708,7 @@ export function RELIEFKnowledgeGraph3D() {
         nodeThreeObjectExtend={true}
         linkColor={linkColor}
         linkDirectionalArrowColor={linkDirectionalArrowColor}
+        linkOpacity={0.98}
         linkWidth={linkWidth}
         linkThreeObject={linkThreeObject}
         linkPositionUpdate={linkPositionUpdate}
