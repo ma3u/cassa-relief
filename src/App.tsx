@@ -175,8 +175,8 @@ function App() {
       icon: Users,
       title: "Fachkräftemangel in den gE",
       stat: "75.000",
-      statLabel: "Beschäftigte in gE",
-      description: "Aktenerschließung und Aktenpflege binden erhebliche Arbeitszeit der Fachkräfte. Jede Minute für manuelle Aktenarbeit fehlt bei der eigentlichen Leistungsbemessung.",
+      statLabel: "Beschäftigte in gE (gemeinsame Einrichtungen)",
+      description: "Gemeinsame Einrichtungen (gE) sind die lokalen Jobcenter, in denen Bundesagentur für Arbeit und kommunale Träger gemeinsam die Grundsicherung nach SGB II umsetzen. Aktenerschließung und Aktenpflege binden erhebliche Arbeitszeit der Fachkräfte. Jede Minute für manuelle Aktenarbeit fehlt bei der eigentlichen Leistungsbemessung.",
       trend: "Entlastung nötig",
       color: "oklch(0.45 0.12 200)"
     }
@@ -1602,13 +1602,20 @@ function App() {
             </Card>
           </motion.div>
 
-          {/* Tool cards for process modernization */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+          {/* BPMN 2.0 compliance note + Tool cards for process modernization */}
+          <div className="mt-12">
+            <p className="text-sm text-muted-foreground text-center mb-6 max-w-3xl mx-auto">
+              CASSA exportiert Prozessmodelle im offenen <strong>BPMN 2.0-Standard (OMG)</strong> — kompatibel mit allen
+              gängigen Editoren. Die generierten XML-Dateien lassen sich direkt importieren, bearbeiten und als ausführbare
+              Workflows deployen.
+            </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
               { name: 'Camunda Platform 8', url: 'https://camunda.com/', desc: 'BPMN-Engine: Führt Geschäftsprozesse als ausführbare Modelle aus' },
               { name: 'Drools', url: 'https://www.drools.org/', desc: 'Business Rules Engine für komplexe Regelketten und Forward-Chaining' },
               { name: 'BPMN.io', url: 'https://bpmn.io/', desc: 'Open-Source-Editor für BPMN- und DMN-Diagramme (Web-basiert)' },
               { name: 'Celonis / Signavio', url: 'https://www.celonis.com/', desc: 'Process Mining: Analysiert Legacy-Systeme und extrahiert Prozessabläufe' },
+              { name: 'yEd Graph Editor', url: 'https://www.yworks.com/products/yed', desc: 'Professioneller Graph- und Diagrammeditor: Layout-Algorithmen für komplexe Prozessmodelle' },
             ].map((tool, i) => (
               <motion.div
                 key={i}
@@ -1630,6 +1637,7 @@ function App() {
                 </Card>
               </motion.div>
             ))}
+          </div>
           </div>
         </div>
       </section>
