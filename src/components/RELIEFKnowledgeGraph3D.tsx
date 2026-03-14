@@ -649,27 +649,27 @@ export function RELIEFKnowledgeGraph3D() {
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-3 border border-slate-700">
-        <div className="text-xs text-slate-400 font-semibold mb-2">Knotentypen</div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-6 border border-slate-700">
+        <div className="text-base text-slate-300 font-semibold mb-3">Knotentypen</div>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2">
           {(Object.keys(NODE_LABELS) as NodeType[]).map(type => (
-            <div key={type} className="flex items-center gap-1.5">
+            <div key={type} className="flex items-center gap-3">
               <span
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                className="w-5 h-5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: NODE_COLORS[type] }}
               />
-              <span className="text-[10px] text-slate-300 whitespace-nowrap">{NODE_LABELS[type]}</span>
+              <span className="text-base text-slate-200 whitespace-nowrap">{NODE_LABELS[type]}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Stats */}
-      <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-slate-700">
-        <div className="text-[10px] text-slate-400">
+      <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg px-6 py-4 border border-slate-700">
+        <div className="text-base text-slate-300">
           {graphData.nodes.length} Knoten · {graphData.links.length} Beziehungen
         </div>
-        <div className="text-[10px] text-blue-400 font-medium">RELIEF E-AKTE Knowledge Graph</div>
+        <div className="text-base text-blue-300 font-medium">RELIEF E-AKTE Knowledge Graph</div>
       </div>
 
       {/* Graph */}
