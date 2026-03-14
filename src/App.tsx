@@ -1620,16 +1620,17 @@ function App() {
           >
             <Card className="border-2 border-primary/20 bg-card">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-2xl">
                   <GitCompare className="h-5 w-5 text-primary" />
                   Schrittweise Migration — kein Big Bang
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-base">
                   Legacy-Code wird Modul für Modul ersetzt — mit Parallelbetrieb und Ergebnisvergleich
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="w-full overflow-x-auto pb-2">
+                  <div className="flex w-full min-w-max md:min-w-0 flex-nowrap items-start justify-between gap-4 text-base">
                   {[
                     { text: 'VB/COBOL Legacy', color: 'bg-red-600', sub: 'Ist-Zustand' },
                     { text: 'Prozess-Mining', color: 'bg-amber-600', sub: 'Analyse' },
@@ -1639,16 +1640,17 @@ function App() {
                     { text: 'Parallelbetrieb', color: 'bg-slate-600', sub: 'Vergleich' },
                     { text: 'Transparenter Bescheid', color: 'bg-primary', sub: 'Ergebnis' },
                   ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="text-center">
-                        <Badge className={`${step.color} text-white border-0 text-xs`}>
+                    <div key={i} className="flex items-center gap-3 flex-shrink-0">
+                      <div className="text-center min-w-[130px]">
+                        <Badge className={`${step.color} text-white border-0 text-sm px-3 py-1`}>
                           {step.text}
                         </Badge>
-                        <div className="text-[10px] text-muted-foreground mt-1">{step.sub}</div>
+                        <div className="text-sm text-muted-foreground mt-1">{step.sub}</div>
                       </div>
-                      {i < 6 && <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                      {i < 6 && <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />}
                     </div>
                   ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
