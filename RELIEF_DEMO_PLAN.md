@@ -297,3 +297,96 @@ Als **Benchmark und optionale Cloud-Alternative** (bei Freigabe durch den Datens
 | DSGVO-Konformität | ✅ Lokal, keine Cloud | ⚠️ Erfordert Cloud-Freigabe + DPA |
 
 **Empfehlung**: Der **lokale Open-Source-Stack** (Granite-Docling + GLiNER + Presidio) bleibt die **Primärlösung** für RELIEF, da §67 SGB X eine lokale Verarbeitung von Sozialdaten erfordert. Gemini/Vertex AI dient als **Benchmark** für Qualitätsvergleiche und als **Fallback** für Szenarien, in denen eine Cloud-Freigabe besteht (z.B. anonymisierte Test-Dokumente, Schulungsmaterialien).
+
+---
+
+## Prozessmodernisierung — Von Black Box zu transparenter Entscheidung
+
+### Ausgangslage: Legacy-Systeme als „Black Boxes"
+
+Die Leistungsberechnung in der Grundsicherung (SGB II) wird heute durch **historisch gewachsene Fachverfahren** gesteuert, deren Kernlogik in **Visual Basic** und **COBOL** implementiert ist. Diese Systeme berechnen zwar korrekte Ergebnisse, aber:
+
+- **Keine Nachvollziehbarkeit**: Warum der Bescheid genau 1.247,63 € ausweist, kann niemand schrittweise erklären
+- **Keine Änderbarkeit**: Bei Gesetzesänderungen (neuer Regelbedarf, geänderte Freibeträge) müssen monolithische Codeblöcke mühsam angepasst werden
+- **Kein Audit-Trail**: Bei einem Widerspruch (§44 SGB X) fehlt die Spur, welche Rechenregeln in welcher Reihenfolge angewendet wurden
+- **Fachkräftemangel**: Die wenigen verbliebenen COBOL-/VB-Entwickler gehen in Rente — das Wissen geht mit ihnen
+
+### CASSA-Ansatz: Prozessanalyse → formale Modelle → transparente Implementierung
+
+CASSA analysiert die bestehenden Geschäftsprozesse und extrahiert die darin enthaltenen Regeln und Abläufe in zwei standardisierte Formate:
+
+#### 1. [BPMN 2.0](https://www.omg.org/spec/BPMN/2.0.2/) — Geschäftsprozessmodellierung
+
+[Business Process Model and Notation](https://www.omg.org/spec/BPMN/2.0.2/) bildet die **Ablauflogik** der Sachbearbeitung ab:
+
+- **Swimlanes**: Wer ist zuständig? (Antragsteller, Sachbearbeiter, Teamleitung, System)
+- **Gateways**: Entscheidungspunkte — z.B. „Ist das Einkommen stabil oder schwankend?" → vorläufiger Bescheid (§41a SGB II) vs. endgültiger Bescheid
+- **Events**: Auslöser und Ergebnisse — Antragstellung (Start) → Bescheid (Ende), Mitwirkungsanforderung (Zwischenereignis)
+- **Subprozesse**: Verschachtelte Prüfungen — BG-Prüfung enthält Einkommensprüfung enthält Freibetragsberechnung
+
+Beispiel für den Demo-Fall:
+
+```text
+[Antrag Familie Becker]
+    → BG-Prüfung (§7 SGB II)
+        → Gateway: Alle 5 Personen in BG?
+            → Einkommensprüfung Leila (§11 SGB II)
+                → Gateway: Schwankendes Einkommen?
+                    → Ja: Vorläufige Entscheidung (§41a SGB II)
+            → Vermögensprüfung Thomas (§12 SGB II)
+            → KdU-Prüfung (§22 SGB II)
+    → Vollständigkeitsprüfung (§60 SGB I)
+        → Fehlende Unterlagen → Mitwirkungsanforderung
+    → Bescheid erstellen
+```
+
+#### 2. [BRML](https://docs.oasis-open.org/ruleml/ruleml-specification/v1.03/ruleml-specification-v1.03.html) / [DMN 1.4](https://www.omg.org/spec/DMN/) — Geschäftsregeln
+
+Die **Entscheidungslogik** (Rechenregeln, Prüfregeln, Schwellenwerte) wird in maschinenlesbare Regelformate überführt:
+
+- **[DMN](https://www.omg.org/spec/DMN/) (Decision Model and Notation)**: OMG-Standard für Entscheidungstabellen — z.B. Regelbedarfsstufentabelle (§20 SGB II), Freibetragsberechnung (§11b SGB II)
+- **[RuleML](https://docs.oasis-open.org/ruleml/ruleml-specification/v1.03/ruleml-specification-v1.03.html) / BRML**: XML-basierte Geschäftsregelsprache für komplexe Regelketten mit Bedingungen und Ausnahmen
+- **Entscheidungstabellen**: Jede Zeile eine Regel, jede Spalte eine Bedingung — lesbar für Juristen und Fachkräfte
+
+Beispiel DMN-Entscheidungstabelle für Freibeträge (§11b SGB II):
+
+| Bruttoeinkommen | Freibetrag Grundabsetzung | Erwerbstätigenfreibetrag | Ergebnis |
+| --- | --- | --- | --- |
+| ≤ 520 € (Minijob) | 100 € | 20% von (Brutto − 100 €) | Freistellung |
+| 520 € – 1.000 € | 100 € | 20% von 420 € + 30% von (Brutto − 520 €) | Teilanrechnung |
+| > 1.000 € | 100 € | 20% von 420 € + 30% von 480 € + 10% Rest | Volle Anrechnung |
+
+→ Für Leila Becker (850 € brutto): Freibetrag = 100 € + 84 € + 99 € = **283 € frei**, 567 € anrechenbar
+
+#### 3. Schrittweise Ablösung: VB/COBOL → Transparente Implementierung
+
+Die Modernisierung erfolgt **inkrementell** — nicht als Big-Bang-Migration:
+
+| Schritt | Aktion | Ergebnis |
+| --- | --- | --- |
+| 1. Prozess-Mining | CASSA analysiert laufende Systeme und extrahiert tatsächliche Abläufe | Ist-Prozessmodell (BPMN) |
+| 2. Regel-Extraktion | Geschäftslogik aus VB/COBOL wird als DMN/BRML formalisiert | Maschinenlesbare Regeln |
+| 3. Validierung | Fachexperten prüfen: Stimmen die extrahierten Regeln mit dem Gesetz überein? | Fachliche Freigabe |
+| 4. Parallelbetrieb | Neue transparente Implementierung läuft parallel zur Legacy-Berechnung | Ergebnisvergleich |
+| 5. Schrittweise Ablösung | Bei Übereinstimmung wird Modul für Modul umgestellt | Transparente Berechnung |
+| 6. Erklärbare Bescheide | Jeder Bescheid enthält einen Audit-Trail: „Ergebnis X weil Regel Y auf Daten Z" | Rechtssicherheit |
+
+### Werkzeuge für die Prozessmodernisierung
+
+| Werkzeug | Aufgabe | Relevanz |
+| --- | --- | --- |
+| **[Camunda Platform 8](https://camunda.com/)** | BPMN-Ausführung | Orchestriert Geschäftsprozesse als ausführbare BPMN-Modelle |
+| **[DMN Engine (Camunda)](https://docs.camunda.io/docs/components/modeler/dmn/)** | Entscheidungsautomatisierung | Führt DMN-Entscheidungstabellen aus — z.B. Freibetragsberechnung |
+| **[Drools](https://www.drools.org/)** | Business Rules Engine | Führt BRML/RuleML-Regeln aus — komplexe Regelketten mit Forward/Backward Chaining |
+| **[Celonis](https://www.celonis.com/)** / [Signavio](https://www.signavio.com/) | Process Mining | Analysiert Legacy-Systeme und extrahiert tatsächliche Prozessabläufe |
+| **[BPMN.io](https://bpmn.io/)** | Modellierung | Open-Source-Editor für BPMN- und DMN-Diagramme (Web-basiert) |
+
+### Rechtssicherheit durch Transparenz
+
+Die formale Modellierung bietet entscheidende Vorteile für die Rechtssicherheit der Leistungsbescheide:
+
+1. **Begründungspflicht (§35 SGB X)**: Jeder Verwaltungsakt muss begründet sein — die transparente Implementierung liefert automatisch die Begründung
+2. **Widerspruchsverfahren (§78ff. SGG)**: Bei Widerspruch kann exakt nachvollzogen werden, welche Regel welches Ergebnis erzeugt hat
+3. **Gesetzesänderungen**: Neue Regelbedarfsstufen oder Freibeträge werden als DMN-Tabellenzeile geändert — nicht als COBOL-Patch
+4. **Vier-Augen-Prinzip**: BPMN-Diagramme können von Juristen gelesen und geprüft werden — COBOL-Code nicht
+5. **Revisionssicherheit**: Jede Regelversion ist versioniert und archiviert — §45/48 SGB X (Aufhebung/Änderung) wird nachvollziehbar

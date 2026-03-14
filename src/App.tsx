@@ -42,6 +42,8 @@ import {
   Layers,
   Link2,
   ExternalLink,
+  Code2,
+  Replace,
   Play,
   Pause,
   Volume2,
@@ -167,11 +169,11 @@ function App() {
     {
       number: 3,
       title: "Prozedurale Schicht",
-      subtitle: "Aktenerschließung & Aktenpflege",
-      description: "Geschäftsprozesse der gE: Antragsaufnahme, BG-Prüfung, Einkommensprüfung, KdU-Berechnung. RELIEF ordnet Dokumente den richtigen Prüfschritten zu und prüft Vollständigkeit.",
+      subtitle: "BPMN-Prozesse & Geschäftsregeln",
+      description: "Geschäftsprozesse der gE als BPMN 2.0: Antragsaufnahme, BG-Prüfung, Einkommensprüfung, KdU-Berechnung. Entscheidungslogik formalisiert als DMN-Tabellen — keine Black-Box-Berechnung mehr.",
       icon: ChartBar,
       color: "oklch(0.50 0.18 160)",
-      examples: ["Antragsaufnahme", "BG-Prüfung", "Einkommensprüfung", "KdU-Berechnung"]
+      examples: ["BPMN-Prozessmodelle", "DMN-Entscheidungstabellen", "Regelbasierte Prüfung", "Erklärbare Bescheide"]
     },
     {
       number: 4,
@@ -239,6 +241,19 @@ function App() {
       icon: Users,
       color: "oklch(0.45 0.12 200)",
       impact: "Einarbeitungszeit von Wochen auf Tage reduzieren"
+    },
+    {
+      title: "Prozessmodernisierung",
+      description: "Legacy-Systeme in Visual Basic und COBOL berechnen Leistungen als ‚Black Box' — niemand kann erklären, warum ein Bescheid genau diesen Betrag ausweist. CASSA ersetzt diese schrittweise durch transparente, regelbasierte Systeme.",
+      benefits: [
+        "BPMN 2.0: Geschäftsprozesse werden als lesbare Diagramme modelliert — Sachbearbeiter und Juristen können sie prüfen",
+        "DMN-Entscheidungstabellen: Freibeträge, Regelbedarfe und Anrechnungsregeln als nachvollziehbare Tabellen statt unlesbarem Code",
+        "Erklärbare Bescheide: ‚1.247,63 € weil Regel X auf Einkommen Y' — Begründungspflicht (§35 SGB X) automatisch erfüllt",
+        "Schrittweise Ablösung: Neues und altes System laufen parallel — Umstellung erst bei nachgewiesener Übereinstimmung"
+      ],
+      icon: Replace,
+      color: "oklch(0.50 0.15 290)",
+      impact: "Von Black Box zu erklärbarer Entscheidung"
     }
   ]
 
@@ -388,6 +403,9 @@ function App() {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('tech-stack')} className="hidden md:flex">
               Technologie
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('process-modernization')} className="hidden md:flex">
+              Prozesse
             </Button>
             <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
@@ -1265,7 +1283,7 @@ function App() {
           </motion.div>
 
           <Tabs value={String(activeScenario)} onValueChange={(v) => setActiveScenario(Number(v))} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 h-auto p-2 mb-12 max-w-5xl mx-auto">
+            <TabsList className="grid w-full grid-cols-5 h-auto p-2 mb-12 max-w-5xl mx-auto">
               {scenarios.map((scenario, index) => {
                 const Icon = scenario.icon
                 return (
@@ -1719,6 +1737,287 @@ function App() {
               </CardContent>
             </Card>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── SECTION: Prozessmodernisierung — BPMN & BRML ── */}
+      <section id="process-modernization" className="py-32 bg-card relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Replace className="h-4 w-4 mr-2" />
+              Schritt 9: Prozessmodernisierung
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Von der Black Box zum erklärten Bescheid
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Bestehende Fachverfahren in Visual Basic und COBOL berechnen Leistungen, die niemand nachvollziehen kann. 
+              CASSA überführt diese Logik in transparente, prüfbare Modelle — Schritt für Schritt.
+            </p>
+          </motion.div>
+
+          {/* Before/After visualization */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <Card className="border-2 border-primary/20 bg-card">
+              <CardContent className="p-8">
+                <div className="grid md:grid-cols-3 gap-8 items-center">
+                  {/* Before */}
+                  <div className="text-center">
+                    <div className="p-4 rounded-xl bg-red-500/10 mb-4 inline-block">
+                      <Code2 className="h-12 w-12 text-red-500" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-2 text-red-500">Heute: Black Box</h3>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>Visual Basic & COBOL</p>
+                      <p>Berechnung ohne Erklärung</p>
+                      <p>Kein Audit-Trail</p>
+                      <p>Änderung = Risiko</p>
+                    </div>
+                  </div>
+
+                  {/* Arrow */}
+                  <div className="flex flex-col items-center gap-4">
+                    <motion.div
+                      animate={{ x: [0, 10, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="h-10 w-10 text-primary" />
+                    </motion.div>
+                    <div className="text-center">
+                      <Badge className="bg-primary text-primary-foreground">
+                        CASSA-Analyse
+                      </Badge>
+                      <div className="flex flex-wrap justify-center gap-2 mt-3">
+                        <Badge variant="outline" className="text-xs">Prozess-Mining</Badge>
+                        <Badge variant="outline" className="text-xs">Regel-Extraktion</Badge>
+                        <Badge variant="outline" className="text-xs">Validierung</Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* After */}
+                  <div className="text-center">
+                    <div className="p-4 rounded-xl bg-green-500/10 mb-4 inline-block">
+                      <Workflow className="h-12 w-12 text-green-500" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-2 text-green-500">Morgen: Transparent</h3>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p>BPMN 2.0 & DMN-Tabellen</p>
+                      <p>Erklärbare Bescheide</p>
+                      <p>Vollständiger Audit-Trail</p>
+                      <p>Änderung = Tabellenzeile</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* BPMN / DMN / Process cards */}
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                title: "BPMN 2.0 — Prozesse sichtbar machen",
+                url: "https://www.omg.org/spec/BPMN/2.0.2/",
+                icon: Workflow,
+                color: "oklch(0.50 0.18 160)",
+                description: "Geschäftsprozesse wie Antragsaufnahme, BG-Prüfung und KdU-Berechnung werden als lesbare Diagramme modelliert. Sachbearbeiter und Juristen können Abläufe verstehen und prüfen — ohne Programmierkenntnis.",
+                examples: [
+                  "Wer ist zuständig? → Swimlanes zeigen Verantwortlichkeiten",
+                  "Entscheidungspunkte → z.B. \u201aEinkommen stabil oder schwankend?\u2018",
+                  "Vollständigkeitsprüfung → fehlende Nachweise automatisch erkannt",
+                  "Prüfbar von Juristen, nicht nur von Entwicklern"
+                ]
+              },
+              {
+                title: "DMN — Regeln als Tabellen",
+                url: "https://www.omg.org/spec/DMN/",
+                icon: Scale,
+                color: "oklch(0.50 0.15 50)",
+                description: "Entscheidungslogik (Freibeträge, Regelbedarfe, Anrechnungsregeln) wird als verständliche Tabelle formuliert statt als COBOL-Code. Bei Gesetzesänderungen wird eine Tabellenzeile angepasst — nicht monolithischer Code.",
+                examples: [
+                  "Freibetragsberechnung (§11b SGB II) als Entscheidungstabelle",
+                  "Regelbedarfsstufen (§20 SGB II) — jährliche Anpassung in Minuten",
+                  "KdU-Angemessenheit (§22 SGB II) — kommunale Grenzwerte als Tabelle",
+                  "Leila Becker: 850 € brutto → 283 € Freibetrag → nachvollziehbar"
+                ]
+              },
+              {
+                title: "Erklärbare Bescheide",
+                url: "https://www.gesetze-im-internet.de/sgb_10/__35.html",
+                icon: ShieldCheck,
+                color: "oklch(0.45 0.15 245)",
+                description: "Jeder Leistungsbescheid enthält automatisch eine Begründung: welche Regel auf welche Daten angewendet wurde. Widersprüche (§78ff. SGG) können nachvollzogen werden — kein Rätselraten mehr über Berechnungswege.",
+                examples: [
+                  "§35 SGB X: Begründungspflicht automatisch erfüllt",
+                  "Audit-Trail: \u201a1.247,63 € weil Regel X auf Einkommen Y\u2018",
+                  "Widerspruchsverfahren: exakte Nachverfolgung jeder Berechnung",
+                  "Vier-Augen-Prinzip: Juristen prüfen Diagramme, nicht COBOL"
+                ]
+              }
+            ].map((card, i) => {
+              const CardIcon = card.icon
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${card.color}15` }}>
+                          <CardIcon className="h-6 w-6" style={{ color: card.color }} />
+                        </div>
+                        <CardTitle className="text-lg leading-tight">
+                          <a href={card.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
+                            {card.title}
+                            <ExternalLink className="h-3.5 w-3.5 opacity-40" />
+                          </a>
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{card.description}</p>
+                      <div className="space-y-2">
+                        {card.examples.map((ex, j) => (
+                          <div key={j} className="flex gap-2 text-sm">
+                            <CheckCircle2 className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
+                            <span className="text-foreground">{ex}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* Migration Steps Pipeline */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <Card className="border-2 border-primary/20 bg-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GitCompare className="h-5 w-5 text-primary" />
+                  Schrittweise Migration — kein Big Bang
+                </CardTitle>
+                <CardDescription>
+                  Legacy-Code wird Modul für Modul ersetzt — mit Parallelbetrieb und Ergebnisvergleich
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  {[
+                    { text: 'VB/COBOL Legacy', color: 'bg-red-600', sub: 'Ist-Zustand' },
+                    { text: 'Prozess-Mining', color: 'bg-amber-600', sub: 'Analyse' },
+                    { text: 'BPMN-Modell', color: 'bg-blue-600', sub: 'Ablauflogik' },
+                    { text: 'DMN-Tabellen', color: 'bg-purple-600', sub: 'Rechenregeln' },
+                    { text: 'Fachliche Validierung', color: 'bg-cyan-600', sub: 'Prüfung' },
+                    { text: 'Parallelbetrieb', color: 'bg-orange-600', sub: 'Vergleich' },
+                    { text: 'Transparenter Bescheid', color: 'bg-green-600', sub: 'Ergebnis' },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="text-center">
+                        <Badge className={`${step.color} text-white border-0 text-xs`}>
+                          {step.text}
+                        </Badge>
+                        <div className="text-[10px] text-muted-foreground mt-1">{step.sub}</div>
+                      </div>
+                      {i < 6 && <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Non-technical explanation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card className="border-2 border-primary/30 bg-primary/5">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <Scale className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Warum das wichtig ist — einfach erklärt</h3>
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      Stellen Sie sich vor, Ihre Steuererklärung wird von einem Programm berechnet, das Ihnen nur den Endbetrag zeigt — 
+                      aber niemand kann Ihnen erklären, wie er zustande kam. Genau so funktionieren die heutigen Fachverfahren bei der 
+                      Grundsicherung. Die Sachbearbeiterin gibt Daten ein, das System gibt ein Ergebnis aus — aber den Weg dazwischen 
+                      kennt niemand.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      CASSA macht diesen Weg sichtbar: Zuerst analysiert es die bestehenden Programme und erstellt daraus 
+                      <strong> verständliche Diagramme</strong> (BPMN) und <strong>übersichtliche Tabellen</strong> (DMN). 
+                      Fachkräfte und Juristen können diese prüfen — ohne eine Zeile Code lesen zu müssen.
+                    </p>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Die neuen Systeme erklären jeden Bescheid: „Familie Becker erhält 1.247,63 €, <em>weil</em> Leilas Freibetrag 
+                      283 € beträgt (§11b SGB II, Zeile 2), <em>weil</em> die KdU 1.000 € angemessen sind (§22 SGB II, Tabelle Dortmund), 
+                      <em>weil</em> die vorläufige Entscheidung nach §41a SGB II greift." — Bei einem Widerspruch kann jeder Schritt 
+                      nachvollzogen werden. Das schafft Rechtssicherheit für Bürgerinnen und Bürger <em>und</em> für die Verwaltung.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Tool cards for process modernization */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+            {[
+              { name: 'Camunda Platform 8', url: 'https://camunda.com/', desc: 'BPMN-Engine: Führt Geschäftsprozesse als ausführbare Modelle aus' },
+              { name: 'Drools', url: 'https://www.drools.org/', desc: 'Business Rules Engine für komplexe Regelketten und Forward-Chaining' },
+              { name: 'BPMN.io', url: 'https://bpmn.io/', desc: 'Open-Source-Editor für BPMN- und DMN-Diagramme (Web-basiert)' },
+              { name: 'Celonis / Signavio', url: 'https://www.celonis.com/', desc: 'Process Mining: Analysiert Legacy-Systeme und extrahiert Prozessabläufe' },
+            ].map((tool, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.1 }}
+              >
+                <Card className="h-full hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <h4 className="font-semibold text-sm mb-1">
+                      <a href={tool.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                        {tool.name}
+                        <ExternalLink className="h-3 w-3 opacity-40" />
+                      </a>
+                    </h4>
+                    <p className="text-xs text-muted-foreground">{tool.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
