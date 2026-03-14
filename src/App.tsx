@@ -268,7 +268,7 @@ function App() {
       impact: "Automatische DSGVO-Compliance statt manueller Prüfung"
     },
     {
-      title: "Onboarding & Wissenstransfer",
+      title: "Onboarding",
       description: "Neue Mitarbeitende in der gE verstehen Aktenstrukturen, Dokumententypen und Prüfschritte — interaktiv im Knowledge Graph statt mit 200-Seiten-Handbüchern.",
       benefits: [
         "Navigierbarer Wissensgraph: Von §7 BG-Definition über Prüfschritte bis zum konkreten Dokument explorieren",
