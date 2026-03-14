@@ -425,28 +425,16 @@ function App() {
       detail: 'Ist-Abläufe werden aus Logdaten rekonstruiert und Engpässe sowie Regelpfade sichtbar gemacht.',
     },
     {
-      text: 'BPMN-Modell',
+      text: 'BPMN + DMN',
       color: 'bg-blue-600',
-      sub: 'Ablauflogik',
-      detail: 'Fachprozesse werden als verständliche BPMN-Modelle formalisiert und versionierbar gemacht.',
-    },
-    {
-      text: 'DMN-Tabellen',
-      color: 'bg-purple-600',
-      sub: 'Rechenregeln',
-      detail: 'Berechnungs- und Entscheidungslogik wird transparent in DMN-Regeltabellen dokumentiert.',
+      sub: 'Modellierung',
+      detail: 'Abläufe (BPMN) und Rechenregeln (DMN) werden gemeinsam in ein fachlich prüfbares Zielmodell überführt.',
     },
     {
       text: 'Fachliche Validierung',
       color: 'bg-slate-600',
       sub: 'Prüfung',
-      detail: 'Fachbereich und Recht prüfen Prozesse und Regeln gegen SGB-II-Vorgaben und Praxisfälle.',
-    },
-    {
-      text: 'Parallelbetrieb',
-      color: 'bg-slate-600',
-      sub: 'Vergleich',
-      detail: 'Alt- und Neusystem laufen parallel; Ergebnisse werden fallweise verglichen und Abweichungen bewertet.',
+      detail: 'Fachbereich prüft Modell und Ergebnis im Parallelvergleich mit dem Altsystem für sichere Freigabe.',
     },
     {
       text: 'Transparenter Bescheid',
