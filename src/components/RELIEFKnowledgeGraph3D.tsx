@@ -527,6 +527,8 @@ export function RELIEFKnowledgeGraph3D() {
   return (
     <div
       ref={containerRef}
+      role="img"
+      aria-label={`Interaktiver 3D Knowledge Graph: RELIEF E-AKTE — ${graphData.nodes.length} Knoten, ${graphData.links.length} Beziehungen. Zeigt SGB-II-Rechtsstruktur der Bedarfsgemeinschaft Becker mit Dokumenten, Gesetzen und KI-Verarbeitungsschritten.`}
       className={`relative rounded-xl overflow-hidden border-2 border-border bg-[#0f172a] ${
         isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'w-full h-full'
       }`}
@@ -537,15 +539,18 @@ export function RELIEFKnowledgeGraph3D() {
           onClick={resetCamera}
           className="p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm"
           title="Kamera zurücksetzen"
+          aria-label="Kamera zurücksetzen"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="h-4 w-4" aria-hidden="true" />
         </button>
         <button
           onClick={toggleFullscreen}
           className="p-2 rounded-lg bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm"
           title={isFullscreen ? 'Vollbild beenden' : 'Vollbild'}
+          aria-label={isFullscreen ? 'Vollbild beenden' : 'Vollbild aktivieren'}
+          aria-pressed={isFullscreen}
         >
-          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          {isFullscreen ? <Minimize2 className="h-4 w-4" aria-hidden="true" /> : <Maximize2 className="h-4 w-4" aria-hidden="true" />}
         </button>
       </div>
 

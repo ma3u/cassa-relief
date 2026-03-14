@@ -48,6 +48,8 @@ import {
   Pause,
   Volume2,
   VolumeX,
+  Menu,
+  X,
 } from "lucide-react"
 import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { RELIEFKnowledgeGraph3D } from "@/components/RELIEFKnowledgeGraph3D"
@@ -60,6 +62,8 @@ function App() {
   const [showIntroGuide, setShowIntroGuide] = useState<boolean>(true)
   const [isPlayingNarration, setIsPlayingNarration] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [narrationStatus, setNarrationStatus] = useState('')
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const architectureRef = useRef<HTMLDivElement>(null)
 
@@ -88,8 +92,10 @@ function App() {
     if (!audioRef.current) return
     if (isPlayingNarration) {
       audioRef.current.pause()
+      setNarrationStatus('Narration pausiert')
     } else {
       audioRef.current.play()
+      setNarrationStatus('Narration wird abgespielt')
     }
     setIsPlayingNarration(!isPlayingNarration)
   }, [isPlayingNarration])
@@ -107,7 +113,18 @@ function App() {
     // Move focus to the section for keyboard/screen-reader users
     if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1')
     el.focus({ preventScroll: true })
+    setMobileNavOpen(false)
   }
+
+  // ── Close mobile nav on Escape ──
+  useEffect(() => {
+    if (!mobileNavOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileNavOpen(false)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [mobileNavOpen])
 
   // ── Side navigation sections ──
   const sideNavSections = useMemo(() => [
@@ -402,6 +419,10 @@ function App() {
       >
         Zum Hauptinhalt springen
       </a>
+      {/* ── WCAG: ARIA live region for narration status ── */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {narrationStatus}
+      </div>
       <AnimatePresence>
         {showIntroGuide && (
           <motion.div
@@ -461,8 +482,46 @@ function App() {
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </a>
             </Button>
+            {/* ── Mobile hamburger button ── */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-expanded={mobileNavOpen}
+              aria-controls="mobile-nav-menu"
+              aria-label={mobileNavOpen ? 'Navigation schließen' : 'Navigation öffnen'}
+              onClick={() => setMobileNavOpen(v => !v)}
+            >
+              {mobileNavOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </Button>
           </nav>
         </div>
+        {/* ── Mobile nav dropdown ── */}
+        {mobileNavOpen && (
+          <div
+            id="mobile-nav-menu"
+            role="menu"
+            className="md:hidden border-t border-border bg-card/95 backdrop-blur-md px-6 py-3 flex flex-col gap-1"
+          >
+            {[
+              { id: 'fall-becker', label: 'Fall Becker' },
+              { id: 'architecture', label: 'Architektur' },
+              { id: 'document-ai', label: 'Document AI' },
+              { id: 'process-modernization', label: 'Prozesse' },
+              { id: 'scenarios', label: 'Szenarien' },
+              { id: 'tech-stack', label: 'Technologie' },
+            ].map(item => (
+              <button
+                key={item.id}
+                role="menuitem"
+                onClick={() => scrollToSection(item.id)}
+                className="text-left text-sm px-3 py-2 rounded-lg hover:bg-accent/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* ── SIDE NAVIGATION (desktop only, top-right below header) ── */}
