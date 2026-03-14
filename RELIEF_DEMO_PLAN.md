@@ -168,7 +168,7 @@ Bezogen auf den konkreten CASSA RELIEF Use Case — 47 Dokumente (Fotos, Scans, 
 
 ### Phase 1: Textextraktion (OCR & Parsing)
 
-#### [IBM Granite-Docling-258M](https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview) (Sep 2025, Apache 2.0)
+#### [IBM Granite-Docling-258M](https://github.com/DS4SD/docling) (Sep 2025, Apache 2.0)
 
 Der aktuell beste Open-Source-Ansatz für den RELIEF-Use Case. Das Modell ist mit nur **258M Parametern** speziell für Dokumentenkonvertierung trainiert — nicht auf einen allgemeinen LLM adaptiert. Es liefert **DocTags**, die Layout, Tabellenstruktur, Formeln und Code vollständig erhalten, und übertrifft dabei deutlich größere Systeme in Benchmarks. Für RELIEF zentral: Es verarbeitet sowohl digitale PDFs (ohne OCR-Overhead) als auch **Fotos und Screenshots** (mit integrierter Vision) — also genau die Qualitätsprobleme #1–#4 aus dem Demo-Fall.
 
@@ -228,7 +228,7 @@ Für Personennamen (Thomas Becker, Leila Kaya) in deutschen Verwaltungstexten li
 
 ### Empfohlene RELIEF-Pipeline (vollständig lokal, DSGVO-konform)
 
-```
+```text
 Eingang (Foto/Scan/PDF/Screenshot)
         ↓
 [Granite-Docling-258M]  → DocTags / Markdown-Text
@@ -249,7 +249,7 @@ Strukturierte E-AKTE (xdomea 3.0-konform)
 
 | Modell/Tool | Aufgabe | Stärke im RELIEF-Kontext | Lizenz |
 |---|---|---|---|
-| **[Granite-Docling-258M](https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview)** | OCR + Layout | Fotos, Screenshots, Scans → strukturierter Text | Apache 2.0 |
+| **[Granite-Docling-258M](https://github.com/DS4SD/docling)** | OCR + Layout | Fotos, Screenshots, Scans → strukturierter Text | Apache 2.0 |
 | **[GLiNER-PII-Large](https://huggingface.co/knowledgator/gliner-pii-large-v1.0)** | NER/PII | IBAN, Geburtsdatum, Zero-Shot | Apache 2.0 |
 | **[Presidio](https://microsoft.github.io/presidio/)** | Redaktions-Framework | Modularer Stack, Docker-ready | MIT |
 | **[spaCy `de_core_news_lg`](https://spacy.io/models/de#de_core_news_lg)** | NER Deutsch | Deutsche Eigennamen (PER, LOC) | MIT |
@@ -340,12 +340,12 @@ Beispiel für den Demo-Fall:
     → Bescheid erstellen
 ```
 
-#### 2. [BRML](https://docs.oasis-open.org/ruleml/ruleml-specification/v1.03/ruleml-specification-v1.03.html) / [DMN 1.4](https://www.omg.org/spec/DMN/) — Geschäftsregeln
+#### 2. [BRML](https://ruleml.org/) / [DMN 1.4](https://www.omg.org/spec/DMN/) — Geschäftsregeln
 
 Die **Entscheidungslogik** (Rechenregeln, Prüfregeln, Schwellenwerte) wird in maschinenlesbare Regelformate überführt:
 
 - **[DMN](https://www.omg.org/spec/DMN/) (Decision Model and Notation)**: OMG-Standard für Entscheidungstabellen — z.B. Regelbedarfsstufentabelle (§20 SGB II), Freibetragsberechnung (§11b SGB II)
-- **[RuleML](https://docs.oasis-open.org/ruleml/ruleml-specification/v1.03/ruleml-specification-v1.03.html) / BRML**: XML-basierte Geschäftsregelsprache für komplexe Regelketten mit Bedingungen und Ausnahmen
+- **[RuleML](https://ruleml.org/) / BRML**: XML-basierte Geschäftsregelsprache für komplexe Regelketten mit Bedingungen und Ausnahmen
 - **Entscheidungstabellen**: Jede Zeile eine Regel, jede Spalte eine Bedingung — lesbar für Juristen und Fachkräfte
 
 Beispiel DMN-Entscheidungstabelle für Freibeträge (§11b SGB II):

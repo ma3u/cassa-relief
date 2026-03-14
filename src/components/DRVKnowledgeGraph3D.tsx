@@ -164,7 +164,7 @@ function buildCaseData(): GraphData {
     { id: 'api_anthropic', label: 'Anthropic Messages', type: 'chatapi', description: 'POST /v1/messages — System-Prompt separiert', details: { 'Format': 'system: str, messages[]: {role, content}', 'Besonderheit': 'System-Prompt als Top-Level-Parameter', 'Streaming': 'SSE mit delta-Events' } },
     { id: 'api_langchain', label: 'LangChain / LangServe', type: 'chatapi', description: 'Framework-Standard für RAG-Pipelines', details: { 'Protokoll': 'invoke / stream / batch Endpoints', 'RAG-Integration': 'Retriever → LLM → Output Parser', 'Deployment': 'LangServe (FastAPI-basiert)' } },
     { id: 'api_openapi', label: 'OpenAPI 3.1', type: 'chatapi', description: 'API-Beschreibungsstandard für REST-Schnittstellen', details: { 'Nutzen': 'Automatische Swagger/ReDoc-Dokumentation', 'CASSA': '/docs und /redoc Endpunkte', 'Tooling': 'Client-SDKs automatisch generierbar' } },
-    { id: 'api_cassa', label: 'CASSA Chat API', type: 'chatapi', description: 'CASSA-eigene API: OpenAI-kompatibel + GraphRAG-Erweiterungen', details: { 'Endpunkte': '/api/v1/chat, /api/v1/search', 'Erweiterung': 'citations[], session_id, context{}', 'Kompatibilität': 'OpenAI messages[]-Format', 'Swagger': 'http://localhost:8000/docs' } },
+    { id: 'api_cassa', label: 'CASSA Chat API', type: 'chatapi', description: 'CASSA-eigene API: OpenAI-kompatibel + GraphRAG-Erweiterungen', details: { 'Endpunkte': '/api/v1/chat, /api/v1/search', 'Erweiterung': 'citations[], session_id, context{}', 'Kompatibilität': 'OpenAI messages[]-Format', 'Swagger': '/api/docs (lokal)' } },
 
     // ────────────────────────────────────────────
     // SACHBEARBEITER-FALL: Sabine Müller — Az. R 920/25-EM

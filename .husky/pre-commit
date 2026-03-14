@@ -1,0 +1,16 @@
+#!/bin/sh
+# Pre-commit quality gates
+
+echo "⏳ TypeScript type check..."
+npx tsc --noEmit || { echo "❌ TypeScript errors — commit blocked"; exit 1; }
+
+echo "⏳ ESLint..."
+npm run lint || { echo "❌ ESLint errors — commit blocked"; exit 1; }
+
+echo "⏳ Markdownlint..."
+npx markdownlint "**/*.md" --ignore node_modules --ignore ".husky" || { echo "❌ Markdown lint errors — commit blocked"; exit 1; }
+
+echo "⏳ Link check (staged files only)..."
+python3 scripts/check_links.py || { echo "❌ Broken links found — commit blocked"; exit 1; }
+
+echo "✅ All checks passed"

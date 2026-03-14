@@ -358,7 +358,7 @@ function App() {
       endpoint: "POST /api/v1/classify",
       description: "IBM Granite-Docling-258M: Spezialisiertes Vision-Language-Modell (258M Parameter) wandelt Fotos, Scans und Screenshots in strukturierten Text um. Erkennt Dokumententyp, Layout und Tabellenstruktur — auch bei Handyfotos von Kontoauszügen.",
       adoptedBy: "IBM Granite-Docling-258M, Docling Framework, RapidOCR",
-      url: "https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview",
+      url: "https://github.com/DS4SD/docling",
       color: "#10b981"
     },
     {
@@ -1856,7 +1856,7 @@ function App() {
               {
                 name: 'IBM Granite-Docling-258M',
                 role: 'Textextraktion & Layout',
-                url: 'https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview',
+                url: 'https://github.com/DS4SD/docling',
                 description: 'Spezialisiertes Vision-Language-Modell mit nur 258M Parametern. Wandelt Fotos, Scans und Screenshots in strukturierten Text um — Layout, Tabellen und Formeln bleiben erhalten. Verarbeitet genau die Qualitätsprobleme aus dem Demo-Fall: Handyfotos von Kontoauszügen, 15-seitige Mietverträge, Screenshots.',
                 highlights: ['258M Parameter (kompakt)', 'Fotos + Scans + PDFs', 'Layout-Erhaltung (DocTags)', 'Open Source (Apache 2.0)'],
                 color: 'oklch(0.50 0.18 160)',
@@ -2027,8 +2027,8 @@ function App() {
                 standards: [
                   { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)", url: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32016R0679" },
                   { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html" },
-                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03138/tr-03138.html" },
-                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03125/tr-03125.html" },
+                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03138/tr03138_node.html" },
+                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html" },
                   { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum", url: "https://www.gesetze-im-internet.de/sgb_10/__67.html" },
                 ]
               },
@@ -2039,7 +2039,7 @@ function App() {
                 standards: [
                   { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen", url: "https://www.xrepository.de/details/urn:xoev-de:xdomea:standard:xdomea_3.0" },
                   { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
-                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de/mitwirken/normenausschuesse/nabd/veroeffentlichungen/wdc-beuth:din21:269816944" },
+                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de" },
                   { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
                   { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
                 ]

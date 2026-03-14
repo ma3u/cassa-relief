@@ -1,8 +1,8 @@
-# 📋 CASSA DRV — Digitaler Wissensassistent für die Rentenversicherung
+# 📋 CASSA RELIEF — Digitaler Wissensassistent für die e-Akte
 
 **Compliance-Assured Structured Semantic Analysis** für die Deutsche Rentenversicherung — Interaktive 3D-Visualisierung eines Sozialrecht-Knowledge-Graphs mit GraphRAG und Chat-API.
 
-> **[▶ Live-App öffnen](https://ma3u.github.io/cassa-drv/)**
+> **[▶ Live-App öffnen](https://ma3u.github.io/cassa-relief/)**
 
 ![Knoten](https://img.shields.io/badge/Knoten-65+-blue) ![Beziehungen](https://img.shields.io/badge/Beziehungen-90+-green) ![SGB](https://img.shields.io/badge/SGB-5%2B-orange) ![Chat API](https://img.shields.io/badge/Chat_API-OpenAI--kompatibel-brightgreen)
 
@@ -50,8 +50,8 @@ CASSA demonstriert, wie ein **Knowledge Graph** mit **GraphRAG** die Komplexitä
 
 ```bash
 # Repository klonen
-git clone https://github.com/ma3u/cassa-drv.git
-cd cassa-drv
+git clone https://github.com/ma3u/cassa-relief.git
+cd cassa-relief
 
 # Abhängigkeiten installieren
 npm ci
@@ -60,7 +60,7 @@ npm ci
 npm run dev
 ```
 
-Öffne [http://localhost:5173/cassa-drv/](http://localhost:5173/cassa-drv/) im Browser.
+Öffne [http://localhost:5000/cassa-relief/](http://localhost:5000/cassa-relief/) im Browser.
 
 ## Build & Deploy
 
@@ -74,7 +74,7 @@ npm run lint      # ESLint
 
 Das Projekt wird automatisch via GitHub Actions deployed:
 - Push auf `main` → Build → Deploy auf GitHub Pages
-- URL: `https://ma3u.github.io/cassa-drv/`
+- URL: `https://ma3u.github.io/cassa-relief/`
 
 ---
 
@@ -93,7 +93,7 @@ Die Landing Page zeigt 4 konkrete Beispiele, wo Vector RAG versagt:
 
 CASSA implementiert eine OpenAI-kompatible Chat-API:
 
-```
+```http
 POST /api/v1/chat        # Multi-Turn Chat mit Session
 POST /api/v1/search       # Single-Turn Search (stateless)
 GET  /api/v1/chat/{id}/history  # Konversationsverlauf
@@ -106,7 +106,7 @@ GET  /health              # Health Check
 
 ## Projektstruktur
 
-```
+```text
 src/
 ├── App.tsx                           # Haupt-SPA mit allen Sektionen
 ├── components/
