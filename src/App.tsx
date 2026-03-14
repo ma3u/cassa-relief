@@ -1675,32 +1675,23 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="w-full overflow-x-auto pb-2">
-                  <div className="inline-flex min-w-max items-start gap-4 pr-4 xl:w-full xl:min-w-0 xl:justify-between text-base">
+                <div className="w-full py-2">
+                  <div className="flex flex-wrap items-start gap-x-5 gap-y-3 text-base">
                   {migrationSteps.map((step, i) => (
                     <div key={i} className="flex items-center gap-3 flex-shrink-0">
-                      <div className="text-center min-w-[145px]">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                type="button"
-                                onClick={() => setActiveMigrationStep(i)}
-                                className={`rounded-full transition-all ${activeMigrationStep === i ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
-                                aria-pressed={activeMigrationStep === i}
-                                aria-label={`Schritt ${i + 1}: ${step.text}`}
-                              >
-                                <Badge className={`${step.color} text-white border-0 text-sm px-3 py-1`}>
-                                  {step.text}
-                                </Badge>
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              {step.detail}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <div className="text-sm text-muted-foreground mt-1">{step.sub}</div>
+                      <div className="text-center min-w-[150px]">
+                        <button
+                          type="button"
+                          onClick={() => setActiveMigrationStep(i)}
+                          className={`rounded-full px-1 py-1 transition-all ${activeMigrationStep === i ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+                          aria-pressed={activeMigrationStep === i}
+                          aria-label={`Schritt ${i + 1}: ${step.text}`}
+                        >
+                          <Badge className={`${step.color} text-white border-0 text-sm px-3 py-1 whitespace-normal text-center leading-tight`}>
+                            {step.text}
+                          </Badge>
+                        </button>
+                        <div className="text-sm text-muted-foreground mt-1 whitespace-normal leading-tight">{step.sub}</div>
                       </div>
                       {i < migrationSteps.length - 1 && <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />}
                     </div>
