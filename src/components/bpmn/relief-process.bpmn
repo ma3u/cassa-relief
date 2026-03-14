@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             id="Definitions_1"
+             targetNamespace="http://cassa.soprasteria.de/relief"
+             exporter="CASSA RELIEF"
+             exporterVersion="1.0">
+
+  <collaboration id="Collaboration_1">
+    <participant id="Lane_Antragsteller" name="Antragsteller / Familie Becker" processRef="Process_Antragsteller" />
+    <participant id="Lane_Sachbearbeitung" name="Sachbearbeitung (gE / Jobcenter)" processRef="Process_Sachbearbeitung" />
+    <participant id="Lane_RELIEF" name="RELIEF KI-System" processRef="Process_RELIEF" />
+    <participant id="Lane_Entscheidung" name="Teamleitung / Entscheidung" processRef="Process_Entscheidung" />
+    <messageFlow id="MF_1" sourceRef="Task_Antrag" targetRef="Event_AntragEingang" />
+    <messageFlow id="MF_2" sourceRef="Task_DokEingang" targetRef="Event_DokEingang" />
+    <messageFlow id="MF_3" sourceRef="Task_SBForwardDocs" targetRef="Event_KIStart" />
+    <messageFlow id="MF_4" sourceRef="Task_KIResult" targetRef="Event_KIErgebnis" />
+    <messageFlow id="MF_5" sourceRef="Task_BescheidErstellen" targetRef="Event_BescheidZustellung" />
+    <messageFlow id="MF_6" sourceRef="Task_Mitwirkung" targetRef="Event_Mitwirkung" />
+    <messageFlow id="MF_7" sourceRef="Task_EskalationSend" targetRef="Event_Eskalation" />
+    <messageFlow id="MF_8" sourceRef="Task_FreigabeSend" targetRef="Event_Freigabe" />
+  </collaboration>
+
+  <!-- ═══ PROCESS: Antragsteller ═══ -->
+  <process id="Process_Antragsteller" isExecutable="false">
+    <startEvent id="Start_Insolvenz" name="Insolvenz Arbeitgeber&#10;(15.01.2026)">
+      <outgoing>Flow_A1</outgoing>
+    </startEvent>
+    <task id="Task_Antrag" name="Bürgergeld-Antrag&#10;über jobcenter.digital">
+      <incoming>Flow_A1</incoming>
+      <outgoing>Flow_A2</outgoing>
+    </task>
+    <task id="Task_DokEingang" name="47 Dokumente einreichen&#10;(Fotos, Scans, Post)">
+      <incoming>Flow_A2</incoming>
+      <outgoing>Flow_A3</outgoing>
+    </task>
+    <intermediateCatchEvent id="Event_Mitwirkung" name="Mitwirkungs-&#10;anforderung">
+      <incoming>Flow_A3</incoming>
+      <outgoing>Flow_A4</outgoing>
+      <messageEventDefinition id="MED_Mitw" />
+    </intermediateCatchEvent>
+    <task id="Task_Nachreichung" name="Fehlende Unterlagen&#10;nachreichen">
+      <incoming>Flow_A4</incoming>
+      <outgoing>Flow_A5</outgoing>
+    </task>
+    <intermediateCatchEvent id="Event_BescheidZustellung" name="Bescheid&#10;erhalten">
+      <incoming>Flow_A5</incoming>
+      <outgoing>Flow_A6</outgoing>
+      <messageEventDefinition id="MED_Bescheid" />
+    </intermediateCatchEvent>
+    <endEvent id="End_Antragsteller" name="Leistungsbezug&#10;beginnt">
+      <incoming>Flow_A6</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_A1" sourceRef="Start_Insolvenz" targetRef="Task_Antrag" />
+    <sequenceFlow id="Flow_A2" sourceRef="Task_Antrag" targetRef="Task_DokEingang" />
+    <sequenceFlow id="Flow_A3" sourceRef="Task_DokEingang" targetRef="Event_Mitwirkung" />
+    <sequenceFlow id="Flow_A4" sourceRef="Event_Mitwirkung" targetRef="Task_Nachreichung" />
+    <sequenceFlow id="Flow_A5" sourceRef="Task_Nachreichung" targetRef="Event_BescheidZustellung" />
+    <sequenceFlow id="Flow_A6" sourceRef="Event_BescheidZustellung" targetRef="End_Antragsteller" />
+  </process>
+
+  <!-- ═══ PROCESS: Sachbearbeitung ═══ -->
+  <process id="Process_Sachbearbeitung" isExecutable="false">
+    <intermediateCatchEvent id="Event_AntragEingang" name="Antrag&#10;eingegangen">
+      <outgoing>Flow_S1</outgoing>
+      <messageEventDefinition id="MED_Antrag" />
+    </intermediateCatchEvent>
+    <task id="Task_AkteOeffnen" name="E-AKTE öffnen&#10;(47 Dokumente)">
+      <incoming>Flow_S1</incoming>
+      <outgoing>Flow_S2</outgoing>
+    </task>
+    <task id="Task_SBForwardDocs" name="Dokumente an&#10;RELIEF übergeben">
+      <incoming>Flow_S2</incoming>
+      <outgoing>Flow_S3</outgoing>
+    </task>
+    <intermediateCatchEvent id="Event_KIErgebnis" name="KI-Ergebnis&#10;erhalten">
+      <incoming>Flow_S3</incoming>
+      <outgoing>Flow_S4</outgoing>
+      <messageEventDefinition id="MED_KI" />
+    </intermediateCatchEvent>
+    <task id="Task_BGPruefung" name="BG-Prüfung&#10;(§7 SGB II)&#10;5 Personen prüfen">
+      <incoming>Flow_S4</incoming>
+      <outgoing>Flow_S5</outgoing>
+    </task>
+    <parallelGateway id="GW_Parallel1" name="Parallele&#10;Prüfungen">
+      <incoming>Flow_S5</incoming>
+      <outgoing>Flow_S6a</outgoing>
+      <outgoing>Flow_S6b</outgoing>
+      <outgoing>Flow_S6c</outgoing>
+      <outgoing>Flow_S6d</outgoing>
+    </parallelGateway>
+    <task id="Task_Einkommen" name="Einkommensprüfung&#10;Leila (§11 SGB II)&#10;850 € schwankend">
+      <incoming>Flow_S6a</incoming>
+      <outgoing>Flow_S7a</outgoing>
+    </task>
+    <task id="Task_Vermoegen" name="Vermögensprüfung&#10;Thomas (§12 SGB II)&#10;LV 12.500 € + Auto">
+      <incoming>Flow_S6b</incoming>
+      <outgoing>Flow_S7b</outgoing>
+    </task>
+    <task id="Task_KdU" name="KdU-Prüfung&#10;(§22 SGB II)&#10;1.000 € warm">
+      <incoming>Flow_S6c</incoming>
+      <outgoing>Flow_S7c</outgoing>
+    </task>
+    <task id="Task_Vollstaendigkeit" name="Vollständigkeits-&#10;prüfung&#10;(§60 SGB I)">
+      <incoming>Flow_S6d</incoming>
+      <outgoing>Flow_S7d</outgoing>
+    </task>
+    <exclusiveGateway id="GW_Vollstaendig" name="Unterlagen&#10;vollständig?">
+      <incoming>Flow_S7d</incoming>
+      <outgoing>Flow_Vollst_Ja</outgoing>
+      <outgoing>Flow_Vollst_Nein</outgoing>
+    </exclusiveGateway>
+    <task id="Task_Mitwirkung" name="Mitwirkungs-&#10;anforderung&#10;(§60/§66 SGB I)">
+      <incoming>Flow_Vollst_Nein</incoming>
+      <outgoing>Flow_MitwDone</outgoing>
+    </task>
+    <parallelGateway id="GW_Parallel2" name="Zusammen-&#10;führung">
+      <incoming>Flow_S7a</incoming>
+      <incoming>Flow_S7b</incoming>
+      <incoming>Flow_S7c</incoming>
+      <incoming>Flow_Vollst_Ja</incoming>
+      <incoming>Flow_MitwDone</incoming>
+      <outgoing>Flow_S8</outgoing>
+    </parallelGateway>
+    <exclusiveGateway id="GW_Einkommen" name="Einkommen&#10;schwankend?">
+      <incoming>Flow_S8</incoming>
+      <outgoing>Flow_Vorlaeufig</outgoing>
+      <outgoing>Flow_Endgueltig</outgoing>
+    </exclusiveGateway>
+    <task id="Task_VorlBescheid" name="Vorläufige&#10;Entscheidung&#10;(§41a SGB II)">
+      <incoming>Flow_Vorlaeufig</incoming>
+      <outgoing>Flow_VB1</outgoing>
+    </task>
+    <task id="Task_EndBescheid" name="Endgültiger&#10;Bescheid">
+      <incoming>Flow_Endgueltig</incoming>
+      <outgoing>Flow_EB1</outgoing>
+    </task>
+    <exclusiveGateway id="GW_BescheidMerge">
+      <incoming>Flow_VB1</incoming>
+      <incoming>Flow_EB1</incoming>
+      <outgoing>Flow_S9</outgoing>
+    </exclusiveGateway>
+    <task id="Task_EskalationSend" name="Zur Freigabe&#10;an Teamleitung">
+      <incoming>Flow_S9</incoming>
+      <outgoing>Flow_S10</outgoing>
+    </task>
+    <intermediateCatchEvent id="Event_Freigabe" name="Freigabe&#10;erhalten">
+      <incoming>Flow_S10</incoming>
+      <outgoing>Flow_S11</outgoing>
+      <messageEventDefinition id="MED_Freigabe" />
+    </intermediateCatchEvent>
+    <task id="Task_BescheidErstellen" name="Bescheid erstellen&#10;und versenden&#10;(§35 SGB X)">
+      <incoming>Flow_S11</incoming>
+      <outgoing>Flow_S12</outgoing>
+    </task>
+    <endEvent id="End_Sachbearbeitung" name="Fall&#10;abgeschlossen">
+      <incoming>Flow_S12</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_S1" sourceRef="Event_AntragEingang" targetRef="Task_AkteOeffnen" />
+    <sequenceFlow id="Flow_S2" sourceRef="Task_AkteOeffnen" targetRef="Task_SBForwardDocs" />
+    <sequenceFlow id="Flow_S3" sourceRef="Task_SBForwardDocs" targetRef="Event_KIErgebnis" />
+    <sequenceFlow id="Flow_S4" sourceRef="Event_KIErgebnis" targetRef="Task_BGPruefung" />
+    <sequenceFlow id="Flow_S5" sourceRef="Task_BGPruefung" targetRef="GW_Parallel1" />
+    <sequenceFlow id="Flow_S6a" sourceRef="GW_Parallel1" targetRef="Task_Einkommen" />
+    <sequenceFlow id="Flow_S6b" sourceRef="GW_Parallel1" targetRef="Task_Vermoegen" />
+    <sequenceFlow id="Flow_S6c" sourceRef="GW_Parallel1" targetRef="Task_KdU" />
+    <sequenceFlow id="Flow_S6d" sourceRef="GW_Parallel1" targetRef="Task_Vollstaendigkeit" />
+    <sequenceFlow id="Flow_S7a" sourceRef="Task_Einkommen" targetRef="GW_Parallel2" />
+    <sequenceFlow id="Flow_S7b" sourceRef="Task_Vermoegen" targetRef="GW_Parallel2" />
+    <sequenceFlow id="Flow_S7c" sourceRef="Task_KdU" targetRef="GW_Parallel2" />
+    <sequenceFlow id="Flow_S7d" sourceRef="Task_Vollstaendigkeit" targetRef="GW_Vollstaendig" />
+    <sequenceFlow id="Flow_Vollst_Ja" name="Ja" sourceRef="GW_Vollstaendig" targetRef="GW_Parallel2" />
+    <sequenceFlow id="Flow_Vollst_Nein" name="Nein" sourceRef="GW_Vollstaendig" targetRef="Task_Mitwirkung" />
+    <sequenceFlow id="Flow_MitwDone" sourceRef="Task_Mitwirkung" targetRef="GW_Parallel2" />
+    <sequenceFlow id="Flow_S8" sourceRef="GW_Parallel2" targetRef="GW_Einkommen" />
+    <sequenceFlow id="Flow_Vorlaeufig" name="Ja (Leila)" sourceRef="GW_Einkommen" targetRef="Task_VorlBescheid" />
+    <sequenceFlow id="Flow_Endgueltig" name="Nein" sourceRef="GW_Einkommen" targetRef="Task_EndBescheid" />
+    <sequenceFlow id="Flow_VB1" sourceRef="Task_VorlBescheid" targetRef="GW_BescheidMerge" />
+    <sequenceFlow id="Flow_EB1" sourceRef="Task_EndBescheid" targetRef="GW_BescheidMerge" />
+    <sequenceFlow id="Flow_S9" sourceRef="GW_BescheidMerge" targetRef="Task_EskalationSend" />
+    <sequenceFlow id="Flow_S10" sourceRef="Task_EskalationSend" targetRef="Event_Freigabe" />
+    <sequenceFlow id="Flow_S11" sourceRef="Event_Freigabe" targetRef="Task_BescheidErstellen" />
+    <sequenceFlow id="Flow_S12" sourceRef="Task_BescheidErstellen" targetRef="End_Sachbearbeitung" />
+  </process>
+
+  <!-- ═══ PROCESS: RELIEF KI-System ═══ -->
+  <process id="Process_RELIEF" isExecutable="false">
+    <intermediateCatchEvent id="Event_KIStart" name="Dokumente&#10;empfangen">
+      <outgoing>Flow_R1</outgoing>
+      <messageEventDefinition id="MED_KIStart" />
+    </intermediateCatchEvent>
+    <task id="Task_OCR" name="OCR &amp; Textextraktion&#10;(Granite-Docling-258M)&#10;Fotos → Text">
+      <incoming>Flow_R1</incoming>
+      <outgoing>Flow_R2</outgoing>
+    </task>
+    <task id="Task_Klassifikation" name="Dokumenten-&#10;klassifikation&#10;(12 Typen erkennen)">
+      <incoming>Flow_R2</incoming>
+      <outgoing>Flow_R3</outgoing>
+    </task>
+    <task id="Task_PII" name="PII-Erkennung&#10;(GLiNER + Presidio)&#10;IBAN, Geburtsdaten">
+      <incoming>Flow_R3</incoming>
+      <outgoing>Flow_R4</outgoing>
+    </task>
+    <exclusiveGateway id="GW_Datenschutz" name="Sensible&#10;Daten?">
+      <incoming>Flow_R4</incoming>
+      <outgoing>Flow_DS_Ja</outgoing>
+      <outgoing>Flow_DS_Nein</outgoing>
+    </exclusiveGateway>
+    <task id="Task_Schwaerzung" name="Automatische&#10;Schwärzung&#10;(§67 SGB X)">
+      <incoming>Flow_DS_Ja</incoming>
+      <outgoing>Flow_DS1</outgoing>
+    </task>
+    <exclusiveGateway id="GW_DSMerge">
+      <incoming>Flow_DS1</incoming>
+      <incoming>Flow_DS_Nein</incoming>
+      <outgoing>Flow_R5</outgoing>
+    </exclusiveGateway>
+    <task id="Task_NER" name="Personen-Zuordnung&#10;(spaCy de_core_news_lg)&#10;→ BG-Mitglieder">
+      <incoming>Flow_R5</incoming>
+      <outgoing>Flow_R6</outgoing>
+    </task>
+    <task id="Task_Sortierung" name="Sachlogische&#10;Sortierung &amp;&#10;Zusammenführung">
+      <incoming>Flow_R6</incoming>
+      <outgoing>Flow_R7</outgoing>
+    </task>
+    <task id="Task_Freitext" name="Freitextgenerierung&#10;(Llama 3 / Granite)&#10;lokales LLM">
+      <incoming>Flow_R7</incoming>
+      <outgoing>Flow_R8</outgoing>
+    </task>
+    <task id="Task_Graph" name="Knowledge Graph&#10;(Neo4j)&#10;Verknüpfung mit §§">
+      <incoming>Flow_R8</incoming>
+      <outgoing>Flow_R9</outgoing>
+    </task>
+    <task id="Task_KIResult" name="Ergebnis an&#10;Sachbearbeitung&#10;(strukturierte E-AKTE)">
+      <incoming>Flow_R9</incoming>
+      <outgoing>Flow_R10</outgoing>
+    </task>
+    <endEvent id="End_RELIEF" name="KI-Verarbeitung&#10;abgeschlossen">
+      <incoming>Flow_R10</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_R1" sourceRef="Event_KIStart" targetRef="Task_OCR" />
+    <sequenceFlow id="Flow_R2" sourceRef="Task_OCR" targetRef="Task_Klassifikation" />
+    <sequenceFlow id="Flow_R3" sourceRef="Task_Klassifikation" targetRef="Task_PII" />
+    <sequenceFlow id="Flow_R4" sourceRef="Task_PII" targetRef="GW_Datenschutz" />
+    <sequenceFlow id="Flow_DS_Ja" name="Ja (IBAN,&#10;Gesundheit)" sourceRef="GW_Datenschutz" targetRef="Task_Schwaerzung" />
+    <sequenceFlow id="Flow_DS_Nein" name="Nein" sourceRef="GW_Datenschutz" targetRef="GW_DSMerge" />
+    <sequenceFlow id="Flow_DS1" sourceRef="Task_Schwaerzung" targetRef="GW_DSMerge" />
+    <sequenceFlow id="Flow_R5" sourceRef="GW_DSMerge" targetRef="Task_NER" />
+    <sequenceFlow id="Flow_R6" sourceRef="Task_NER" targetRef="Task_Sortierung" />
+    <sequenceFlow id="Flow_R7" sourceRef="Task_Sortierung" targetRef="Task_Freitext" />
+    <sequenceFlow id="Flow_R8" sourceRef="Task_Freitext" targetRef="Task_Graph" />
+    <sequenceFlow id="Flow_R9" sourceRef="Task_Graph" targetRef="Task_KIResult" />
+    <sequenceFlow id="Flow_R10" sourceRef="Task_KIResult" targetRef="End_RELIEF" />
+  </process>
+
+  <!-- ═══ PROCESS: Teamleitung / Entscheidung ═══ -->
+  <process id="Process_Entscheidung" isExecutable="false">
+    <intermediateCatchEvent id="Event_Eskalation" name="Bescheid zur&#10;Freigabe">
+      <outgoing>Flow_E1</outgoing>
+      <messageEventDefinition id="MED_Eskalation" />
+    </intermediateCatchEvent>
+    <task id="Task_AuditTrail" name="Audit-Trail prüfen&#10;(DMN-Regelpfad)&#10;Nachvollziehbarkeit">
+      <incoming>Flow_E1</incoming>
+      <outgoing>Flow_E2</outgoing>
+    </task>
+    <exclusiveGateway id="GW_Freigabe" name="Freigabe?">
+      <incoming>Flow_E2</incoming>
+      <outgoing>Flow_FG_Ja</outgoing>
+      <outgoing>Flow_FG_Nein</outgoing>
+    </exclusiveGateway>
+    <task id="Task_FreigabeSend" name="Freigabe&#10;erteilen">
+      <incoming>Flow_FG_Ja</incoming>
+      <outgoing>Flow_E4</outgoing>
+    </task>
+    <task id="Task_Rueckfrage" name="Rückfrage an&#10;Sachbearbeitung">
+      <incoming>Flow_FG_Nein</incoming>
+      <outgoing>Flow_E5</outgoing>
+    </task>
+    <endEvent id="End_Entscheidung_OK" name="Freigabe&#10;erteilt">
+      <incoming>Flow_E4</incoming>
+    </endEvent>
+    <endEvent id="End_Entscheidung_RQ" name="Nacharbeit&#10;erforderlich">
+      <incoming>Flow_E5</incoming>
+    </endEvent>
+    <sequenceFlow id="Flow_E1" sourceRef="Event_Eskalation" targetRef="Task_AuditTrail" />
+    <sequenceFlow id="Flow_E2" sourceRef="Task_AuditTrail" targetRef="GW_Freigabe" />
+    <sequenceFlow id="Flow_FG_Ja" name="Ja" sourceRef="GW_Freigabe" targetRef="Task_FreigabeSend" />
+    <sequenceFlow id="Flow_FG_Nein" name="Nein" sourceRef="GW_Freigabe" targetRef="Task_Rueckfrage" />
+    <sequenceFlow id="Flow_E4" sourceRef="Task_FreigabeSend" targetRef="End_Entscheidung_OK" />
+    <sequenceFlow id="Flow_E5" sourceRef="Task_Rueckfrage" targetRef="End_Entscheidung_RQ" />
+  </process>
+
+  <!-- ═══ DIAGRAM ═══ -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+
+      <!-- ── Participant Bands ── -->
+      <bpmndi:BPMNShape id="Shape_Lane_Antragsteller" bpmnElement="Lane_Antragsteller" isHorizontal="true">
+        <dc:Bounds x="120" y="60" width="1860" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Sachbearbeitung" bpmnElement="Lane_Sachbearbeitung" isHorizontal="true">
+        <dc:Bounds x="120" y="310" width="1860" height="380" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_RELIEF" bpmnElement="Lane_RELIEF" isHorizontal="true">
+        <dc:Bounds x="120" y="740" width="1860" height="220" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Lane_Entscheidung" bpmnElement="Lane_Entscheidung" isHorizontal="true">
+        <dc:Bounds x="120" y="1010" width="1860" height="200" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Antragsteller shapes ── -->
+      <bpmndi:BPMNShape id="Shape_Start_Insolvenz" bpmnElement="Start_Insolvenz">
+        <dc:Bounds x="182" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="156" y="185" width="88" height="40" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Antrag" bpmnElement="Task_Antrag">
+        <dc:Bounds x="280" y="120" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_DokEingang" bpmnElement="Task_DokEingang">
+        <dc:Bounds x="480" y="120" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Event_Mitwirkung" bpmnElement="Event_Mitwirkung">
+        <dc:Bounds x="882" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="860" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Nachreichung" bpmnElement="Task_Nachreichung">
+        <dc:Bounds x="1000" y="120" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Event_BescheidZustellung" bpmnElement="Event_BescheidZustellung">
+        <dc:Bounds x="1692" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1680" y="105" width="60" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Antragsteller" bpmnElement="End_Antragsteller">
+        <dc:Bounds x="1862" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1840" y="185" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── Sachbearbeitung shapes ── -->
+      <bpmndi:BPMNShape id="Shape_Event_AntragEingang" bpmnElement="Event_AntragEingang">
+        <dc:Bounds x="312" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="295" y="415" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_AkteOeffnen" bpmnElement="Task_AkteOeffnen">
+        <dc:Bounds x="400" y="350" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_SBForwardDocs" bpmnElement="Task_SBForwardDocs">
+        <dc:Bounds x="400" y="470" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Event_KIErgebnis" bpmnElement="Event_KIErgebnis">
+        <dc:Bounds x="592" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="575" y="535" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_BGPruefung" bpmnElement="Task_BGPruefung">
+        <dc:Bounds x="670" y="350" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Parallel1" bpmnElement="GW_Parallel1">
+        <dc:Bounds x="845" y="365" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="836" y="335" width="68" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Einkommen" bpmnElement="Task_Einkommen">
+        <dc:Bounds x="940" y="320" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Vermoegen" bpmnElement="Task_Vermoegen">
+        <dc:Bounds x="940" y="420" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_KdU" bpmnElement="Task_KdU">
+        <dc:Bounds x="940" y="520" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Vollstaendigkeit" bpmnElement="Task_Vollstaendigkeit">
+        <dc:Bounds x="940" y="620" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Vollstaendig" bpmnElement="GW_Vollstaendig" isMarkerVisible="true">
+        <dc:Bounds x="815" y="635" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="755" y="646" width="55" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Mitwirkung" bpmnElement="Task_Mitwirkung">
+        <dc:Bounds x="790" y="520" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Parallel2" bpmnElement="GW_Parallel2">
+        <dc:Bounds x="1125" y="365" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1116" y="335" width="68" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Einkommen" bpmnElement="GW_Einkommen" isMarkerVisible="true">
+        <dc:Bounds x="1215" y="365" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1205" y="335" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_VorlBescheid" bpmnElement="Task_VorlBescheid">
+        <dc:Bounds x="1310" y="340" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_EndBescheid" bpmnElement="Task_EndBescheid">
+        <dc:Bounds x="1310" y="450" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_BescheidMerge" bpmnElement="GW_BescheidMerge" isMarkerVisible="true">
+        <dc:Bounds x="1485" y="375" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_EskalationSend" bpmnElement="Task_EskalationSend">
+        <dc:Bounds x="1460" y="470" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Event_Freigabe" bpmnElement="Event_Freigabe">
+        <dc:Bounds x="1632" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1618" y="535" width="64" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_BescheidErstellen" bpmnElement="Task_BescheidErstellen">
+        <dc:Bounds x="1690" y="350" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Sachbearbeitung" bpmnElement="End_Sachbearbeitung">
+        <dc:Bounds x="1862" y="372" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1846" y="415" width="68" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── RELIEF shapes ── -->
+      <bpmndi:BPMNShape id="Shape_Event_KIStart" bpmnElement="Event_KIStart">
+        <dc:Bounds x="312" y="832" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="295" y="875" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_OCR" bpmnElement="Task_OCR">
+        <dc:Bounds x="390" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Klassifikation" bpmnElement="Task_Klassifikation">
+        <dc:Bounds x="560" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_PII" bpmnElement="Task_PII">
+        <dc:Bounds x="730" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Datenschutz" bpmnElement="GW_Datenschutz" isMarkerVisible="true">
+        <dc:Bounds x="895" y="825" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="889" y="795" width="62" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Schwaerzung" bpmnElement="Task_Schwaerzung">
+        <dc:Bounds x="970" y="880" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_DSMerge" bpmnElement="GW_DSMerge" isMarkerVisible="true">
+        <dc:Bounds x="1055" y="825" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_NER" bpmnElement="Task_NER">
+        <dc:Bounds x="1130" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Sortierung" bpmnElement="Task_Sortierung">
+        <dc:Bounds x="1300" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Freitext" bpmnElement="Task_Freitext">
+        <dc:Bounds x="1470" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Graph" bpmnElement="Task_Graph">
+        <dc:Bounds x="1640" y="810" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_KIResult" bpmnElement="Task_KIResult">
+        <dc:Bounds x="1640" y="760" width="140" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_RELIEF" bpmnElement="End_RELIEF">
+        <dc:Bounds x="1862" y="832" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1838" y="875" width="84" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── Entscheidung shapes ── -->
+      <bpmndi:BPMNShape id="Shape_Event_Eskalation" bpmnElement="Event_Eskalation">
+        <dc:Bounds x="1492" y="1092" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1475" y="1135" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_AuditTrail" bpmnElement="Task_AuditTrail">
+        <dc:Bounds x="1560" y="1070" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GW_Freigabe" bpmnElement="GW_Freigabe" isMarkerVisible="true">
+        <dc:Bounds x="1735" y="1085" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1738" y="1065" width="44" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_FreigabeSend" bpmnElement="Task_FreigabeSend">
+        <dc:Bounds x="1810" y="1030" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Rueckfrage" bpmnElement="Task_Rueckfrage">
+        <dc:Bounds x="1810" y="1120" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Entscheidung_OK" bpmnElement="End_Entscheidung_OK">
+        <dc:Bounds x="1952" y="1042" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1938" y="1085" width="64" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_End_Entscheidung_RQ" bpmnElement="End_Entscheidung_RQ">
+        <dc:Bounds x="1952" y="1132" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1934" y="1175" width="72" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── Sequence Flows: Antragsteller ── -->
+      <bpmndi:BPMNEdge id="Edge_Flow_A1" bpmnElement="Flow_A1">
+        <di:waypoint x="218" y="160" /><di:waypoint x="280" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_A2" bpmnElement="Flow_A2">
+        <di:waypoint x="420" y="160" /><di:waypoint x="480" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_A3" bpmnElement="Flow_A3">
+        <di:waypoint x="620" y="160" /><di:waypoint x="882" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_A4" bpmnElement="Flow_A4">
+        <di:waypoint x="918" y="160" /><di:waypoint x="1000" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_A5" bpmnElement="Flow_A5">
+        <di:waypoint x="1140" y="160" /><di:waypoint x="1692" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_A6" bpmnElement="Flow_A6">
+        <di:waypoint x="1728" y="160" /><di:waypoint x="1862" y="160" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ── Sequence Flows: Sachbearbeitung ── -->
+      <bpmndi:BPMNEdge id="Edge_Flow_S1" bpmnElement="Flow_S1">
+        <di:waypoint x="348" y="390" /><di:waypoint x="400" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S2" bpmnElement="Flow_S2">
+        <di:waypoint x="470" y="430" /><di:waypoint x="470" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S3" bpmnElement="Flow_S3">
+        <di:waypoint x="540" y="510" /><di:waypoint x="592" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S4" bpmnElement="Flow_S4">
+        <di:waypoint x="628" y="510" /><di:waypoint x="650" y="510" /><di:waypoint x="650" y="390" /><di:waypoint x="670" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S5" bpmnElement="Flow_S5">
+        <di:waypoint x="810" y="390" /><di:waypoint x="845" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S6a" bpmnElement="Flow_S6a">
+        <di:waypoint x="895" y="380" /><di:waypoint x="940" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S6b" bpmnElement="Flow_S6b">
+        <di:waypoint x="895" y="400" /><di:waypoint x="940" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S6c" bpmnElement="Flow_S6c">
+        <di:waypoint x="870" y="415" /><di:waypoint x="870" y="560" /><di:waypoint x="940" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S6d" bpmnElement="Flow_S6d">
+        <di:waypoint x="870" y="415" /><di:waypoint x="870" y="660" /><di:waypoint x="940" y="660" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S7a" bpmnElement="Flow_S7a">
+        <di:waypoint x="1080" y="360" /><di:waypoint x="1125" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S7b" bpmnElement="Flow_S7b">
+        <di:waypoint x="1080" y="460" /><di:waypoint x="1150" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S7c" bpmnElement="Flow_S7c">
+        <di:waypoint x="1080" y="560" /><di:waypoint x="1150" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S7d" bpmnElement="Flow_S7d">
+        <di:waypoint x="940" y="660" /><di:waypoint x="865" y="660" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Vollst_Ja" bpmnElement="Flow_Vollst_Ja">
+        <di:waypoint x="840" y="635" /><di:waypoint x="840" y="500" /><di:waypoint x="1150" y="500" /><di:waypoint x="1150" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Vollst_Nein" bpmnElement="Flow_Vollst_Nein">
+        <di:waypoint x="840" y="635" /><di:waypoint x="840" y="600" /><di:waypoint x="850" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_MitwDone" bpmnElement="Flow_MitwDone">
+        <di:waypoint x="910" y="560" /><di:waypoint x="1150" y="560" /><di:waypoint x="1150" y="415" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S8" bpmnElement="Flow_S8">
+        <di:waypoint x="1175" y="390" /><di:waypoint x="1215" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Vorlaeufig" bpmnElement="Flow_Vorlaeufig">
+        <di:waypoint x="1265" y="380" /><di:waypoint x="1310" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Endgueltig" bpmnElement="Flow_Endgueltig">
+        <di:waypoint x="1240" y="415" /><di:waypoint x="1240" y="490" /><di:waypoint x="1310" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_VB1" bpmnElement="Flow_VB1">
+        <di:waypoint x="1450" y="380" /><di:waypoint x="1485" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_EB1" bpmnElement="Flow_EB1">
+        <di:waypoint x="1450" y="490" /><di:waypoint x="1510" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S9" bpmnElement="Flow_S9">
+        <di:waypoint x="1510" y="425" /><di:waypoint x="1530" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S10" bpmnElement="Flow_S10">
+        <di:waypoint x="1600" y="510" /><di:waypoint x="1632" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S11" bpmnElement="Flow_S11">
+        <di:waypoint x="1668" y="510" /><di:waypoint x="1760" y="510" /><di:waypoint x="1760" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_S12" bpmnElement="Flow_S12">
+        <di:waypoint x="1830" y="390" /><di:waypoint x="1862" y="390" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ── Sequence Flows: RELIEF ── -->
+      <bpmndi:BPMNEdge id="Edge_Flow_R1" bpmnElement="Flow_R1">
+        <di:waypoint x="348" y="850" /><di:waypoint x="390" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R2" bpmnElement="Flow_R2">
+        <di:waypoint x="530" y="850" /><di:waypoint x="560" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R3" bpmnElement="Flow_R3">
+        <di:waypoint x="700" y="850" /><di:waypoint x="730" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R4" bpmnElement="Flow_R4">
+        <di:waypoint x="870" y="850" /><di:waypoint x="895" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_DS_Ja" bpmnElement="Flow_DS_Ja">
+        <di:waypoint x="920" y="875" /><di:waypoint x="920" y="920" /><di:waypoint x="970" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_DS_Nein" bpmnElement="Flow_DS_Nein">
+        <di:waypoint x="945" y="850" /><di:waypoint x="1055" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_DS1" bpmnElement="Flow_DS1">
+        <di:waypoint x="1110" y="920" /><di:waypoint x="1080" y="920" /><di:waypoint x="1080" y="875" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R5" bpmnElement="Flow_R5">
+        <di:waypoint x="1105" y="850" /><di:waypoint x="1130" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R6" bpmnElement="Flow_R6">
+        <di:waypoint x="1270" y="850" /><di:waypoint x="1300" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R7" bpmnElement="Flow_R7">
+        <di:waypoint x="1440" y="850" /><di:waypoint x="1470" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R8" bpmnElement="Flow_R8">
+        <di:waypoint x="1610" y="850" /><di:waypoint x="1640" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R9" bpmnElement="Flow_R9">
+        <di:waypoint x="1780" y="850" /><di:waypoint x="1810" y="850" /><di:waypoint x="1810" y="780" /><di:waypoint x="1780" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_R10" bpmnElement="Flow_R10">
+        <di:waypoint x="1780" y="780" /><di:waypoint x="1880" y="780" /><di:waypoint x="1880" y="832" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ── Sequence Flows: Entscheidung ── -->
+      <bpmndi:BPMNEdge id="Edge_Flow_E1" bpmnElement="Flow_E1">
+        <di:waypoint x="1528" y="1110" /><di:waypoint x="1560" y="1110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_E2" bpmnElement="Flow_E2">
+        <di:waypoint x="1700" y="1110" /><di:waypoint x="1735" y="1110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_FG_Ja" bpmnElement="Flow_FG_Ja">
+        <di:waypoint x="1760" y="1085" /><di:waypoint x="1760" y="1060" /><di:waypoint x="1810" y="1060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_FG_Nein" bpmnElement="Flow_FG_Nein">
+        <di:waypoint x="1760" y="1135" /><di:waypoint x="1760" y="1150" /><di:waypoint x="1810" y="1150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_E4" bpmnElement="Flow_E4">
+        <di:waypoint x="1930" y="1060" /><di:waypoint x="1952" y="1060" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_E5" bpmnElement="Flow_E5">
+        <di:waypoint x="1930" y="1150" /><di:waypoint x="1952" y="1150" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ── Message Flows ── -->
+      <bpmndi:BPMNEdge id="Edge_MF_1" bpmnElement="MF_1">
+        <di:waypoint x="330" y="200" /><di:waypoint x="330" y="372" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_2" bpmnElement="MF_2">
+        <di:waypoint x="550" y="200" /><di:waypoint x="550" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_3" bpmnElement="MF_3">
+        <di:waypoint x="470" y="550" /><di:waypoint x="470" y="740" /><di:waypoint x="330" y="740" /><di:waypoint x="330" y="832" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_4" bpmnElement="MF_4">
+        <di:waypoint x="1710" y="760" /><di:waypoint x="1710" y="690" /><di:waypoint x="610" y="690" /><di:waypoint x="610" y="528" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_5" bpmnElement="MF_5">
+        <di:waypoint x="1760" y="350" /><di:waypoint x="1710" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_6" bpmnElement="MF_6">
+        <di:waypoint x="850" y="520" /><di:waypoint x="900" y="178" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_7" bpmnElement="MF_7">
+        <di:waypoint x="1530" y="550" /><di:waypoint x="1510" y="1092" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_MF_8" bpmnElement="MF_8">
+        <di:waypoint x="1870" y="1030" /><di:waypoint x="1650" y="690" /><di:waypoint x="1650" y="528" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

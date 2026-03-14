@@ -52,6 +52,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from "react"
 import { RELIEFKnowledgeGraph3D } from "@/components/RELIEFKnowledgeGraph3D"
 import { DataModelGraph3D } from "@/components/DataModelGraph3D"
+import { BPMNProcessViewer } from "@/components/BPMNViewer"
 
 function App() {
   const [selectedLayer, setSelectedLayer] = useState<number | null>(null)
@@ -1827,6 +1828,27 @@ function App() {
           </motion.div>
 
           {/* BPMN / DMN / Process cards */}
+
+          {/* Interactive BPMN Diagram */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+              <Workflow className="h-6 w-6 text-primary" />
+              Interaktives Prozessdiagramm — Fall Becker
+            </h3>
+            <p className="text-muted-foreground mb-6 max-w-3xl">
+              Vier Swimlanes zeigen das Zusammenspiel von Bürgerin, Sachbearbeitung, KI-System und Teamleitung. 
+              Scrollen Sie zum Zoomen, ziehen Sie zum Navigieren.
+            </p>
+            <BPMNProcessViewer />
+          </motion.div>
+
+          {/* BPMN / DMN / Explanation cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {[
               {
