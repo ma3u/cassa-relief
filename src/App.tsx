@@ -173,10 +173,10 @@ function App() {
     },
     {
       icon: Users,
-      title: "Fachkräftemangel in den gE",
+      title: "Überlastung in den Jobcentern",
       stat: "75.000",
-      statLabel: "Beschäftigte in gE (gemeinsame Einrichtungen)",
-      description: "Gemeinsame Einrichtungen (gE) sind die lokalen Jobcenter, in denen Bundesagentur für Arbeit und kommunale Träger gemeinsam die Grundsicherung nach SGB II umsetzen. Aktenerschließung und Aktenpflege binden erhebliche Arbeitszeit der Fachkräfte. Jede Minute für manuelle Aktenarbeit fehlt bei der eigentlichen Leistungsbemessung.",
+      statLabel: "Mitarbeitende in deutschen Jobcentern",
+      description: "75.000 Mitarbeitende in ca. 400 Jobcentern (sog. \"gemeinsame Einrichtungen\") bearbeiten täglich Bürgergeld-Anträge. Ein Großteil ihrer Zeit geht für das manuelle Sortieren und Prüfen von Dokumenten drauf — Zeit, die für die eigentliche Beratung von Menschen in Not fehlt.",
       trend: "Entlastung nötig",
       color: "oklch(0.45 0.12 200)"
     }
