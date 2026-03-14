@@ -1368,11 +1368,11 @@ function App() {
                 title: "Sozialgesetzbücher",
                 color: "oklch(0.45 0.15 245)",
                 standards: [
-                  { name: "SGB II — Grundsicherung", desc: "Primärgesetz: Leistungsberechtigung (§7), Einkommen (§11), Vermögen (§12), KdU (§22), BuT (§28)" },
-                  { name: "SGB I — Allgemeiner Teil", desc: "Mitwirkungspflichten (§60), Folgen bei Pflichtverletzung (§66) — Grundlage für Nachforderungen" },
-                  { name: "SGB III — Arbeitsförderung", desc: "Sperrzeit (§159), Arbeitslosmeldung — Prüfpunkt bei Kündigung/Insolvenz" },
-                  { name: "SGB X — Verwaltungsverfahren", desc: "Sozialdatenschutz (§67ff.), Verwaltungsakte (§31), Aufhebung (§45/48)" },
-                  { name: "SGB XII — Sozialhilfe", desc: "Subsidiarität und Abgrenzung zu SGB II — wann greift welches Gesetz?" },
+                  { name: "SGB II — Grundsicherung", desc: "Primärgesetz: Leistungsberechtigung (§7), Einkommen (§11), Vermögen (§12), KdU (§22), BuT (§28)", url: "https://www.gesetze-im-internet.de/sgb_2/" },
+                  { name: "SGB I — Allgemeiner Teil", desc: "Mitwirkungspflichten (§60), Folgen bei Pflichtverletzung (§66) — Grundlage für Nachforderungen", url: "https://www.gesetze-im-internet.de/sgb_1/" },
+                  { name: "SGB III — Arbeitsförderung", desc: "Sperrzeit (§159), Arbeitslosmeldung — Prüfpunkt bei Kündigung/Insolvenz", url: "https://www.gesetze-im-internet.de/sgb_3/" },
+                  { name: "SGB X — Verwaltungsverfahren", desc: "Sozialdatenschutz (§67ff.), Verwaltungsakte (§31), Aufhebung (§45/48)", url: "https://www.gesetze-im-internet.de/sgb_10/" },
+                  { name: "SGB XII — Sozialhilfe", desc: "Subsidiarität und Abgrenzung zu SGB II — wann greift welches Gesetz?", url: "https://www.gesetze-im-internet.de/sgb_12/" },
                 ]
               },
               {
@@ -1380,11 +1380,11 @@ function App() {
                 title: "Datenschutz & IT-Sicherheit",
                 color: "oklch(0.50 0.18 200)",
                 standards: [
-                  { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)" },
-                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur" },
-                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente" },
-                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung" },
-                  { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum" },
+                  { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)", url: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32016R0679" },
+                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html" },
+                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03138/tr-03138.html" },
+                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03125/tr-03125.html" },
+                  { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum", url: "https://www.gesetze-im-internet.de/sgb_10/__67.html" },
                 ]
               },
               {
@@ -1392,10 +1392,10 @@ function App() {
                 title: "E-AKTE & Records Management",
                 color: "oklch(0.55 0.20 55)",
                 standards: [
-                  { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen" },
-                  { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen" },
-                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE" },
-                  { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung" },
+                  { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen", url: "https://www.xrepository.de/details/urn:xoev-de:xdomea:standard:xdomea_3.0" },
+                  { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
+                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de/mitwirken/normenausschuesse/nabd/veroeffentlichungen/wdc-beuth:din21:269816944" },
+                  { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
                   { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
                 ]
               }
@@ -1421,7 +1421,14 @@ function App() {
                     <CardContent className="space-y-4">
                       {category.standards.map((std, i) => (
                         <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                          <div className="font-semibold text-sm text-foreground mb-1">{std.name}</div>
+                          <div className="font-semibold text-sm text-foreground mb-1">
+                            {std.url ? (
+                              <a href={std.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                                {std.name}
+                                <ExternalLink className="h-3 w-3 opacity-40" />
+                              </a>
+                            ) : std.name}
+                          </div>
                           <p className="text-xs text-muted-foreground leading-relaxed">{std.desc}</p>
                         </div>
                       ))}
