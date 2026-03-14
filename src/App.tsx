@@ -49,7 +49,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { RELIEFKnowledgeGraph3D } from "@/components/RELIEFKnowledgeGraph3D"
 import { DataModelGraph3D } from "@/components/DataModelGraph3D"
 import { BPMNProcessViewer } from "@/components/BPMNViewer"
@@ -102,6 +102,43 @@ function App() {
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  // ── Side navigation sections ──
+  const sideNavSections = useMemo(() => [
+    { id: 'challenges', label: 'Herausforderungen', group: 'Problem' },
+    { id: 'llm-limits', label: 'Manuelle Grenzen', group: 'Problem' },
+    { id: 'fall-becker', label: 'Fall Becker', group: 'Problem' },
+    { id: 'architecture', label: 'Architektur', group: 'Lösung' },
+    { id: 'ki-vs-manuell', label: 'KI vs. Manuell', group: 'Lösung' },
+    { id: 'document-ai', label: 'Document AI', group: 'Lösung' },
+    { id: 'process-modernization', label: 'Prozesse', group: 'Lösung' },
+    { id: 'scenarios', label: 'Szenarien', group: 'Vertiefung' },
+    { id: 'graph-detail', label: 'Graph-Detail', group: 'Vertiefung' },
+    { id: 'tech-stack', label: 'Technologie', group: 'Vertiefung' },
+    { id: 'standards', label: 'Compliance', group: 'Vertiefung' },
+  ], [])
+
+  const [activeSection, setActiveSection] = useState<string>('')
+
+  useEffect(() => {
+    const ids = sideNavSections.map(s => s.id)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter(e => e.isIntersecting)
+        if (visible.length > 0) {
+          // Pick the one with highest intersection ratio
+          const best = visible.reduce((a, b) => a.intersectionRatio > b.intersectionRatio ? a : b)
+          setActiveSection(best.target.id)
+        }
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: [0, 0.25, 0.5] }
+    )
+    ids.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [sideNavSections])
 
   // ────────────────────────────────────────────
   // Data: Challenges
@@ -387,26 +424,23 @@ function App() {
             <span className="text-sm font-medium text-muted-foreground hidden md:block">CASSA · RELIEF</span>
           </div>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('architecture')} className="hidden md:flex">
-              Architektur
-            </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-becker')} className="hidden md:flex">
               Fall Becker
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('ki-vs-manuell')} className="hidden md:flex">
-              KI vs. Manuell
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('architecture')} className="hidden md:flex">
+              Architektur
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('document-ai')} className="hidden md:flex">
               Document AI
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('process-modernization')} className="hidden md:flex">
+              Prozesse
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('scenarios')} className="hidden md:flex">
               Szenarien
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('tech-stack')} className="hidden md:flex">
               Technologie
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('process-modernization')} className="hidden md:flex">
-              Prozesse
             </Button>
             <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
@@ -417,6 +451,39 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* ── SIDE NAVIGATION (desktop only, right side) ── */}
+      <nav className="hidden xl:block fixed right-6 top-1/2 -translate-y-1/2 z-50">
+        <div className="bg-card/90 backdrop-blur-md border border-border rounded-xl shadow-lg px-3 py-4 space-y-1 max-h-[70vh] overflow-y-auto">
+          {(() => {
+            let lastGroup = ''
+            return sideNavSections.map((section) => {
+              const showGroup = section.group !== lastGroup
+              lastGroup = section.group
+              return (
+                <div key={section.id}>
+                  {showGroup && (
+                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-2 pt-2 pb-1 first:pt-0">
+                      {section.group}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => scrollToSection(section.id)}
+                    className={`
+                      block w-full text-left text-xs px-2 py-1.5 rounded-md transition-all duration-200
+                      ${activeSection === section.id 
+                        ? 'bg-primary/15 text-primary font-semibold border-l-2 border-primary pl-2.5' 
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}
+                    `}
+                  >
+                    {section.label}
+                  </button>
+                </div>
+              )
+            })
+          })()}
+        </div>
+      </nav>
 
       {/* ── HERO ── */}
       <motion.section style={{ opacity: heroOpacity }} className="hero-pattern py-32 md:py-40 relative overflow-hidden">
@@ -545,9 +612,8 @@ function App() {
           </div>
         </div>
       </section>
-
       {/* ── SECTION: Warum reine LLMs nicht genügen ── */}
-      <section className="py-24 bg-card relative">
+      <section id="llm-limits" className="py-24 bg-card relative">
         <div className="absolute inset-0 bg-destructive/5"></div>
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <motion.div
@@ -614,136 +680,6 @@ function App() {
           </div>
         </div>
       </section>
-
-      {/* ── SECTION: Architektur (4-Layer Ontologie) ── */}
-      <section id="architecture" ref={architectureRef} className="py-32 bg-primary/5 network-pattern relative">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-20"
-          >
-            <Badge className="mb-4 bg-primary text-primary-foreground text-base px-4 py-2">
-              <BrainCircuit className="h-4 w-4 mr-2" />
-              Schritt 3: Die RELIEF-Lösung
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Document AI Pipeline + Knowledge Graph
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-              RELIEF kombiniert Document AI (Klassifikation, OCR, Schwärzung) mit einem Neo4j-Wissensgraphen — 
-              Gesetze, Prozesse, Dokumente und KI-Funktionen als navigierbarer Knowledge Graph.
-            </p>
-            <p className="text-base text-primary font-semibold">
-              👆 Klicken Sie auf die Schichten, um mehr zu erfahren
-            </p>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
-            <div className="space-y-4">
-              {layers.map((layer, index) => {
-                const Icon = layer.icon
-                const isSelected = selectedLayer === index
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card 
-                      className={`cursor-pointer transition-all duration-300 ${
-                        isSelected 
-                          ? 'ring-4 ring-primary shadow-2xl scale-105' 
-                          : 'hover:shadow-lg hover:scale-102'
-                      }`}
-                      onClick={() => setSelectedLayer(isSelected ? null : index)}
-                    >
-                      <CardHeader>
-                        <div className="flex items-start gap-4">
-                          <motion.div 
-                            className="p-4 rounded-xl"
-                            style={{ backgroundColor: `${layer.color}15` }}
-                            animate={{ scale: isSelected ? [1, 1.1, 1] : 1 }}
-                            transition={{ duration: 0.5 }}
-                          >
-                            <Icon className="h-8 w-8" style={{ color: layer.color }} />
-                          </motion.div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <Badge 
-                                variant="outline"
-                                className="text-sm"
-                                style={{ borderColor: layer.color, color: layer.color }}
-                              >
-                                Schicht {layer.number}
-                              </Badge>
-                              <CardTitle className="text-xl">{layer.title}</CardTitle>
-                            </div>
-                            <p className="text-sm text-muted-foreground font-medium">{layer.subtitle}</p>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <AnimatePresence>
-                        {isSelected && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <CardContent className="pt-0">
-                              <Separator className="mb-4" />
-                              <p className="text-muted-foreground leading-relaxed mb-4">{layer.description}</p>
-                              <div className="flex flex-wrap gap-2">
-                                {layer.examples.map((example, i) => (
-                                  <Badge key={i} variant="secondary" className="text-xs">{example}</Badge>
-                                ))}
-                              </div>
-                            </CardContent>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </Card>
-                  </motion.div>
-                )
-              })}
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6 }}
-              className="sticky top-24 h-[700px] relative"
-            >
-              <RELIEFKnowledgeGraph3D />
-              {/* Narration Play Button — overlaying the 3D graph */}
-              <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3">
-                <button
-                  onClick={toggleNarration}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all hover:scale-105 backdrop-blur-sm"
-                >
-                  {isPlayingNarration ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
-                  <span className="text-sm font-medium">{isPlayingNarration ? 'Pause' : 'Fall Becker anhören'}</span>
-                </button>
-                {isPlayingNarration && (
-                  <button
-                    onClick={toggleMute}
-                    className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm"
-                  >
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
       {/* ── SECTION: Fall Becker — E-AKTE-Fall ── */}
       <section id="fall-becker" className="py-32 bg-background relative overflow-hidden">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -756,7 +692,7 @@ function App() {
           >
             <Badge className="mb-4 bg-red-600 text-white text-base px-4 py-2">
               <FileText className="h-4 w-4 mr-2" />
-              Praxisbeispiel: Komplexer E-AKTE-Fall
+              Schritt 3: Praxisbeispiel — Komplexer E-AKTE-Fall
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Fall Familie Becker — BG-Nr. 412K-078263-B
@@ -993,7 +929,134 @@ function App() {
           </div>
         </div>
       </section>
+      {/* ── SECTION: Architektur (4-Layer Ontologie) ── */}
+      <section id="architecture" ref={architectureRef} className="py-32 bg-primary/5 network-pattern relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
+          >
+            <Badge className="mb-4 bg-primary text-primary-foreground text-base px-4 py-2">
+              <BrainCircuit className="h-4 w-4 mr-2" />
+              Schritt 4: Die RELIEF-Lösung
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Document AI Pipeline + Knowledge Graph
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
+              RELIEF kombiniert Document AI (Klassifikation, OCR, Schwärzung) mit einem Neo4j-Wissensgraphen — 
+              Gesetze, Prozesse, Dokumente und KI-Funktionen als navigierbarer Knowledge Graph.
+            </p>
+            <p className="text-base text-primary font-semibold">
+              👆 Klicken Sie auf die Schichten, um mehr zu erfahren
+            </p>
+          </motion.div>
 
+          <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
+            <div className="space-y-4">
+              {layers.map((layer, index) => {
+                const Icon = layer.icon
+                const isSelected = selectedLayer === index
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card 
+                      className={`cursor-pointer transition-all duration-300 ${
+                        isSelected 
+                          ? 'ring-4 ring-primary shadow-2xl scale-105' 
+                          : 'hover:shadow-lg hover:scale-102'
+                      }`}
+                      onClick={() => setSelectedLayer(isSelected ? null : index)}
+                    >
+                      <CardHeader>
+                        <div className="flex items-start gap-4">
+                          <motion.div 
+                            className="p-4 rounded-xl"
+                            style={{ backgroundColor: `${layer.color}15` }}
+                            animate={{ scale: isSelected ? [1, 1.1, 1] : 1 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            <Icon className="h-8 w-8" style={{ color: layer.color }} />
+                          </motion.div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <Badge 
+                                variant="outline"
+                                className="text-sm"
+                                style={{ borderColor: layer.color, color: layer.color }}
+                              >
+                                Schicht {layer.number}
+                              </Badge>
+                              <CardTitle className="text-xl">{layer.title}</CardTitle>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">{layer.subtitle}</p>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <AnimatePresence>
+                        {isSelected && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <CardContent className="pt-0">
+                              <Separator className="mb-4" />
+                              <p className="text-muted-foreground leading-relaxed mb-4">{layer.description}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {layer.examples.map((example, i) => (
+                                  <Badge key={i} variant="secondary" className="text-xs">{example}</Badge>
+                                ))}
+                              </div>
+                            </CardContent>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </Card>
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6 }}
+              className="sticky top-24 h-[700px] relative"
+            >
+              <RELIEFKnowledgeGraph3D />
+              {/* Narration Play Button — overlaying the 3D graph */}
+              <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3">
+                <button
+                  onClick={toggleNarration}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all hover:scale-105 backdrop-blur-sm"
+                >
+                  {isPlayingNarration ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+                  <span className="text-sm font-medium">{isPlayingNarration ? 'Pause' : 'Fall Becker anhören'}</span>
+                </button>
+                {isPlayingNarration && (
+                  <button
+                    onClick={toggleMute}
+                    className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm"
+                  >
+                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
       {/* ── SECTION: KI-gestützt vs. Manuelle Aktenarbeit ── */}
       <section id="ki-vs-manuell" className="py-32 bg-background">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -1006,7 +1069,7 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <GitCompare className="h-4 w-4 mr-2" />
-              Schritt 4: Warum KI-gestützte Aktenarbeit?
+              Schritt 5: Warum KI-gestützte Aktenarbeit?
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               RELIEF KI vs. manuelle Aktenarbeit
@@ -1119,7 +1182,6 @@ function App() {
           </div>
         </div>
       </section>
-
       {/* ── SECTION: Document AI Standards ── */}
       <section id="document-ai" className="py-32 bg-muted/30 relative">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -1132,7 +1194,7 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <MessageSquare className="h-4 w-4 mr-2" />
-              Schritt 5: RELIEF Document AI API
+              Schritt 6: RELIEF Document AI API
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Document AI API für die E-AKTE
@@ -1260,487 +1322,6 @@ function App() {
           </motion.div>
         </div>
       </section>
-
-      {/* ── SECTION: Praxisszenarien ── */}
-      <section id="scenarios" className="py-32 bg-card">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 text-base px-4 py-2">
-              <CheckCircle2 className="h-4 w-4 mr-2" />
-              Schritt 6: Praxis erleben
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Praxisszenarien für die gE
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Konkrete Anwendungsfälle zeigen, wie RELIEF die tägliche Aktenarbeit in den gemeinsamen Einrichtungen unterstützt.
-            </p>
-          </motion.div>
-
-          <Tabs value={String(activeScenario)} onValueChange={(v) => setActiveScenario(Number(v))} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 h-auto p-2 mb-12 max-w-5xl mx-auto">
-              {scenarios.map((scenario, index) => {
-                const Icon = scenario.icon
-                return (
-                  <TabsTrigger 
-                    key={index} 
-                    value={String(index)}
-                    className="flex flex-col items-center gap-2 py-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                  >
-                    <Icon className="h-6 w-6" />
-                    <span className="text-xs md:text-sm font-medium text-center leading-tight">{scenario.title}</span>
-                  </TabsTrigger>
-                )
-              })}
-            </TabsList>
-
-            {scenarios.map((scenario, index) => {
-              const Icon = scenario.icon
-              return (
-                <TabsContent key={index} value={String(index)}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Card className="border-2 hover:shadow-2xl transition-shadow">
-                      <CardHeader className="pb-8">
-                        <div className="flex items-start gap-6">
-                          <motion.div 
-                            className="p-6 rounded-2xl"
-                            style={{ backgroundColor: `${scenario.color}15` }}
-                            animate={{ rotate: [0, 5, -5, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                          >
-                            <Icon className="h-12 w-12" style={{ color: scenario.color }} />
-                          </motion.div>
-                          <div className="flex-1">
-                            <CardTitle className="text-3xl mb-4">{scenario.title}</CardTitle>
-                            <CardDescription className="text-base leading-relaxed">{scenario.description}</CardDescription>
-                            <Badge variant="secondary" className="mt-4">
-                              <TrendingUp className="h-3 w-3 mr-1" />
-                              {scenario.impact}
-                            </Badge>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <Separator className="mb-6" />
-                        <h4 className="font-semibold text-lg mb-4">RELIEF-Funktionen für diesen Fall:</h4>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          {scenario.benefits.map((benefit, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.4, delay: i * 0.1 }}
-                              className="flex gap-3 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                            >
-                              <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                              <span className="text-sm text-foreground leading-relaxed">{benefit}</span>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              )
-            })}
-          </Tabs>
-        </div>
-      </section>
-
-      {/* ── SECTION: Standards & Compliance ── */}
-      <section id="standards" className="py-32 bg-muted/30 relative">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 text-base px-4 py-2">
-              <Scale className="h-4 w-4 mr-2" />
-              Schritt 7: Rechtsgrundlagen
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Gesetzliche Grundlagen im Knowledge Graph
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die Grundsicherung nach SGB II basiert auf einem komplexen Geflecht aus Sozialgesetzbüchern, 
-              Datenschutzregulierung und E-AKTE-Standards. RELIEF bildet sie alle als Graph ab.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              {
-                icon: BookOpen,
-                title: "Sozialgesetzbücher",
-                color: "oklch(0.45 0.15 245)",
-                standards: [
-                  { name: "SGB II — Grundsicherung", desc: "Primärgesetz: Leistungsberechtigung (§7), Einkommen (§11), Vermögen (§12), KdU (§22), BuT (§28)", url: "https://www.gesetze-im-internet.de/sgb_2/" },
-                  { name: "SGB I — Allgemeiner Teil", desc: "Mitwirkungspflichten (§60), Folgen bei Pflichtverletzung (§66) — Grundlage für Nachforderungen", url: "https://www.gesetze-im-internet.de/sgb_1/" },
-                  { name: "SGB III — Arbeitsförderung", desc: "Sperrzeit (§159), Arbeitslosmeldung — Prüfpunkt bei Kündigung/Insolvenz", url: "https://www.gesetze-im-internet.de/sgb_3/" },
-                  { name: "SGB X — Verwaltungsverfahren", desc: "Sozialdatenschutz (§67ff.), Verwaltungsakte (§31), Aufhebung (§45/48)", url: "https://www.gesetze-im-internet.de/sgb_10/" },
-                  { name: "SGB XII — Sozialhilfe", desc: "Subsidiarität und Abgrenzung zu SGB II — wann greift welches Gesetz?", url: "https://www.gesetze-im-internet.de/sgb_12/" },
-                ]
-              },
-              {
-                icon: Landmark,
-                title: "Datenschutz & IT-Sicherheit",
-                color: "oklch(0.50 0.18 200)",
-                standards: [
-                  { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)", url: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32016R0679" },
-                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html" },
-                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03138/tr-03138.html" },
-                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03125/tr-03125.html" },
-                  { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum", url: "https://www.gesetze-im-internet.de/sgb_10/__67.html" },
-                ]
-              },
-              {
-                icon: ScrollText,
-                title: "E-AKTE & Records Management",
-                color: "oklch(0.55 0.20 55)",
-                standards: [
-                  { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen", url: "https://www.xrepository.de/details/urn:xoev-de:xdomea:standard:xdomea_3.0" },
-                  { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
-                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de/mitwirken/normenausschuesse/nabd/veroeffentlichungen/wdc-beuth:din21:269816944" },
-                  { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
-                  { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
-                ]
-              }
-            ].map((category, catIndex) => {
-              const CatIcon = category.icon
-              return (
-                <motion.div
-                  key={catIndex}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.5, delay: catIndex * 0.15 }}
-                >
-                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
-                    <CardHeader>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${category.color}15` }}>
-                          <CatIcon className="h-7 w-7" style={{ color: category.color }} />
-                        </div>
-                        <CardTitle className="text-xl">{category.title}</CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {category.standards.map((std, i) => (
-                        <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
-                          <div className="font-semibold text-sm text-foreground mb-1">
-                            {std.url ? (
-                              <a href={std.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
-                                {std.name}
-                                <ExternalLink className="h-3 w-3 opacity-40" />
-                              </a>
-                            ) : std.name}
-                          </div>
-                          <p className="text-xs text-muted-foreground leading-relaxed">{std.desc}</p>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card className="border-2 border-primary/30 bg-primary/5">
-              <CardContent className="p-8">
-                <div className="flex items-start gap-4">
-                  <ShieldCheck className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-xl font-bold mb-2">RELIEF-Integration</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Alle genannten Gesetze und Standards sind direkt im Knowledge Graph verankert. 
-                      Jeder Paragraph definiert Regeln für Dokumententypen und Prüfschritte — die KI-Pipeline 
-                      verknüpft jedes eingereichte Dokument automatisch mit den relevanten §§ und Complianceanforderungen.
-                      BSI-Richtlinien und xdomea-Standards gewährleisten die Beweiswerterhaltung und interoperable Aktenführung.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── SECTION: Graph-Architektur im Detail ── */}
-      <section id="graph-detail" className="py-32 bg-card relative">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 text-base px-4 py-2">
-              <Layers className="h-4 w-4 mr-2" />
-              Schritt 8: Graph-Architektur
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Knowledge Graph — Datenmodell
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die RELIEF-Graphstruktur: von Dokumententypen über §§ SGB II bis zu KI-Verarbeitungsschritten und Compliance-Regeln.
-            </p>
-          </motion.div>
-
-          <div className="max-w-5xl mx-auto">
-            <div className="h-[700px] rounded-xl overflow-hidden">
-              <DataModelGraph3D />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4 mt-8">
-              {[
-                { label: "~75+", desc: "Knoten im Demo-Graph (skalierbar)", icon: Database },
-                { label: "~100+", desc: "Beziehungen zwischen Entitäten", icon: Network },
-                { label: "5 SGBs", desc: "SGB II, I, III, IX, X verknüpft", icon: Link2 },
-              ].map((stat, i) => {
-                const StatIcon = stat.icon
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                  >
-                    <Card className="text-center p-6 hover:shadow-lg transition-shadow">
-                      <StatIcon className="h-8 w-8 text-primary mx-auto mb-3" />
-                      <div className="text-3xl font-bold text-primary mb-1">{stat.label}</div>
-                      <div className="text-sm text-muted-foreground">{stat.desc}</div>
-                    </Card>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── SECTION: Technologie-Stack ── */}
-      <section id="tech-stack" className="py-32 bg-muted/30 relative">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 text-base px-4 py-2">
-              <Zap className="h-4 w-4 mr-2" />
-              Schritt 9: Technologie
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Open-Source KI-Stack — lokal & DSGVO-konform
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Alle Modelle laufen lokal auf Kubernetes — keine Cloud-Abhängigkeit, keine Daten verlassen das Rechenzentrum.
-              Zentrale Anforderung für §67 SGB X und BSI IT-Grundschutz.
-            </p>
-          </motion.div>
-
-          {/* Pipeline visualization */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <Card className="border-2 border-primary/20 bg-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Workflow className="h-5 w-5 text-primary" />
-                  RELIEF-Pipeline: Vom Foto zur strukturierten E-AKTE
-                </CardTitle>
-                <CardDescription>
-                  Vollständig automatisiert, nachvollziehbar und ohne Cloud-Abhängigkeit
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap items-center gap-3 text-sm">
-                  {[
-                    { text: 'Foto / Scan / PDF', color: 'bg-gray-500', sub: 'Eingang' },
-                    { text: 'Granite-Docling', color: 'bg-emerald-600', sub: 'OCR + Layout' },
-                    { text: 'GLiNER + Presidio', color: 'bg-amber-600', sub: 'PII-Erkennung' },
-                    { text: 'spaCy (deutsch)', color: 'bg-blue-600', sub: 'Namen & Orte' },
-                    { text: 'Presidio Anonymizer', color: 'bg-pink-600', sub: 'Schwärzung' },
-                    { text: 'Llama 3 / Granite', color: 'bg-purple-600', sub: 'Freitext' },
-                    { text: 'Neo4j Graph', color: 'bg-indigo-600', sub: 'Verknüpfung' },
-                    { text: 'E-AKTE (xdomea)', color: 'bg-green-700', sub: 'Ergebnis' },
-                  ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="text-center">
-                        <Badge className={`${step.color} text-white border-0 text-xs`}>
-                          {step.text}
-                        </Badge>
-                        <div className="text-[10px] text-muted-foreground mt-1">{step.sub}</div>
-                      </div>
-                      {i < 7 && <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Model cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                name: 'IBM Granite-Docling-258M',
-                role: 'Textextraktion & Layout',
-                url: 'https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview',
-                description: 'Spezialisiertes Vision-Language-Modell mit nur 258M Parametern. Wandelt Fotos, Scans und Screenshots in strukturierten Text um — Layout, Tabellen und Formeln bleiben erhalten. Verarbeitet genau die Qualitätsprobleme aus dem Demo-Fall: Handyfotos von Kontoauszügen, 15-seitige Mietverträge, Screenshots.',
-                highlights: ['258M Parameter (kompakt)', 'Fotos + Scans + PDFs', 'Layout-Erhaltung (DocTags)', 'Open Source (Apache 2.0)'],
-                color: 'oklch(0.50 0.18 160)',
-                icon: Eye,
-              },
-              {
-                name: 'GLiNER-PII-Large',
-                role: 'PII-Erkennung (Zero-Shot)',
-                url: 'https://huggingface.co/knowledgator/gliner-pii-large-v1.0',
-                description: 'Zero-Shot-NER-Modell von Knowledgator, das IBAN, Geburtsdaten, Gesundheitsdaten und Kontonummern erkennt — auch in nicht standardmäßig formatierten Dokumenten. Entscheidend für die Kontoauszüge und die Unterhaltsurkunde im Demo-Fall.',
-                highlights: ['IBAN-Erkennung nativ', 'Geburtsdaten & Gesundheit', 'Zero-Shot (kein Training)', 'Open Source (Apache 2.0)'],
-                color: 'oklch(0.55 0.20 55)',
-                icon: Shield,
-              },
-              {
-                name: 'Microsoft Presidio',
-                role: 'Schwärzungs-Framework',
-                url: 'https://microsoft.github.io/presidio/',
-                description: 'Modulares Open-Source-Framework für PII-Erkennung und Anonymisierung. Kombiniert GLiNER als NER-Backend mit Regex-Validierung (IBAN-Checksummen). Schwärzt mit wählbaren Operatoren: Ersetzen, Maskieren oder schwarzes Rechteck im PDF.',
-                highlights: ['GLiNER als Backend', 'Regex-Doppelprüfung', 'Replace / Mask / Redact', 'Open Source (MIT)'],
-                color: 'oklch(0.50 0.18 200)',
-                icon: ShieldCheck,
-              },
-              {
-                name: 'spaCy de_core_news_lg',
-                role: 'Deutsche Eigennamen (NER)',
-                url: 'https://spacy.io/models/de#de_core_news_lg',
-                description: 'Deutsches NER-Modell für Personen- und Ortsnamen in Verwaltungstexten. Erkennt "Thomas Becker", "Dortmund-Hörde" und "Sparkasse Dortmund" zuverlässig. Ergänzt GLiNER als performante Basisschicht in Presidio.',
-                highlights: ['PER + LOC + ORG', 'Optimiert für Deutsch', 'Performant (kein GPU)', 'Open Source (MIT)'],
-                color: 'oklch(0.45 0.15 245)',
-                icon: Search,
-              },
-              {
-                name: 'Llama 3 / IBM Granite',
-                role: 'Freitextgenerierung',
-                url: 'https://llama.meta.com/',
-                description: 'Lokales LLM für die automatische Generierung beschreibender Freitexte: "Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3". Läuft vollständig lokal via Ollama — keine Daten verlassen das System.',
-                highlights: ['Lokal via Ollama', 'Deutsch-fähig', 'Dokument-Summarization', 'Meta LLAMA Lizenz'],
-                color: 'oklch(0.45 0.12 280)',
-                icon: Bot,
-              },
-              {
-                name: 'Neo4j Knowledge Graph',
-                role: 'Verknüpfung & Compliance',
-                url: 'https://neo4j.com/',
-                description: 'Graph-Datenbank für die Verbindung aller Entitäten: Dokumente → Personen der BG → §§ SGB II → Prüfschritte → KI-Ergebnisse. Ermöglicht Vollständigkeitsprüfung, Compliance-Checks und navigierbare Wissensstruktur.',
-                highlights: ['Cypher-Abfragen', 'GraphRAG-fähig', 'Compliance-Traversierung', 'Community Edition'],
-                color: 'oklch(0.50 0.15 170)',
-                icon: Network,
-              },
-              {
-                name: 'Gemini 3 / Vertex AI',
-                role: 'Cloud-Benchmark (Bild & Dokument)',
-                url: 'https://ai.google.dev/gemini-api/docs/image-understanding',
-                description: 'Googles multimodales KI-Modell als Cloud-Benchmark: Native PDF-Vision (bis 1.000 Seiten), Object Detection & Segmentierung, Nano Banana Inpainting für Schwärzung per Sprachbefehl. Bis 4K Auflösung, Thinking Mode für komplexe Aufgaben.',
-                highlights: ['PDF bis 1.000 Seiten', 'Segmentierung & Detection', 'Nano Banana Inpainting', '⚠️ Cloud (DPA erforderlich)'],
-                color: 'oklch(0.55 0.15 220)',
-                icon: Globe,
-              },
-            ].map((model, i) => {
-              const ModelIcon = model.icon
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                >
-                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
-                    <CardHeader>
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${model.color}15` }}>
-                          <ModelIcon className="h-6 w-6" style={{ color: model.color }} />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg leading-tight">
-                            <a href={model.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
-                              {model.name}
-                              <ExternalLink className="h-3.5 w-3.5 opacity-40" />
-                            </a>
-                          </CardTitle>
-                          <p className="text-xs text-muted-foreground font-medium mt-1">{model.role}</p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{model.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {model.highlights.map((h, j) => (
-                          <Badge key={j} variant="secondary" className="text-xs">{h}</Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
-          </div>
-
-          {/* DSGVO compliance note */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-12"
-          >
-            <Card className="border-2 border-primary/30 bg-primary/5">
-              <CardContent className="p-8">
-                <div className="flex items-start gap-4">
-                  <Shield className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="text-xl font-bold mb-2">100% lokal — 0% Cloud</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Alle Modelle (Granite-Docling, GLiNER, Presidio, spaCy, Llama 3) laufen auf Kubernetes im Rechenzentrum der gE. 
-                      Keine personenbezogenen Daten verlassen die Infrastruktur. Alle Komponenten sind Open Source (Apache 2.0 / MIT / Meta LLAMA) — 
-                      keine proprietären Cloud-Abhängigkeiten. Konform mit §67 SGB X (Sozialdatenschutz), BSI IT-Grundschutz und DSGVO Art. 25 (Privacy by Design).
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── SECTION: Prozessmodernisierung — BPMN & BRML ── */}
       <section id="process-modernization" className="py-32 bg-card relative">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -1753,7 +1334,7 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <Replace className="h-4 w-4 mr-2" />
-              Schritt 9: Prozessmodernisierung
+              Schritt 7: Prozessmodernisierung
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Von der Black Box zum erklärten Bescheid
@@ -2042,7 +1623,482 @@ function App() {
           </div>
         </div>
       </section>
+      {/* ── SECTION: Praxisszenarien ── */}
+      <section id="scenarios" className="py-32 bg-card">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <CheckCircle2 className="h-4 w-4 mr-2" />
+              Schritt 8: Praxis erleben
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Praxisszenarien für die gE
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Konkrete Anwendungsfälle zeigen, wie RELIEF die tägliche Aktenarbeit in den gemeinsamen Einrichtungen unterstützt.
+            </p>
+          </motion.div>
 
+          <Tabs value={String(activeScenario)} onValueChange={(v) => setActiveScenario(Number(v))} className="w-full">
+            <TabsList className="grid w-full grid-cols-5 h-auto p-2 mb-12 max-w-5xl mx-auto">
+              {scenarios.map((scenario, index) => {
+                const Icon = scenario.icon
+                return (
+                  <TabsTrigger 
+                    key={index} 
+                    value={String(index)}
+                    className="flex flex-col items-center gap-2 py-4 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  >
+                    <Icon className="h-6 w-6" />
+                    <span className="text-xs md:text-sm font-medium text-center leading-tight">{scenario.title}</span>
+                  </TabsTrigger>
+                )
+              })}
+            </TabsList>
+
+            {scenarios.map((scenario, index) => {
+              const Icon = scenario.icon
+              return (
+                <TabsContent key={index} value={String(index)}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Card className="border-2 hover:shadow-2xl transition-shadow">
+                      <CardHeader className="pb-8">
+                        <div className="flex items-start gap-6">
+                          <motion.div 
+                            className="p-6 rounded-2xl"
+                            style={{ backgroundColor: `${scenario.color}15` }}
+                            animate={{ rotate: [0, 5, -5, 0] }}
+                            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                          >
+                            <Icon className="h-12 w-12" style={{ color: scenario.color }} />
+                          </motion.div>
+                          <div className="flex-1">
+                            <CardTitle className="text-3xl mb-4">{scenario.title}</CardTitle>
+                            <CardDescription className="text-base leading-relaxed">{scenario.description}</CardDescription>
+                            <Badge variant="secondary" className="mt-4">
+                              <TrendingUp className="h-3 w-3 mr-1" />
+                              {scenario.impact}
+                            </Badge>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <Separator className="mb-6" />
+                        <h4 className="font-semibold text-lg mb-4">RELIEF-Funktionen für diesen Fall:</h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          {scenario.benefits.map((benefit, i) => (
+                            <motion.div
+                              key={i}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.4, delay: i * 0.1 }}
+                              className="flex gap-3 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                            >
+                              <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                              <span className="text-sm text-foreground leading-relaxed">{benefit}</span>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </TabsContent>
+              )
+            })}
+          </Tabs>
+        </div>
+      </section>
+      {/* ── SECTION: Graph-Architektur im Detail ── */}
+      <section id="graph-detail" className="py-32 bg-card relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Layers className="h-4 w-4 mr-2" />
+              Schritt 9: Graph-Architektur
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Knowledge Graph — Datenmodell
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Die RELIEF-Graphstruktur: von Dokumententypen über §§ SGB II bis zu KI-Verarbeitungsschritten und Compliance-Regeln.
+            </p>
+          </motion.div>
+
+          <div className="max-w-5xl mx-auto">
+            <div className="h-[700px] rounded-xl overflow-hidden">
+              <DataModelGraph3D />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4 mt-8">
+              {[
+                { label: "~75+", desc: "Knoten im Demo-Graph (skalierbar)", icon: Database },
+                { label: "~100+", desc: "Beziehungen zwischen Entitäten", icon: Network },
+                { label: "5 SGBs", desc: "SGB II, I, III, IX, X verknüpft", icon: Link2 },
+              ].map((stat, i) => {
+                const StatIcon = stat.icon
+                return (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.1 }}
+                  >
+                    <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+                      <StatIcon className="h-8 w-8 text-primary mx-auto mb-3" />
+                      <div className="text-3xl font-bold text-primary mb-1">{stat.label}</div>
+                      <div className="text-sm text-muted-foreground">{stat.desc}</div>
+                    </Card>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ── SECTION: Technologie-Stack ── */}
+      <section id="tech-stack" className="py-32 bg-muted/30 relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Zap className="h-4 w-4 mr-2" />
+              Schritt 10: Technologie
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Open-Source KI-Stack — lokal & DSGVO-konform
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Alle Modelle laufen lokal auf Kubernetes — keine Cloud-Abhängigkeit, keine Daten verlassen das Rechenzentrum.
+              Zentrale Anforderung für §67 SGB X und BSI IT-Grundschutz.
+            </p>
+          </motion.div>
+
+          {/* Pipeline visualization */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <Card className="border-2 border-primary/20 bg-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Workflow className="h-5 w-5 text-primary" />
+                  RELIEF-Pipeline: Vom Foto zur strukturierten E-AKTE
+                </CardTitle>
+                <CardDescription>
+                  Vollständig automatisiert, nachvollziehbar und ohne Cloud-Abhängigkeit
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  {[
+                    { text: 'Foto / Scan / PDF', color: 'bg-gray-500', sub: 'Eingang' },
+                    { text: 'Granite-Docling', color: 'bg-emerald-600', sub: 'OCR + Layout' },
+                    { text: 'GLiNER + Presidio', color: 'bg-amber-600', sub: 'PII-Erkennung' },
+                    { text: 'spaCy (deutsch)', color: 'bg-blue-600', sub: 'Namen & Orte' },
+                    { text: 'Presidio Anonymizer', color: 'bg-pink-600', sub: 'Schwärzung' },
+                    { text: 'Llama 3 / Granite', color: 'bg-purple-600', sub: 'Freitext' },
+                    { text: 'Neo4j Graph', color: 'bg-indigo-600', sub: 'Verknüpfung' },
+                    { text: 'E-AKTE (xdomea)', color: 'bg-green-700', sub: 'Ergebnis' },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="text-center">
+                        <Badge className={`${step.color} text-white border-0 text-xs`}>
+                          {step.text}
+                        </Badge>
+                        <div className="text-[10px] text-muted-foreground mt-1">{step.sub}</div>
+                      </div>
+                      {i < 7 && <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Model cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'IBM Granite-Docling-258M',
+                role: 'Textextraktion & Layout',
+                url: 'https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview',
+                description: 'Spezialisiertes Vision-Language-Modell mit nur 258M Parametern. Wandelt Fotos, Scans und Screenshots in strukturierten Text um — Layout, Tabellen und Formeln bleiben erhalten. Verarbeitet genau die Qualitätsprobleme aus dem Demo-Fall: Handyfotos von Kontoauszügen, 15-seitige Mietverträge, Screenshots.',
+                highlights: ['258M Parameter (kompakt)', 'Fotos + Scans + PDFs', 'Layout-Erhaltung (DocTags)', 'Open Source (Apache 2.0)'],
+                color: 'oklch(0.50 0.18 160)',
+                icon: Eye,
+              },
+              {
+                name: 'GLiNER-PII-Large',
+                role: 'PII-Erkennung (Zero-Shot)',
+                url: 'https://huggingface.co/knowledgator/gliner-pii-large-v1.0',
+                description: 'Zero-Shot-NER-Modell von Knowledgator, das IBAN, Geburtsdaten, Gesundheitsdaten und Kontonummern erkennt — auch in nicht standardmäßig formatierten Dokumenten. Entscheidend für die Kontoauszüge und die Unterhaltsurkunde im Demo-Fall.',
+                highlights: ['IBAN-Erkennung nativ', 'Geburtsdaten & Gesundheit', 'Zero-Shot (kein Training)', 'Open Source (Apache 2.0)'],
+                color: 'oklch(0.55 0.20 55)',
+                icon: Shield,
+              },
+              {
+                name: 'Microsoft Presidio',
+                role: 'Schwärzungs-Framework',
+                url: 'https://microsoft.github.io/presidio/',
+                description: 'Modulares Open-Source-Framework für PII-Erkennung und Anonymisierung. Kombiniert GLiNER als NER-Backend mit Regex-Validierung (IBAN-Checksummen). Schwärzt mit wählbaren Operatoren: Ersetzen, Maskieren oder schwarzes Rechteck im PDF.',
+                highlights: ['GLiNER als Backend', 'Regex-Doppelprüfung', 'Replace / Mask / Redact', 'Open Source (MIT)'],
+                color: 'oklch(0.50 0.18 200)',
+                icon: ShieldCheck,
+              },
+              {
+                name: 'spaCy de_core_news_lg',
+                role: 'Deutsche Eigennamen (NER)',
+                url: 'https://spacy.io/models/de#de_core_news_lg',
+                description: 'Deutsches NER-Modell für Personen- und Ortsnamen in Verwaltungstexten. Erkennt "Thomas Becker", "Dortmund-Hörde" und "Sparkasse Dortmund" zuverlässig. Ergänzt GLiNER als performante Basisschicht in Presidio.',
+                highlights: ['PER + LOC + ORG', 'Optimiert für Deutsch', 'Performant (kein GPU)', 'Open Source (MIT)'],
+                color: 'oklch(0.45 0.15 245)',
+                icon: Search,
+              },
+              {
+                name: 'Llama 3 / IBM Granite',
+                role: 'Freitextgenerierung',
+                url: 'https://llama.meta.com/',
+                description: 'Lokales LLM für die automatische Generierung beschreibender Freitexte: "Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3". Läuft vollständig lokal via Ollama — keine Daten verlassen das System.',
+                highlights: ['Lokal via Ollama', 'Deutsch-fähig', 'Dokument-Summarization', 'Meta LLAMA Lizenz'],
+                color: 'oklch(0.45 0.12 280)',
+                icon: Bot,
+              },
+              {
+                name: 'Neo4j Knowledge Graph',
+                role: 'Verknüpfung & Compliance',
+                url: 'https://neo4j.com/',
+                description: 'Graph-Datenbank für die Verbindung aller Entitäten: Dokumente → Personen der BG → §§ SGB II → Prüfschritte → KI-Ergebnisse. Ermöglicht Vollständigkeitsprüfung, Compliance-Checks und navigierbare Wissensstruktur.',
+                highlights: ['Cypher-Abfragen', 'GraphRAG-fähig', 'Compliance-Traversierung', 'Community Edition'],
+                color: 'oklch(0.50 0.15 170)',
+                icon: Network,
+              },
+              {
+                name: 'Gemini 3 / Vertex AI',
+                role: 'Cloud-Benchmark (Bild & Dokument)',
+                url: 'https://ai.google.dev/gemini-api/docs/image-understanding',
+                description: 'Googles multimodales KI-Modell als Cloud-Benchmark: Native PDF-Vision (bis 1.000 Seiten), Object Detection & Segmentierung, Nano Banana Inpainting für Schwärzung per Sprachbefehl. Bis 4K Auflösung, Thinking Mode für komplexe Aufgaben.',
+                highlights: ['PDF bis 1.000 Seiten', 'Segmentierung & Detection', 'Nano Banana Inpainting', '⚠️ Cloud (DPA erforderlich)'],
+                color: 'oklch(0.55 0.15 220)',
+                icon: Globe,
+              },
+            ].map((model, i) => {
+              const ModelIcon = model.icon
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${model.color}15` }}>
+                          <ModelIcon className="h-6 w-6" style={{ color: model.color }} />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg leading-tight">
+                            <a href={model.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
+                              {model.name}
+                              <ExternalLink className="h-3.5 w-3.5 opacity-40" />
+                            </a>
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground font-medium mt-1">{model.role}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{model.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {model.highlights.map((h, j) => (
+                          <Badge key={j} variant="secondary" className="text-xs">{h}</Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* DSGVO compliance note */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-12"
+          >
+            <Card className="border-2 border-primary/30 bg-primary/5">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <Shield className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">100% lokal — 0% Cloud</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Alle Modelle (Granite-Docling, GLiNER, Presidio, spaCy, Llama 3) laufen auf Kubernetes im Rechenzentrum der gE. 
+                      Keine personenbezogenen Daten verlassen die Infrastruktur. Alle Komponenten sind Open Source (Apache 2.0 / MIT / Meta LLAMA) — 
+                      keine proprietären Cloud-Abhängigkeiten. Konform mit §67 SGB X (Sozialdatenschutz), BSI IT-Grundschutz und DSGVO Art. 25 (Privacy by Design).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+      {/* ── SECTION: Standards & Compliance ── */}
+      <section id="standards" className="py-32 bg-muted/30 relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Scale className="h-4 w-4 mr-2" />
+              Schritt 11: Rechtsgrundlagen
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Gesetzliche Grundlagen im Knowledge Graph
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Die Grundsicherung nach SGB II basiert auf einem komplexen Geflecht aus Sozialgesetzbüchern, 
+              Datenschutzregulierung und E-AKTE-Standards. RELIEF bildet sie alle als Graph ab.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                icon: BookOpen,
+                title: "Sozialgesetzbücher",
+                color: "oklch(0.45 0.15 245)",
+                standards: [
+                  { name: "SGB II — Grundsicherung", desc: "Primärgesetz: Leistungsberechtigung (§7), Einkommen (§11), Vermögen (§12), KdU (§22), BuT (§28)", url: "https://www.gesetze-im-internet.de/sgb_2/" },
+                  { name: "SGB I — Allgemeiner Teil", desc: "Mitwirkungspflichten (§60), Folgen bei Pflichtverletzung (§66) — Grundlage für Nachforderungen", url: "https://www.gesetze-im-internet.de/sgb_1/" },
+                  { name: "SGB III — Arbeitsförderung", desc: "Sperrzeit (§159), Arbeitslosmeldung — Prüfpunkt bei Kündigung/Insolvenz", url: "https://www.gesetze-im-internet.de/sgb_3/" },
+                  { name: "SGB X — Verwaltungsverfahren", desc: "Sozialdatenschutz (§67ff.), Verwaltungsakte (§31), Aufhebung (§45/48)", url: "https://www.gesetze-im-internet.de/sgb_10/" },
+                  { name: "SGB XII — Sozialhilfe", desc: "Subsidiarität und Abgrenzung zu SGB II — wann greift welches Gesetz?", url: "https://www.gesetze-im-internet.de/sgb_12/" },
+                ]
+              },
+              {
+                icon: Landmark,
+                title: "Datenschutz & IT-Sicherheit",
+                color: "oklch(0.50 0.18 200)",
+                standards: [
+                  { name: "DSGVO (EU 2016/679)", desc: "Art. 6 Rechtmäßigkeit, Art. 9 besondere Kategorien (Gesundheitsdaten, Religion)", url: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32016R0679" },
+                  { name: "BSI IT-Grundschutz", desc: "IT-Sicherheitsstandard für Jobcenter-Systeme — Schutz der E-AKTE-Infrastruktur", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/IT-Grundschutz/it-grundschutz_node.html" },
+                  { name: "BSI TR-RESISCAN", desc: "Technische Richtlinie für ersetzendes Scannen — Beweiswert digitalisierter Dokumente", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03138/tr-03138.html" },
+                  { name: "BSI TR-ESOR", desc: "Beweiswerterhaltung kryptographisch signierter Dokumente — Langzeitarchivierung", url: "https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Standards-und-Zertifizierung/Technische-Richtlinien/TR-nach-Thema-sortiert/tr03125/tr-03125.html" },
+                  { name: "§67 SGB X — Sozialdatenschutz", desc: "Spezialgesetzlicher Datenschutz für Sozialdaten — strenger als DSGVO-Minimum", url: "https://www.gesetze-im-internet.de/sgb_10/__67.html" },
+                ]
+              },
+              {
+                icon: ScrollText,
+                title: "E-AKTE & Records Management",
+                color: "oklch(0.55 0.20 55)",
+                standards: [
+                  { name: "xdomea 3.0", desc: "Standard für den Austausch von Schriftgutobjekten zwischen Verwaltungssystemen", url: "https://www.xrepository.de/details/urn:xoev-de:xdomea:standard:xdomea_3.0" },
+                  { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
+                  { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de/mitwirken/normenausschuesse/nabd/veroeffentlichungen/wdc-beuth:din21:269816944" },
+                  { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
+                  { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
+                ]
+              }
+            ].map((category, catIndex) => {
+              const CatIcon = category.icon
+              return (
+                <motion.div
+                  key={catIndex}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: catIndex * 0.15 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${category.color}15` }}>
+                          <CatIcon className="h-7 w-7" style={{ color: category.color }} />
+                        </div>
+                        <CardTitle className="text-xl">{category.title}</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {category.standards.map((std, i) => (
+                        <div key={i} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
+                          <div className="font-semibold text-sm text-foreground mb-1">
+                            {std.url ? (
+                              <a href={std.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                                {std.name}
+                                <ExternalLink className="h-3 w-3 opacity-40" />
+                              </a>
+                            ) : std.name}
+                          </div>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{std.desc}</p>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="border-2 border-primary/30 bg-primary/5">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <ShieldCheck className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">RELIEF-Integration</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Alle genannten Gesetze und Standards sind direkt im Knowledge Graph verankert. 
+                      Jeder Paragraph definiert Regeln für Dokumententypen und Prüfschritte — die KI-Pipeline 
+                      verknüpft jedes eingereichte Dokument automatisch mit den relevanten §§ und Complianceanforderungen.
+                      BSI-Richtlinien und xdomea-Standards gewährleisten die Beweiswerterhaltung und interoperable Aktenführung.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
       {/* ── CTA ── */}
       <section className="py-32 bg-primary text-primary-foreground relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">

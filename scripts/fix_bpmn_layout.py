@@ -1,301 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-             id="Definitions_1"
-             targetNamespace="http://cassa.soprasteria.de/relief"
-             exporter="CASSA RELIEF"
-             exporterVersion="1.0">
+#!/usr/bin/env python3
+"""Rewrite the DI section of relief-process.bpmn with proper layout coordinates."""
+import os
 
-  <collaboration id="Collaboration_1">
-    <participant id="Lane_Antragsteller" name="Antragsteller / Familie Becker" processRef="Process_Antragsteller" />
-    <participant id="Lane_Sachbearbeitung" name="Sachbearbeitung (gE / Jobcenter)" processRef="Process_Sachbearbeitung" />
-    <participant id="Lane_RELIEF" name="RELIEF KI-System" processRef="Process_RELIEF" />
-    <participant id="Lane_Entscheidung" name="Teamleitung / Entscheidung" processRef="Process_Entscheidung" />
-    <messageFlow id="MF_1" sourceRef="Task_Antrag" targetRef="Event_AntragEingang" />
-    <messageFlow id="MF_2" sourceRef="Task_DokEingang" targetRef="Event_DokEingang" />
-    <messageFlow id="MF_3" sourceRef="Task_SBForwardDocs" targetRef="Event_KIStart" />
-    <messageFlow id="MF_4" sourceRef="Task_KIResult" targetRef="Event_KIErgebnis" />
-    <messageFlow id="MF_5" sourceRef="Task_BescheidErstellen" targetRef="Event_BescheidZustellung" />
-    <messageFlow id="MF_6" sourceRef="Task_Mitwirkung" targetRef="Event_Mitwirkung" />
-    <messageFlow id="MF_7" sourceRef="Task_EskalationSend" targetRef="Event_Eskalation" />
-    <messageFlow id="MF_8" sourceRef="Task_FreigabeSend" targetRef="Event_Freigabe" />
-  </collaboration>
+BPMN_PATH = os.path.join(os.path.dirname(__file__), '..', 'src', 'components', 'bpmn', 'relief-process.bpmn')
 
-  <!-- ═══ PROCESS: Antragsteller ═══ -->
-  <process id="Process_Antragsteller" isExecutable="false">
-    <startEvent id="Start_Insolvenz" name="Insolvenz Arbeitgeber&#10;(15.01.2026)">
-      <outgoing>Flow_A1</outgoing>
-    </startEvent>
-    <task id="Task_Antrag" name="Bürgergeld-Antrag&#10;über jobcenter.digital">
-      <incoming>Flow_A1</incoming>
-      <outgoing>Flow_A2</outgoing>
-    </task>
-    <task id="Task_DokEingang" name="47 Dokumente einreichen&#10;(Fotos, Scans, Post)">
-      <incoming>Flow_A2</incoming>
-      <outgoing>Flow_A3</outgoing>
-    </task>
-    <intermediateCatchEvent id="Event_Mitwirkung" name="Mitwirkungs-&#10;anforderung">
-      <incoming>Flow_A3</incoming>
-      <outgoing>Flow_A4</outgoing>
-      <messageEventDefinition id="MED_Mitw" />
-    </intermediateCatchEvent>
-    <task id="Task_Nachreichung" name="Fehlende Unterlagen&#10;nachreichen">
-      <incoming>Flow_A4</incoming>
-      <outgoing>Flow_A5</outgoing>
-    </task>
-    <intermediateCatchEvent id="Event_BescheidZustellung" name="Bescheid&#10;erhalten">
-      <incoming>Flow_A5</incoming>
-      <outgoing>Flow_A6</outgoing>
-      <messageEventDefinition id="MED_Bescheid" />
-    </intermediateCatchEvent>
-    <endEvent id="End_Antragsteller" name="Leistungsbezug&#10;beginnt">
-      <incoming>Flow_A6</incoming>
-    </endEvent>
-    <sequenceFlow id="Flow_A1" sourceRef="Start_Insolvenz" targetRef="Task_Antrag" />
-    <sequenceFlow id="Flow_A2" sourceRef="Task_Antrag" targetRef="Task_DokEingang" />
-    <sequenceFlow id="Flow_A3" sourceRef="Task_DokEingang" targetRef="Event_Mitwirkung" />
-    <sequenceFlow id="Flow_A4" sourceRef="Event_Mitwirkung" targetRef="Task_Nachreichung" />
-    <sequenceFlow id="Flow_A5" sourceRef="Task_Nachreichung" targetRef="Event_BescheidZustellung" />
-    <sequenceFlow id="Flow_A6" sourceRef="Event_BescheidZustellung" targetRef="End_Antragsteller" />
-  </process>
+with open(BPMN_PATH, 'r', encoding='utf-8') as f:
+    lines = f.readlines()
 
-  <!-- ═══ PROCESS: Sachbearbeitung ═══ -->
-  <process id="Process_Sachbearbeitung" isExecutable="false">
-    <intermediateCatchEvent id="Event_AntragEingang" name="Antrag&#10;eingegangen">
-      <outgoing>Flow_S1</outgoing>
-      <messageEventDefinition id="MED_Antrag" />
-    </intermediateCatchEvent>
-    <task id="Task_AkteOeffnen" name="E-AKTE öffnen&#10;(47 Dokumente)">
-      <incoming>Flow_S1</incoming>
-      <outgoing>Flow_S2</outgoing>
-    </task>
-    <task id="Task_SBForwardDocs" name="Dokumente an&#10;RELIEF übergeben">
-      <incoming>Flow_S2</incoming>
-      <outgoing>Flow_S3</outgoing>
-    </task>
-    <intermediateCatchEvent id="Event_KIErgebnis" name="KI-Ergebnis&#10;erhalten">
-      <incoming>Flow_S3</incoming>
-      <outgoing>Flow_S4</outgoing>
-      <messageEventDefinition id="MED_KI" />
-    </intermediateCatchEvent>
-    <task id="Task_BGPruefung" name="BG-Prüfung&#10;(§7 SGB II)&#10;5 Personen prüfen">
-      <incoming>Flow_S4</incoming>
-      <outgoing>Flow_S5</outgoing>
-    </task>
-    <parallelGateway id="GW_Parallel1" name="Parallele&#10;Prüfungen">
-      <incoming>Flow_S5</incoming>
-      <outgoing>Flow_S6a</outgoing>
-      <outgoing>Flow_S6b</outgoing>
-      <outgoing>Flow_S6c</outgoing>
-      <outgoing>Flow_S6d</outgoing>
-    </parallelGateway>
-    <task id="Task_Einkommen" name="Einkommensprüfung&#10;Leila (§11 SGB II)&#10;850 € schwankend">
-      <incoming>Flow_S6a</incoming>
-      <outgoing>Flow_S7a</outgoing>
-    </task>
-    <task id="Task_Vermoegen" name="Vermögensprüfung&#10;Thomas (§12 SGB II)&#10;LV 12.500 € + Auto">
-      <incoming>Flow_S6b</incoming>
-      <outgoing>Flow_S7b</outgoing>
-    </task>
-    <task id="Task_KdU" name="KdU-Prüfung&#10;(§22 SGB II)&#10;1.000 € warm">
-      <incoming>Flow_S6c</incoming>
-      <outgoing>Flow_S7c</outgoing>
-    </task>
-    <task id="Task_Vollstaendigkeit" name="Vollständigkeits-&#10;prüfung&#10;(§60 SGB I)">
-      <incoming>Flow_S6d</incoming>
-      <outgoing>Flow_S7d</outgoing>
-    </task>
-    <exclusiveGateway id="GW_Vollstaendig" name="Unterlagen&#10;vollständig?">
-      <incoming>Flow_S7d</incoming>
-      <outgoing>Flow_Vollst_Ja</outgoing>
-      <outgoing>Flow_Vollst_Nein</outgoing>
-    </exclusiveGateway>
-    <task id="Task_Mitwirkung" name="Mitwirkungs-&#10;anforderung&#10;(§60/§66 SGB I)">
-      <incoming>Flow_Vollst_Nein</incoming>
-      <outgoing>Flow_MitwDone</outgoing>
-    </task>
-    <parallelGateway id="GW_Parallel2" name="Zusammen-&#10;führung">
-      <incoming>Flow_S7a</incoming>
-      <incoming>Flow_S7b</incoming>
-      <incoming>Flow_S7c</incoming>
-      <incoming>Flow_Vollst_Ja</incoming>
-      <incoming>Flow_MitwDone</incoming>
-      <outgoing>Flow_S8</outgoing>
-    </parallelGateway>
-    <exclusiveGateway id="GW_Einkommen" name="Einkommen&#10;schwankend?">
-      <incoming>Flow_S8</incoming>
-      <outgoing>Flow_Vorlaeufig</outgoing>
-      <outgoing>Flow_Endgueltig</outgoing>
-    </exclusiveGateway>
-    <task id="Task_VorlBescheid" name="Vorläufige&#10;Entscheidung&#10;(§41a SGB II)">
-      <incoming>Flow_Vorlaeufig</incoming>
-      <outgoing>Flow_VB1</outgoing>
-    </task>
-    <task id="Task_EndBescheid" name="Endgültiger&#10;Bescheid">
-      <incoming>Flow_Endgueltig</incoming>
-      <outgoing>Flow_EB1</outgoing>
-    </task>
-    <exclusiveGateway id="GW_BescheidMerge">
-      <incoming>Flow_VB1</incoming>
-      <incoming>Flow_EB1</incoming>
-      <outgoing>Flow_S9</outgoing>
-    </exclusiveGateway>
-    <task id="Task_EskalationSend" name="Zur Freigabe&#10;an Teamleitung">
-      <incoming>Flow_S9</incoming>
-      <outgoing>Flow_S10</outgoing>
-    </task>
-    <intermediateCatchEvent id="Event_Freigabe" name="Freigabe&#10;erhalten">
-      <incoming>Flow_S10</incoming>
-      <outgoing>Flow_S11</outgoing>
-      <messageEventDefinition id="MED_Freigabe" />
-    </intermediateCatchEvent>
-    <task id="Task_BescheidErstellen" name="Bescheid erstellen&#10;und versenden&#10;(§35 SGB X)">
-      <incoming>Flow_S11</incoming>
-      <outgoing>Flow_S12</outgoing>
-    </task>
-    <endEvent id="End_Sachbearbeitung" name="Fall&#10;abgeschlossen">
-      <incoming>Flow_S12</incoming>
-    </endEvent>
-    <sequenceFlow id="Flow_S1" sourceRef="Event_AntragEingang" targetRef="Task_AkteOeffnen" />
-    <sequenceFlow id="Flow_S2" sourceRef="Task_AkteOeffnen" targetRef="Task_SBForwardDocs" />
-    <sequenceFlow id="Flow_S3" sourceRef="Task_SBForwardDocs" targetRef="Event_KIErgebnis" />
-    <sequenceFlow id="Flow_S4" sourceRef="Event_KIErgebnis" targetRef="Task_BGPruefung" />
-    <sequenceFlow id="Flow_S5" sourceRef="Task_BGPruefung" targetRef="GW_Parallel1" />
-    <sequenceFlow id="Flow_S6a" sourceRef="GW_Parallel1" targetRef="Task_Einkommen" />
-    <sequenceFlow id="Flow_S6b" sourceRef="GW_Parallel1" targetRef="Task_Vermoegen" />
-    <sequenceFlow id="Flow_S6c" sourceRef="GW_Parallel1" targetRef="Task_KdU" />
-    <sequenceFlow id="Flow_S6d" sourceRef="GW_Parallel1" targetRef="Task_Vollstaendigkeit" />
-    <sequenceFlow id="Flow_S7a" sourceRef="Task_Einkommen" targetRef="GW_Parallel2" />
-    <sequenceFlow id="Flow_S7b" sourceRef="Task_Vermoegen" targetRef="GW_Parallel2" />
-    <sequenceFlow id="Flow_S7c" sourceRef="Task_KdU" targetRef="GW_Parallel2" />
-    <sequenceFlow id="Flow_S7d" sourceRef="Task_Vollstaendigkeit" targetRef="GW_Vollstaendig" />
-    <sequenceFlow id="Flow_Vollst_Ja" name="Ja" sourceRef="GW_Vollstaendig" targetRef="GW_Parallel2" />
-    <sequenceFlow id="Flow_Vollst_Nein" name="Nein" sourceRef="GW_Vollstaendig" targetRef="Task_Mitwirkung" />
-    <sequenceFlow id="Flow_MitwDone" sourceRef="Task_Mitwirkung" targetRef="GW_Parallel2" />
-    <sequenceFlow id="Flow_S8" sourceRef="GW_Parallel2" targetRef="GW_Einkommen" />
-    <sequenceFlow id="Flow_Vorlaeufig" name="Ja (Leila)" sourceRef="GW_Einkommen" targetRef="Task_VorlBescheid" />
-    <sequenceFlow id="Flow_Endgueltig" name="Nein" sourceRef="GW_Einkommen" targetRef="Task_EndBescheid" />
-    <sequenceFlow id="Flow_VB1" sourceRef="Task_VorlBescheid" targetRef="GW_BescheidMerge" />
-    <sequenceFlow id="Flow_EB1" sourceRef="Task_EndBescheid" targetRef="GW_BescheidMerge" />
-    <sequenceFlow id="Flow_S9" sourceRef="GW_BescheidMerge" targetRef="Task_EskalationSend" />
-    <sequenceFlow id="Flow_S10" sourceRef="Task_EskalationSend" targetRef="Event_Freigabe" />
-    <sequenceFlow id="Flow_S11" sourceRef="Event_Freigabe" targetRef="Task_BescheidErstellen" />
-    <sequenceFlow id="Flow_S12" sourceRef="Task_BescheidErstellen" targetRef="End_Sachbearbeitung" />
-  </process>
+# Find the line index where the DI content starts (after <bpmndi:BPMNPlane ...>)
+plane_idx = None
+for i, line in enumerate(lines):
+    if '<bpmndi:BPMNPlane' in line:
+        plane_idx = i
+        break
 
-  <!-- ═══ PROCESS: RELIEF KI-System ═══ -->
-  <process id="Process_RELIEF" isExecutable="false">
-    <intermediateCatchEvent id="Event_KIStart" name="Dokumente&#10;empfangen">
-      <outgoing>Flow_R1</outgoing>
-      <messageEventDefinition id="MED_KIStart" />
-    </intermediateCatchEvent>
-    <task id="Task_OCR" name="OCR &amp; Textextraktion&#10;(Granite-Docling-258M)&#10;Fotos → Text">
-      <incoming>Flow_R1</incoming>
-      <outgoing>Flow_R2</outgoing>
-    </task>
-    <task id="Task_Klassifikation" name="Dokumenten-&#10;klassifikation&#10;(12 Typen erkennen)">
-      <incoming>Flow_R2</incoming>
-      <outgoing>Flow_R3</outgoing>
-    </task>
-    <task id="Task_PII" name="PII-Erkennung&#10;(GLiNER + Presidio)&#10;IBAN, Geburtsdaten">
-      <incoming>Flow_R3</incoming>
-      <outgoing>Flow_R4</outgoing>
-    </task>
-    <exclusiveGateway id="GW_Datenschutz" name="Sensible&#10;Daten?">
-      <incoming>Flow_R4</incoming>
-      <outgoing>Flow_DS_Ja</outgoing>
-      <outgoing>Flow_DS_Nein</outgoing>
-    </exclusiveGateway>
-    <task id="Task_Schwaerzung" name="Automatische&#10;Schwärzung&#10;(§67 SGB X)">
-      <incoming>Flow_DS_Ja</incoming>
-      <outgoing>Flow_DS1</outgoing>
-    </task>
-    <exclusiveGateway id="GW_DSMerge">
-      <incoming>Flow_DS1</incoming>
-      <incoming>Flow_DS_Nein</incoming>
-      <outgoing>Flow_R5</outgoing>
-    </exclusiveGateway>
-    <task id="Task_NER" name="Personen-Zuordnung&#10;(spaCy de_core_news_lg)&#10;→ BG-Mitglieder">
-      <incoming>Flow_R5</incoming>
-      <outgoing>Flow_R6</outgoing>
-    </task>
-    <task id="Task_Sortierung" name="Sachlogische&#10;Sortierung &amp;&#10;Zusammenführung">
-      <incoming>Flow_R6</incoming>
-      <outgoing>Flow_R7</outgoing>
-    </task>
-    <task id="Task_Freitext" name="Freitextgenerierung&#10;(Llama 3 / Granite)&#10;lokales LLM">
-      <incoming>Flow_R7</incoming>
-      <outgoing>Flow_R8</outgoing>
-    </task>
-    <task id="Task_Graph" name="Knowledge Graph&#10;(Neo4j)&#10;Verknüpfung mit §§">
-      <incoming>Flow_R8</incoming>
-      <outgoing>Flow_R9</outgoing>
-    </task>
-    <task id="Task_KIResult" name="Ergebnis an&#10;Sachbearbeitung&#10;(strukturierte E-AKTE)">
-      <incoming>Flow_R9</incoming>
-      <outgoing>Flow_R10</outgoing>
-    </task>
-    <endEvent id="End_RELIEF" name="KI-Verarbeitung&#10;abgeschlossen">
-      <incoming>Flow_R10</incoming>
-    </endEvent>
-    <sequenceFlow id="Flow_R1" sourceRef="Event_KIStart" targetRef="Task_OCR" />
-    <sequenceFlow id="Flow_R2" sourceRef="Task_OCR" targetRef="Task_Klassifikation" />
-    <sequenceFlow id="Flow_R3" sourceRef="Task_Klassifikation" targetRef="Task_PII" />
-    <sequenceFlow id="Flow_R4" sourceRef="Task_PII" targetRef="GW_Datenschutz" />
-    <sequenceFlow id="Flow_DS_Ja" name="Ja (IBAN,&#10;Gesundheit)" sourceRef="GW_Datenschutz" targetRef="Task_Schwaerzung" />
-    <sequenceFlow id="Flow_DS_Nein" name="Nein" sourceRef="GW_Datenschutz" targetRef="GW_DSMerge" />
-    <sequenceFlow id="Flow_DS1" sourceRef="Task_Schwaerzung" targetRef="GW_DSMerge" />
-    <sequenceFlow id="Flow_R5" sourceRef="GW_DSMerge" targetRef="Task_NER" />
-    <sequenceFlow id="Flow_R6" sourceRef="Task_NER" targetRef="Task_Sortierung" />
-    <sequenceFlow id="Flow_R7" sourceRef="Task_Sortierung" targetRef="Task_Freitext" />
-    <sequenceFlow id="Flow_R8" sourceRef="Task_Freitext" targetRef="Task_Graph" />
-    <sequenceFlow id="Flow_R9" sourceRef="Task_Graph" targetRef="Task_KIResult" />
-    <sequenceFlow id="Flow_R10" sourceRef="Task_KIResult" targetRef="End_RELIEF" />
-  </process>
+if plane_idx is None:
+    raise RuntimeError("Could not find <bpmndi:BPMNPlane> in BPMN file")
 
-  <!-- ═══ PROCESS: Teamleitung / Entscheidung ═══ -->
-  <process id="Process_Entscheidung" isExecutable="false">
-    <intermediateCatchEvent id="Event_Eskalation" name="Bescheid zur&#10;Freigabe">
-      <outgoing>Flow_E1</outgoing>
-      <messageEventDefinition id="MED_Eskalation" />
-    </intermediateCatchEvent>
-    <task id="Task_AuditTrail" name="Audit-Trail prüfen&#10;(DMN-Regelpfad)&#10;Nachvollziehbarkeit">
-      <incoming>Flow_E1</incoming>
-      <outgoing>Flow_E2</outgoing>
-    </task>
-    <exclusiveGateway id="GW_Freigabe" name="Freigabe?">
-      <incoming>Flow_E2</incoming>
-      <outgoing>Flow_FG_Ja</outgoing>
-      <outgoing>Flow_FG_Nein</outgoing>
-    </exclusiveGateway>
-    <task id="Task_FreigabeSend" name="Freigabe&#10;erteilen">
-      <incoming>Flow_FG_Ja</incoming>
-      <outgoing>Flow_E4</outgoing>
-    </task>
-    <task id="Task_Rueckfrage" name="Rückfrage an&#10;Sachbearbeitung">
-      <incoming>Flow_FG_Nein</incoming>
-      <outgoing>Flow_E5</outgoing>
-    </task>
-    <endEvent id="End_Entscheidung_OK" name="Freigabe&#10;erteilt">
-      <incoming>Flow_E4</incoming>
-    </endEvent>
-    <endEvent id="End_Entscheidung_RQ" name="Nacharbeit&#10;erforderlich">
-      <incoming>Flow_E5</incoming>
-    </endEvent>
-    <sequenceFlow id="Flow_E1" sourceRef="Event_Eskalation" targetRef="Task_AuditTrail" />
-    <sequenceFlow id="Flow_E2" sourceRef="Task_AuditTrail" targetRef="GW_Freigabe" />
-    <sequenceFlow id="Flow_FG_Ja" name="Ja" sourceRef="GW_Freigabe" targetRef="Task_FreigabeSend" />
-    <sequenceFlow id="Flow_FG_Nein" name="Nein" sourceRef="GW_Freigabe" targetRef="Task_Rueckfrage" />
-    <sequenceFlow id="Flow_E4" sourceRef="Task_FreigabeSend" targetRef="End_Entscheidung_OK" />
-    <sequenceFlow id="Flow_E5" sourceRef="Task_Rueckfrage" targetRef="End_Entscheidung_RQ" />
-  </process>
+# Keep everything up to and including the BPMNPlane opening line
+header = lines[:plane_idx + 1]
 
-  <!-- ═══ DIAGRAM ═══ -->
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
-
+NEW_DI = r"""
       <!-- Participant Bands -->
       <bpmndi:BPMNShape id="Shape_Lane_Antragsteller" bpmnElement="Lane_Antragsteller" isHorizontal="true">
         <dc:Bounds x="160" y="60" width="2400" height="180" />
@@ -665,3 +390,13 @@
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
+"""
+
+with open(BPMN_PATH, 'w', encoding='utf-8') as f:
+    f.writelines(header)
+    f.write(NEW_DI)
+
+print(f"Done! Written to {BPMN_PATH}")
+with open(BPMN_PATH, 'r') as f:
+    content = f.read()
+print(f"File size: {len(content)} bytes, has width=2400: {'2400' in content}")
