@@ -43,6 +43,8 @@ interface GraphData {
   links: GraphLink[]
 }
 
+const START_NODE_ID = 'case_becker'
+
 // ────────────────────────────────────────────
 // Color palette per node type
 // ────────────────────────────────────────────
@@ -349,6 +351,17 @@ export function RELIEFKnowledgeGraph3D() {
 
   const graphData = useMemo(() => buildCaseData(), [])
 
+  const getNodeId = useCallback((ref: string | { id: string }) => {
+    return typeof ref === 'string' ? ref : ref.id
+  }, [])
+
+  const isLinkConnectedToSelected = useCallback((link: GraphLink) => {
+    if (!selectedNode) return false
+    const src = getNodeId(link.source)
+    const tgt = getNodeId(link.target)
+    return src === selectedNode.id || tgt === selectedNode.id
+  }, [getNodeId, selectedNode])
+
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
@@ -429,6 +442,8 @@ export function RELIEFKnowledgeGraph3D() {
 
   const nodeThreeObject = useCallback((node: GraphNode) => {
     const group = new THREE.Group()
+    const isSelected = selectedNode?.id === node.id
+    const isStartNode = node.id === START_NODE_ID
     const color = NODE_COLORS[node.type] || '#999'
     const size = node.type === 'case' ? 11
       : node.type === 'law' ? 10
@@ -449,6 +464,39 @@ export function RELIEFKnowledgeGraph3D() {
     const sphere = new THREE.Mesh(geometry, material)
     group.add(sphere)
 
+    if (isStartNode) {
+      const startGlowGeo = new THREE.SphereGeometry(size * 1.75, 28, 28)
+      const startGlowMat = new THREE.MeshPhongMaterial({
+        color: new THREE.Color('#facc15'),
+        transparent: true,
+        opacity: 0.22,
+        shininess: 90,
+      })
+      group.add(new THREE.Mesh(startGlowGeo, startGlowMat))
+
+      const startRingGeo = new THREE.TorusGeometry(size * 1.45, 0.9, 16, 64)
+      const startRingMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#fde047') })
+      const startRing = new THREE.Mesh(startRingGeo, startRingMat)
+      startRing.rotation.x = Math.PI / 2
+      group.add(startRing)
+    }
+
+    if (isSelected) {
+      const selectedRingGeo = new THREE.TorusGeometry(size * 1.65, 0.8, 16, 64)
+      const selectedRingMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#ffffff') })
+      const selectedRing = new THREE.Mesh(selectedRingGeo, selectedRingMat)
+      selectedRing.rotation.x = Math.PI / 2
+      group.add(selectedRing)
+
+      const selectedHaloGeo = new THREE.SphereGeometry(size * 1.95, 24, 24)
+      const selectedHaloMat = new THREE.MeshPhongMaterial({
+        color: new THREE.Color('#ffffff'),
+        transparent: true,
+        opacity: 0.12,
+      })
+      group.add(new THREE.Mesh(selectedHaloGeo, selectedHaloMat))
+    }
+
     // Glow effect for case, law, and ai nodes
     if (node.type === 'law' || node.type === 'case' || node.type === 'ai') {
       const glowGeo = new THREE.SphereGeometry(size * 1.4, 24, 24)
@@ -462,17 +510,41 @@ export function RELIEFKnowledgeGraph3D() {
 
     const label = new SpriteText(node.label) as any
     label.color = '#e2e8f0'
-    label.textHeight = node.type === 'case' ? 5.5 : node.type === 'law' ? 5 : node.type === 'ai' ? 4.5 : node.type === 'person' ? 4 : 3.5
-    label.backgroundColor = 'rgba(15, 23, 42, 0.75)'
-    label.padding = [2, 4]
+    label.textHeight = node.type === 'case' ? 7 : node.type === 'law' ? 6.5 : node.type === 'ai' ? 6 : node.type === 'person' ? 5.5 : 5
+    label.backgroundColor = isSelected ? 'rgba(15, 23, 42, 0.95)' : 'rgba(15, 23, 42, 0.88)'
+    label.padding = [3.5, 6]
     label.borderRadius = 3
-    label.position.y = -(size + 6)
+    label.position.y = -(size + 9)
+    if (label.material) {
+      label.material.depthTest = false
+      label.material.depthWrite = false
+    }
+    label.renderOrder = 1000
     group.add(label)
 
+    if (isStartNode) {
+      const startTag = new SpriteText('START') as any
+      startTag.color = '#0f172a'
+      startTag.textHeight = 4.2
+      startTag.backgroundColor = 'rgba(250, 204, 21, 0.98)'
+      startTag.padding = [2.5, 5]
+      startTag.borderRadius = 3
+      startTag.position.y = size + 8
+      if (startTag.material) {
+        startTag.material.depthTest = false
+        startTag.material.depthWrite = false
+      }
+      startTag.renderOrder = 1001
+      group.add(startTag)
+    }
+
     return group
-  }, [])
+  }, [selectedNode])
 
   const linkColor = useCallback((link: GraphLink) => {
+    if (selectedNode && !isLinkConnectedToSelected(link)) {
+      return 'rgba(100, 116, 139, 0.08)'
+    }
     switch (link.type) {
       case 'SR_CONTAINS': return 'rgba(59, 130, 246, 0.5)'
       case 'SR_REALIZED_BY': return 'rgba(16, 185, 129, 0.5)'
@@ -496,14 +568,51 @@ export function RELIEFKnowledgeGraph3D() {
       case 'SR_APPLIES_TO': return 'rgba(6, 182, 212, 0.4)'
       default: return 'rgba(148, 163, 184, 0.3)'
     }
-  }, [])
+  }, [isLinkConnectedToSelected, selectedNode])
+
+  const linkWidth = useCallback((link: GraphLink) => {
+    if (!selectedNode) return 1.8
+    return isLinkConnectedToSelected(link) ? 3.8 : 0.5
+  }, [isLinkConnectedToSelected, selectedNode])
 
   const linkDirectionalParticles = useCallback((link: GraphLink) => {
+    if (selectedNode && !isLinkConnectedToSelected(link)) return 0
     return link.type === 'SR_SEQUENCE' ? 3
       : link.type === 'SR_LOEST' ? 3
       : link.type === 'SR_FEHLT' ? 2
       : link.type === 'SR_HAT_PROBLEM' ? 2
       : 1
+  }, [isLinkConnectedToSelected, selectedNode])
+
+  const linkThreeObject = useCallback((link: GraphLink) => {
+    const showLabel = !selectedNode || isLinkConnectedToSelected(link)
+    if (!showLabel) return null
+
+    const relationText = link.description && link.description.trim().length > 0
+      ? link.description
+      : link.type.replace('SR_', '').replace(/_/g, ' ')
+
+    const label = new SpriteText(relationText) as any
+    label.color = '#f8fafc'
+    label.textHeight = selectedNode ? 3.2 : 2.4
+    label.backgroundColor = selectedNode ? 'rgba(15, 23, 42, 0.96)' : 'rgba(15, 23, 42, 0.72)'
+    label.padding = selectedNode ? [1.8, 3.6] : [1.2, 2.6]
+    label.borderRadius = 2
+    if (label.material) {
+      label.material.depthTest = false
+      label.material.depthWrite = false
+    }
+    label.renderOrder = 1000
+    return label
+  }, [isLinkConnectedToSelected, selectedNode])
+
+  const linkPositionUpdate = useCallback((sprite: THREE.Object3D, coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } }) => {
+    const middlePos = {
+      x: coords.start.x + (coords.end.x - coords.start.x) * 0.5,
+      y: coords.start.y + (coords.end.y - coords.start.y) * 0.5,
+      z: coords.start.z + (coords.end.z - coords.start.z) * 0.5,
+    }
+    Object.assign(sprite.position, middlePos)
   }, [])
 
   // Build adjacency for detail panel
@@ -555,27 +664,27 @@ export function RELIEFKnowledgeGraph3D() {
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-3 border border-slate-700">
-        <div className="text-xs text-slate-400 font-semibold mb-2">Knotentypen</div>
+      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-4 border border-slate-700">
+        <div className="text-sm text-slate-200 font-semibold mb-2">Knotentypen</div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1">
           {(Object.keys(NODE_LABELS) as NodeType[]).map(type => (
             <div key={type} className="flex items-center gap-1.5">
               <span
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                className="w-3 h-3 rounded-full flex-shrink-0"
                 style={{ backgroundColor: NODE_COLORS[type] }}
               />
-              <span className="text-[10px] text-slate-300 whitespace-nowrap">{NODE_LABELS[type]}</span>
+              <span className="text-xs text-slate-200 whitespace-nowrap">{NODE_LABELS[type]}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Stats */}
-      <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg px-3 py-2 border border-slate-700">
-        <div className="text-[10px] text-slate-400">
+      <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg px-4 py-3 border border-slate-700">
+        <div className="text-sm text-slate-200">
           {graphData.nodes.length} Knoten · {graphData.links.length} Beziehungen
         </div>
-        <div className="text-[10px] text-blue-400 font-medium">RELIEF E-AKTE Knowledge Graph</div>
+        <div className="text-sm text-blue-300 font-semibold">RELIEF E-AKTE Knowledge Graph</div>
       </div>
 
       {/* Graph */}
@@ -587,9 +696,11 @@ export function RELIEFKnowledgeGraph3D() {
         backgroundColor="#0f172a"
         nodeThreeObject={nodeThreeObject}
         onNodeClick={handleNodeClick}
+        nodeThreeObjectExtend={true}
         linkColor={linkColor}
-        linkWidth={1.5}
-        linkOpacity={0.7}
+        linkWidth={linkWidth}
+        linkThreeObject={linkThreeObject}
+        linkPositionUpdate={linkPositionUpdate}
         linkDirectionalArrowLength={4}
         linkDirectionalArrowRelPos={0.85}
         linkDirectionalParticles={linkDirectionalParticles}
