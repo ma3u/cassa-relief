@@ -452,30 +452,40 @@ function App() {
         </div>
       </header>
 
-      {/* ── SIDE NAVIGATION (desktop only, right side) ── */}
-      <nav className="hidden xl:block fixed right-6 top-1/2 -translate-y-1/2 z-50">
-        <div className="bg-card/90 backdrop-blur-md border border-border rounded-xl shadow-lg px-3 py-4 space-y-1 max-h-[70vh] overflow-y-auto">
+      {/* ── SIDE NAVIGATION (desktop only, top-right below header) ── */}
+      <nav className="hidden xl:block fixed right-6 top-20 z-50">
+        <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-lg px-4 py-5 max-h-[calc(100vh-6rem)] overflow-y-auto">
           {(() => {
             let lastGroup = ''
+            let index = 0
             return sideNavSections.map((section) => {
               const showGroup = section.group !== lastGroup
               lastGroup = section.group
+              index++
               return (
                 <div key={section.id}>
                   {showGroup && (
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-2 pt-2 pb-1 first:pt-0">
+                    <div className="text-[11px] uppercase tracking-wider text-muted-foreground/60 font-bold px-2 pt-3 pb-1.5 first:pt-0">
                       {section.group}
                     </div>
                   )}
                   <button
                     onClick={() => scrollToSection(section.id)}
                     className={`
-                      block w-full text-left text-xs px-2 py-1.5 rounded-md transition-all duration-200
+                      flex items-center gap-2.5 w-full text-left text-sm px-2.5 py-2 rounded-lg transition-all duration-200
                       ${activeSection === section.id 
-                        ? 'bg-primary/15 text-primary font-semibold border-l-2 border-primary pl-2.5' 
+                        ? 'bg-primary/15 text-primary font-semibold border-l-3 border-primary pl-3' 
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}
                     `}
                   >
+                    <span className={`
+                      inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0
+                      ${activeSection === section.id
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground'}
+                    `}>
+                      {index}
+                    </span>
                     {section.label}
                   </button>
                 </div>
