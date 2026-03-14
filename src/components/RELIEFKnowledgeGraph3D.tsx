@@ -546,42 +546,49 @@ export function RELIEFKnowledgeGraph3D() {
       return 'rgba(100, 116, 139, 0.08)'
     }
     switch (link.type) {
-      case 'SR_CONTAINS': return 'rgba(59, 130, 246, 0.5)'
-      case 'SR_REALIZED_BY': return 'rgba(16, 185, 129, 0.5)'
-      case 'SR_REFERENCES': return 'rgba(139, 92, 246, 0.4)'
-      case 'SR_SEQUENCE': return 'rgba(34, 197, 94, 0.6)'
-      case 'SR_BETRIFFT': return 'rgba(244, 114, 182, 0.7)'
-      case 'SR_GEHOERT_ZU': return 'rgba(244, 114, 182, 0.4)'
-      case 'SR_EINGEREICHT': return 'rgba(251, 191, 36, 0.5)'
-      case 'SR_FEHLT': return 'rgba(239, 68, 68, 0.8)'
-      case 'SR_HAT_PROBLEM': return 'rgba(249, 115, 22, 0.7)'
-      case 'SR_LOEST': return 'rgba(34, 197, 94, 0.8)'
-      case 'SR_COMPLIANT': return 'rgba(6, 182, 212, 0.5)'
-      case 'SR_UNTERSTUETZT': return 'rgba(34, 197, 94, 0.5)'
-      case 'SR_DEFINIERT_DURCH': return 'rgba(99, 102, 241, 0.5)'
-      case 'SR_EREIGNIS': return 'rgba(168, 85, 247, 0.6)'
-      case 'SR_DURCHLAEUFT': return 'rgba(16, 185, 129, 0.6)'
-      case 'SR_HAT': return 'rgba(239, 68, 68, 0.4)'
-      case 'SR_IN_AKTE': return 'rgba(251, 191, 36, 0.3)'
-      case 'SR_NACHWEIS': return 'rgba(251, 191, 36, 0.6)'
-      case 'SR_PRUEFT': return 'rgba(239, 68, 68, 0.6)'
-      case 'SR_APPLIES_TO': return 'rgba(6, 182, 212, 0.4)'
-      default: return 'rgba(148, 163, 184, 0.3)'
+      case 'SR_CONTAINS': return 'rgba(59, 130, 246, 0.88)'
+      case 'SR_REALIZED_BY': return 'rgba(16, 185, 129, 0.88)'
+      case 'SR_REFERENCES': return 'rgba(139, 92, 246, 0.84)'
+      case 'SR_SEQUENCE': return 'rgba(34, 197, 94, 0.92)'
+      case 'SR_BETRIFFT': return 'rgba(244, 114, 182, 0.92)'
+      case 'SR_GEHOERT_ZU': return 'rgba(244, 114, 182, 0.84)'
+      case 'SR_EINGEREICHT': return 'rgba(251, 191, 36, 0.9)'
+      case 'SR_FEHLT': return 'rgba(239, 68, 68, 0.96)'
+      case 'SR_HAT_PROBLEM': return 'rgba(249, 115, 22, 0.94)'
+      case 'SR_LOEST': return 'rgba(34, 197, 94, 0.94)'
+      case 'SR_COMPLIANT': return 'rgba(6, 182, 212, 0.88)'
+      case 'SR_UNTERSTUETZT': return 'rgba(34, 197, 94, 0.88)'
+      case 'SR_DEFINIERT_DURCH': return 'rgba(99, 102, 241, 0.88)'
+      case 'SR_EREIGNIS': return 'rgba(168, 85, 247, 0.9)'
+      case 'SR_DURCHLAEUFT': return 'rgba(16, 185, 129, 0.9)'
+      case 'SR_HAT': return 'rgba(239, 68, 68, 0.84)'
+      case 'SR_IN_AKTE': return 'rgba(251, 191, 36, 0.84)'
+      case 'SR_NACHWEIS': return 'rgba(251, 191, 36, 0.9)'
+      case 'SR_PRUEFT': return 'rgba(239, 68, 68, 0.9)'
+      case 'SR_APPLIES_TO': return 'rgba(6, 182, 212, 0.84)'
+      default: return 'rgba(148, 163, 184, 0.72)'
     }
   }, [isLinkConnectedToSelected, selectedNode])
 
+  const linkDirectionalArrowColor = useCallback((link: GraphLink) => {
+    if (selectedNode && !isLinkConnectedToSelected(link)) {
+      return 'rgba(148, 163, 184, 0.2)'
+    }
+    return 'rgba(248, 250, 252, 0.98)'
+  }, [isLinkConnectedToSelected, selectedNode])
+
   const linkWidth = useCallback((link: GraphLink) => {
-    if (!selectedNode) return 1.8
-    return isLinkConnectedToSelected(link) ? 3.8 : 0.5
+    if (!selectedNode) return 2.9
+    return isLinkConnectedToSelected(link) ? 5.2 : 0.6
   }, [isLinkConnectedToSelected, selectedNode])
 
   const linkDirectionalParticles = useCallback((link: GraphLink) => {
     if (selectedNode && !isLinkConnectedToSelected(link)) return 0
-    return link.type === 'SR_SEQUENCE' ? 3
-      : link.type === 'SR_LOEST' ? 3
-      : link.type === 'SR_FEHLT' ? 2
-      : link.type === 'SR_HAT_PROBLEM' ? 2
-      : 1
+    return link.type === 'SR_SEQUENCE' ? 4
+      : link.type === 'SR_LOEST' ? 4
+      : link.type === 'SR_FEHLT' ? 3
+      : link.type === 'SR_HAT_PROBLEM' ? 3
+      : 2
   }, [isLinkConnectedToSelected, selectedNode])
 
   const linkThreeObject = useCallback((link: GraphLink) => {
@@ -594,9 +601,9 @@ export function RELIEFKnowledgeGraph3D() {
 
     const label = new SpriteText(relationText) as any
     label.color = '#f8fafc'
-    label.textHeight = selectedNode ? 3.2 : 2.4
-    label.backgroundColor = selectedNode ? 'rgba(15, 23, 42, 0.96)' : 'rgba(15, 23, 42, 0.72)'
-    label.padding = selectedNode ? [1.8, 3.6] : [1.2, 2.6]
+    label.textHeight = selectedNode ? 4.5 : 3.6
+    label.backgroundColor = selectedNode ? 'rgba(15, 23, 42, 0.98)' : 'rgba(15, 23, 42, 0.9)'
+    label.padding = selectedNode ? [2.2, 4.2] : [1.8, 3.4]
     label.borderRadius = 2
     if (label.material) {
       label.material.depthTest = false
@@ -664,19 +671,20 @@ export function RELIEFKnowledgeGraph3D() {
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-4 border border-slate-700">
-        <div className="text-sm text-slate-200 font-semibold mb-2">Knotentypen</div>
+      <div className="absolute bottom-3 left-3 z-20 bg-slate-900/90 backdrop-blur-sm rounded-lg p-5 border border-slate-700">
+        <div className="text-lg text-slate-100 font-bold mb-2">Knotentypen</div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1">
           {(Object.keys(NODE_LABELS) as NodeType[]).map(type => (
             <div key={type} className="flex items-center gap-1.5">
               <span
-                className="w-3 h-3 rounded-full flex-shrink-0"
+                className="w-3.5 h-3.5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: NODE_COLORS[type] }}
               />
-              <span className="text-xs text-slate-200 whitespace-nowrap">{NODE_LABELS[type]}</span>
+              <span className="text-base text-slate-100 whitespace-nowrap">{NODE_LABELS[type]}</span>
             </div>
           ))}
         </div>
+        <div className="mt-2 text-sm text-slate-300">Pfeilspitze zeigt die Richtung der Beziehung.</div>
       </div>
 
       {/* Stats */}
@@ -698,14 +706,15 @@ export function RELIEFKnowledgeGraph3D() {
         onNodeClick={handleNodeClick}
         nodeThreeObjectExtend={true}
         linkColor={linkColor}
+        linkDirectionalArrowColor={linkDirectionalArrowColor}
         linkWidth={linkWidth}
         linkThreeObject={linkThreeObject}
         linkPositionUpdate={linkPositionUpdate}
-        linkDirectionalArrowLength={4}
-        linkDirectionalArrowRelPos={0.85}
+        linkDirectionalArrowLength={10}
+        linkDirectionalArrowRelPos={0.94}
         linkDirectionalParticles={linkDirectionalParticles}
-        linkDirectionalParticleWidth={2}
-        linkDirectionalParticleSpeed={0.005}
+        linkDirectionalParticleWidth={4}
+        linkDirectionalParticleSpeed={0.009}
         enableNodeDrag={true}
         enableNavigationControls={true}
         showNavInfo={false}
