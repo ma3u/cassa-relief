@@ -41,6 +41,7 @@ import {
   Bot,
   Layers,
   Link2,
+  ExternalLink,
   Play,
   Pause,
   Volume2,
@@ -300,31 +301,35 @@ function App() {
   // ────────────────────────────────────────────
   const chatApiStandards = [
     {
-      name: "Dokumenten-Klassifikation",
+      name: "Dokumenten-Klassifikation & OCR",
       endpoint: "POST /api/v1/classify",
-      description: "Automatische Erkennung des Dokumententyps: Kontoauszug, Mietvertrag, Lohnabrechnung, Bescheid etc. Rückgabe mit Confidence-Score.",
-      adoptedBy: "Document AI, Azure Form Recognizer, Custom Vision",
+      description: "IBM Granite-Docling-258M: Spezialisiertes Vision-Language-Modell (258M Parameter) wandelt Fotos, Scans und Screenshots in strukturierten Text um. Erkennt Dokumententyp, Layout und Tabellenstruktur — auch bei Handyfotos von Kontoauszügen.",
+      adoptedBy: "IBM Granite-Docling-258M, Docling Framework, RapidOCR",
+      url: "https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview",
       color: "#10b981"
     },
     {
-      name: "OCR & Extraktion",
-      endpoint: "POST /api/v1/extract",
-      description: "Texterkennung aus Fotos, Scans, Screenshots. Strukturierte Datenextraktion: Beträge, Daten, Namen, Adressen.",
-      adoptedBy: "Tesseract OCR, Azure Cognitive Services, AWS Textract",
-      color: "#8b5cf6"
+      name: "PII-Erkennung (Schwärzung)",
+      endpoint: "POST /api/v1/redact",
+      description: "GLiNER-PII-Large (Zero-Shot NER): Erkennt IBAN, Geburtsdaten, Gesundheitsdaten und Kontonummern — auch in nicht-standardformatierten Dokumenten. Kombiniert mit Microsoft Presidio für Regex-Validierung und Schwärzung.",
+      adoptedBy: "GLiNER-PII-Large, Microsoft Presidio, spaCy de_core_news_lg",
+      url: "https://huggingface.co/knowledgator/gliner-pii-large-v1.0",
+      color: "#f59e0b"
     },
     {
-      name: "Schwärzung & Compliance",
-      endpoint: "POST /api/v1/redact",
-      description: "Automatische Erkennung und Schwärzung sensibler Daten: Kontonummern, Geburtsdaten, Gesundheitsdaten. DSGVO-konform.",
-      adoptedBy: "Pattern-Matching, NER-Modelle, Presidio",
-      color: "#f59e0b"
+      name: "Freitextgenerierung",
+      endpoint: "POST /api/v1/extract",
+      description: "Llama 3 / IBM Granite (lokal): Generiert beschreibende Freitexte für jedes Dokument aus dem extrahierten Inhalt — z.B. 'Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3'. Vollständig lokal, keine Cloud.",
+      adoptedBy: "Llama 3 (Meta), IBM Granite, Ollama (lokal)",
+      url: "https://llama.meta.com/",
+      color: "#8b5cf6"
     },
     {
       name: "Knowledge Graph API",
       endpoint: "POST /api/v1/graph/query",
-      description: "Abfrage des RELIEF-Wissensgraphen: Verknüpfungen zwischen Dokumenten, Gesetzen, Personen und Prüfschritten. Cypher-basiert.",
+      description: "Neo4j-Wissensgraph: Verknüpft Dokumente mit Gesetzen (§§ SGB II), Personen der BG, Prüfschritten und KI-Ergebnissen. Cypher-Abfragen für Vollständigkeitsprüfung und Compliance-Checks.",
       adoptedBy: "Neo4j, GraphRAG, LangChain Graph",
+      url: "https://neo4j.com/",
       color: "#3b82f6"
     }
   ]
@@ -380,6 +385,9 @@ function App() {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('scenarios')} className="hidden md:flex">
               Szenarien
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('tech-stack')} className="hidden md:flex">
+              Technologie
             </Button>
             <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
@@ -1129,7 +1137,12 @@ function App() {
                   <CardHeader>
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: api.color }} />
-                      <CardTitle className="text-base">{api.name}</CardTitle>
+                      <CardTitle className="text-base">
+                      <a href={api.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                        {api.name}
+                        <ExternalLink className="h-3 w-3 opacity-50" />
+                      </a>
+                    </CardTitle>
                     </div>
                     <code className="text-xs bg-muted px-2 py-1 rounded font-mono text-primary">{api.endpoint}</code>
                   </CardHeader>
@@ -1497,6 +1510,208 @@ function App() {
               })}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── SECTION: Technologie-Stack ── */}
+      <section id="tech-stack" className="py-32 bg-muted/30 relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Zap className="h-4 w-4 mr-2" />
+              Schritt 9: Technologie
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Open-Source KI-Stack — lokal & DSGVO-konform
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Alle Modelle laufen lokal auf Kubernetes — keine Cloud-Abhängigkeit, keine Daten verlassen das Rechenzentrum.
+              Zentrale Anforderung für §67 SGB X und BSI IT-Grundschutz.
+            </p>
+          </motion.div>
+
+          {/* Pipeline visualization */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <Card className="border-2 border-primary/20 bg-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Workflow className="h-5 w-5 text-primary" />
+                  RELIEF-Pipeline: Vom Foto zur strukturierten E-AKTE
+                </CardTitle>
+                <CardDescription>
+                  Vollständig automatisiert, nachvollziehbar und ohne Cloud-Abhängigkeit
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  {[
+                    { text: 'Foto / Scan / PDF', color: 'bg-gray-500', sub: 'Eingang' },
+                    { text: 'Granite-Docling', color: 'bg-emerald-600', sub: 'OCR + Layout' },
+                    { text: 'GLiNER + Presidio', color: 'bg-amber-600', sub: 'PII-Erkennung' },
+                    { text: 'spaCy (deutsch)', color: 'bg-blue-600', sub: 'Namen & Orte' },
+                    { text: 'Presidio Anonymizer', color: 'bg-pink-600', sub: 'Schwärzung' },
+                    { text: 'Llama 3 / Granite', color: 'bg-purple-600', sub: 'Freitext' },
+                    { text: 'Neo4j Graph', color: 'bg-indigo-600', sub: 'Verknüpfung' },
+                    { text: 'E-AKTE (xdomea)', color: 'bg-green-700', sub: 'Ergebnis' },
+                  ].map((step, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="text-center">
+                        <Badge className={`${step.color} text-white border-0 text-xs`}>
+                          {step.text}
+                        </Badge>
+                        <div className="text-[10px] text-muted-foreground mt-1">{step.sub}</div>
+                      </div>
+                      {i < 7 && <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Model cards */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'IBM Granite-Docling-258M',
+                role: 'Textextraktion & Layout',
+                url: 'https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview',
+                description: 'Spezialisiertes Vision-Language-Modell mit nur 258M Parametern. Wandelt Fotos, Scans und Screenshots in strukturierten Text um — Layout, Tabellen und Formeln bleiben erhalten. Verarbeitet genau die Qualitätsprobleme aus dem Demo-Fall: Handyfotos von Kontoauszügen, 15-seitige Mietverträge, Screenshots.',
+                highlights: ['258M Parameter (kompakt)', 'Fotos + Scans + PDFs', 'Layout-Erhaltung (DocTags)', 'Open Source (Apache 2.0)'],
+                color: 'oklch(0.50 0.18 160)',
+                icon: Eye,
+              },
+              {
+                name: 'GLiNER-PII-Large',
+                role: 'PII-Erkennung (Zero-Shot)',
+                url: 'https://huggingface.co/knowledgator/gliner-pii-large-v1.0',
+                description: 'Zero-Shot-NER-Modell von Knowledgator, das IBAN, Geburtsdaten, Gesundheitsdaten und Kontonummern erkennt — auch in nicht standardmäßig formatierten Dokumenten. Entscheidend für die Kontoauszüge und die Unterhaltsurkunde im Demo-Fall.',
+                highlights: ['IBAN-Erkennung nativ', 'Geburtsdaten & Gesundheit', 'Zero-Shot (kein Training)', 'Open Source (Apache 2.0)'],
+                color: 'oklch(0.55 0.20 55)',
+                icon: Shield,
+              },
+              {
+                name: 'Microsoft Presidio',
+                role: 'Schwärzungs-Framework',
+                url: 'https://microsoft.github.io/presidio/',
+                description: 'Modulares Open-Source-Framework für PII-Erkennung und Anonymisierung. Kombiniert GLiNER als NER-Backend mit Regex-Validierung (IBAN-Checksummen). Schwärzt mit wählbaren Operatoren: Ersetzen, Maskieren oder schwarzes Rechteck im PDF.',
+                highlights: ['GLiNER als Backend', 'Regex-Doppelprüfung', 'Replace / Mask / Redact', 'Open Source (MIT)'],
+                color: 'oklch(0.50 0.18 200)',
+                icon: ShieldCheck,
+              },
+              {
+                name: 'spaCy de_core_news_lg',
+                role: 'Deutsche Eigennamen (NER)',
+                url: 'https://spacy.io/models/de#de_core_news_lg',
+                description: 'Deutsches NER-Modell für Personen- und Ortsnamen in Verwaltungstexten. Erkennt "Thomas Becker", "Dortmund-Hörde" und "Sparkasse Dortmund" zuverlässig. Ergänzt GLiNER als performante Basisschicht in Presidio.',
+                highlights: ['PER + LOC + ORG', 'Optimiert für Deutsch', 'Performant (kein GPU)', 'Open Source (MIT)'],
+                color: 'oklch(0.45 0.15 245)',
+                icon: Search,
+              },
+              {
+                name: 'Llama 3 / IBM Granite',
+                role: 'Freitextgenerierung',
+                url: 'https://llama.meta.com/',
+                description: 'Lokales LLM für die automatische Generierung beschreibender Freitexte: "Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3". Läuft vollständig lokal via Ollama — keine Daten verlassen das System.',
+                highlights: ['Lokal via Ollama', 'Deutsch-fähig', 'Dokument-Summarization', 'Meta LLAMA Lizenz'],
+                color: 'oklch(0.45 0.12 280)',
+                icon: Bot,
+              },
+              {
+                name: 'Neo4j Knowledge Graph',
+                role: 'Verknüpfung & Compliance',
+                url: 'https://neo4j.com/',
+                description: 'Graph-Datenbank für die Verbindung aller Entitäten: Dokumente → Personen der BG → §§ SGB II → Prüfschritte → KI-Ergebnisse. Ermöglicht Vollständigkeitsprüfung, Compliance-Checks und navigierbare Wissensstruktur.',
+                highlights: ['Cypher-Abfragen', 'GraphRAG-fähig', 'Compliance-Traversierung', 'Community Edition'],
+                color: 'oklch(0.50 0.15 170)',
+                icon: Network,
+              },
+              {
+                name: 'Gemini 3 / Vertex AI',
+                role: 'Cloud-Benchmark (Bild & Dokument)',
+                url: 'https://ai.google.dev/gemini-api/docs/image-understanding',
+                description: 'Googles multimodales KI-Modell als Cloud-Benchmark: Native PDF-Vision (bis 1.000 Seiten), Object Detection & Segmentierung, Nano Banana Inpainting für Schwärzung per Sprachbefehl. Bis 4K Auflösung, Thinking Mode für komplexe Aufgaben.',
+                highlights: ['PDF bis 1.000 Seiten', 'Segmentierung & Detection', 'Nano Banana Inpainting', '⚠️ Cloud (DPA erforderlich)'],
+                color: 'oklch(0.55 0.15 220)',
+                icon: Globe,
+              },
+            ].map((model, i) => {
+              const ModelIcon = model.icon
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/50">
+                    <CardHeader>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-3 rounded-xl" style={{ backgroundColor: `${model.color}15` }}>
+                          <ModelIcon className="h-6 w-6" style={{ color: model.color }} />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg leading-tight">
+                            <a href={model.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
+                              {model.name}
+                              <ExternalLink className="h-3.5 w-3.5 opacity-40" />
+                            </a>
+                          </CardTitle>
+                          <p className="text-xs text-muted-foreground font-medium mt-1">{model.role}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-4">{model.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {model.highlights.map((h, j) => (
+                          <Badge key={j} variant="secondary" className="text-xs">{h}</Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* DSGVO compliance note */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-12"
+          >
+            <Card className="border-2 border-primary/30 bg-primary/5">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <Shield className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">100% lokal — 0% Cloud</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Alle Modelle (Granite-Docling, GLiNER, Presidio, spaCy, Llama 3) laufen auf Kubernetes im Rechenzentrum der gE. 
+                      Keine personenbezogenen Daten verlassen die Infrastruktur. Alle Komponenten sind Open Source (Apache 2.0 / MIT / Meta LLAMA) — 
+                      keine proprietären Cloud-Abhängigkeiten. Konform mit §67 SGB X (Sozialdatenschutz), BSI IT-Grundschutz und DSGVO Art. 25 (Privacy by Design).
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </section>
 

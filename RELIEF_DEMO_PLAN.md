@@ -159,3 +159,141 @@ Die Erzählung beschreibt den Fall Familie Becker aus der Perspektive einer Sach
 5. Die Verknüpfung im Knowledge Graph (Gesetze → Prozesse → Dokumente → KI-Lösungen)
 
 Voice: **Alice** (ElevenLabs, professional female educator, multilingual v2)
+
+---
+
+## Umsetzungsdetails — Technologie-Stack (2025/2026)
+
+Bezogen auf den konkreten CASSA RELIEF Use Case — 47 Dokumente (Fotos, Scans, Screenshots) mit IBAN-Nummern, Geburtsdaten, Gesundheitsdaten — ergibt sich folgende Tool-Empfehlung. Der gesamte Stack läuft lokal auf Kubernetes ohne Cloud-Abhängigkeit — eine zentrale Anforderung für §67 SGB X (Sozialdatenschutz) und BSI IT-Grundschutz im Jobcenter-Kontext.
+
+### Phase 1: Textextraktion (OCR & Parsing)
+
+#### [IBM Granite-Docling-258M](https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview) (Sep 2025, Apache 2.0)
+
+Der aktuell beste Open-Source-Ansatz für den RELIEF-Use Case. Das Modell ist mit nur **258M Parametern** speziell für Dokumentenkonvertierung trainiert — nicht auf einen allgemeinen LLM adaptiert. Es liefert **DocTags**, die Layout, Tabellenstruktur, Formeln und Code vollständig erhalten, und übertrifft dabei deutlich größere Systeme in Benchmarks. Für RELIEF zentral: Es verarbeitet sowohl digitale PDFs (ohne OCR-Overhead) als auch **Fotos und Screenshots** (mit integrierter Vision) — also genau die Qualitätsprobleme #1–#4 aus dem Demo-Fall.
+
+Granite-Docling ist die **VLM-Komponente** des [Docling-Frameworks](https://github.com/DS4SD/docling). Beide werden zusammen als Pipeline betrieben:
+
+```python
+from docling.document_converter import DocumentConverter
+
+converter = DocumentConverter()
+result = converter.convert("kontoauszug_foto.jpg")  # Foto, PDF, Screenshot
+markdown = result.document.export_to_markdown()
+```
+
+#### Docling-Extras: [RapidOCR](https://github.com/RapidAI/RapidOCR) & [Azure AI Document Intelligence](https://azure.microsoft.com/de-de/products/ai-services/ai-document-intelligence)
+
+Für schwierige handschriftliche oder qualitätsarme Scans (Demo-Fall #9: Screenshot als Insolvenzbekanntmachung) lässt sich Docling mit **[RapidOCR](https://github.com/RapidAI/RapidOCR)** als Alternative zu [Tesseract](https://github.com/tesseract-ocr/tesseract) konfigurieren. Für Formulare mit strukturierten Key-Value-Paaren (Lohnabrechnungen, Mietverträge) kann **[Azure AI Document Intelligence](https://azure.microsoft.com/de-de/products/ai-services/ai-document-intelligence)** als Docling-Backend eingebunden werden.
+
+### Phase 2: Schwärzung (PII-Erkennung & Redaktion)
+
+#### [GLiNER-PII](https://huggingface.co/knowledgator/gliner-pii-large-v1.0) (Knowledgator, Zero-Shot NER)
+
+Das entscheidende Modell für RELIEF. [`knowledgator/gliner-pii-large-v1.0`](https://huggingface.co/knowledgator/gliner-pii-large-v1.0) ist ein Zero-Shot-NER-Modell, das **explizit `iban` als Label unterstützt** — für die Kontonummern in der Unterhaltsurkunde (Demo-Fall #6):
+
+| Kategorie | Unterstützte Labels (für RELIEF relevant) |
+|---|---|
+| Personen | `person`, `username` |
+| Kontakt | `address`, `phone_number`, `email` |
+| Behörden-IDs | `tax_id`, `social_security_number` |
+| **Finanzdaten** | **`iban`**, `bank_account`, `credit_card_number` |
+| **Gesundheit** | **`medical_record_number`**, `health_insurance_id` |
+| Datum | `date_of_birth` |
+
+Der Schlüsselvorteil gegenüber regelbasiertem Pattern-Matching: GLiNER erkennt IBAN auch dann, wenn sie nicht standardformatiert oder mit Leerzeichen erscheinen (häufig bei abfotografierten Kontoauszügen).
+
+#### [Microsoft Presidio](https://microsoft.github.io/presidio/) + GLiNER als Custom Recognizer
+
+Die empfohlene Architektur kombiniert **[Presidio Analyzer](https://microsoft.github.io/presidio/analyzer/)** (Framework) mit **[GLiNER](https://huggingface.co/knowledgator/gliner-pii-large-v1.0)** als NER-Backend. Presidio übernimmt dabei Regex-Validierung (Checksummen für IBAN, Steuernummern) als zweite Schicht:
+
+```python
+from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import NlpEngineProvider
+from gliner import GLiNER
+
+# GLiNER als NER-Backend für Presidio
+gliner_model = GLiNER.from_pretrained("knowledgator/gliner-pii-large-v1.0")
+
+# Custom Recognizer für deutsche Verwaltungsdokumente
+labels = ["person", "iban", "date_of_birth", "address",
+          "medical_record_number", "tax_id", "phone_number"]
+```
+
+Presidio Anonymizer übernimmt dann die eigentliche Schwärzung mit wählbaren Operatoren: **Replace** (→ `[IBAN]`), **Mask** (→ `DE**...****1234`), **Redact** (→ schwarzes Rechteck im PDF).
+
+#### [spaCy](https://spacy.io/) [`de_core_news_lg`](https://spacy.io/models/de#de_core_news_lg) für deutsche Eigennamen
+
+Für Personennamen (Thomas Becker, Leila Kaya) in deutschen Verwaltungstexten liefert `de_core_news_lg` solide Ergebnisse bei LOC- und PER-Entitäten. Das Transformer-Modell `de_dep_news_trf` ist präziser, aber ressourcenintensiver — bei RELIEF empfiehlt sich `de_core_news_lg` als performanter Basis-NER in Presidio, ergänzt durch GLiNER für strukturierte PII.
+
+### Empfohlene RELIEF-Pipeline (vollständig lokal, DSGVO-konform)
+
+```
+Eingang (Foto/Scan/PDF/Screenshot)
+        ↓
+[Granite-Docling-258M]  → DocTags / Markdown-Text
+        ↓
+[Presidio Analyzer]
+   ├─ GLiNER-PII-Large  → IBAN, Geburtsdatum, Gesundheitsdaten
+   ├─ spaCy de_core_news_lg  → Namen, Orte
+   └─ Regex-Recognizer  → Deutsche Steuernummer, KV-Nr., Aktenzeichen
+        ↓
+[Presidio Anonymizer]   → Geschwärztes Dokument / JSON mit Positionen
+        ↓
+[LLM (Llama 3 / Granite)] → Freitextgenerierung (Demo-Fall #11)
+        ↓
+Strukturierte E-AKTE (xdomea 3.0-konform)
+```
+
+### Modellvergleich für RELIEF
+
+| Modell/Tool | Aufgabe | Stärke im RELIEF-Kontext | Lizenz |
+|---|---|---|---|
+| **[Granite-Docling-258M](https://huggingface.co/ds4sd/docling-ibm-granite-258m-preview)** | OCR + Layout | Fotos, Screenshots, Scans → strukturierter Text | Apache 2.0 |
+| **[GLiNER-PII-Large](https://huggingface.co/knowledgator/gliner-pii-large-v1.0)** | NER/PII | IBAN, Geburtsdatum, Zero-Shot | Apache 2.0 |
+| **[Presidio](https://microsoft.github.io/presidio/)** | Redaktions-Framework | Modularer Stack, Docker-ready | MIT |
+| **[spaCy `de_core_news_lg`](https://spacy.io/models/de#de_core_news_lg)** | NER Deutsch | Deutsche Eigennamen (PER, LOC) | MIT |
+| **[Tesseract](https://github.com/tesseract-ocr/tesseract)/[RapidOCR](https://github.com/RapidAI/RapidOCR)** | OCR Fallback | Schlechte Bildqualität | Apache 2.0 |
+| **[Llama 3](https://llama.meta.com/) (lokal via [Ollama](https://ollama.com/))** | Freitextgenerierung | Dokument-Summarization auf Deutsch | Meta LLAMA |
+| **[Gemini 3 Flash](https://ai.google.dev/gemini-api/docs/image-understanding)** | Bild- & Dokumentenanalyse | Cloud-Benchmark für OCR, Segmentierung, Structured Output | Proprietär (API) |
+| **[Imagen 4](https://ai.google.dev/gemini-api/docs/imagen) / [Nano Banana](https://ai.google.dev/gemini-api/docs/image-generation)** | Bildgenerierung & -bearbeitung | Redaktion via Inpainting, bis 4K Auflösung | Proprietär (API) |
+| **[Neo4j](https://neo4j.com/)** | Knowledge Graph | Compliance-Traversierung, GraphRAG | Community (GPLv3) |
+
+### Cloud-Alternative: Google Gemini / Vertex AI (Stand März 2026)
+
+Als **Benchmark und optionale Cloud-Alternative** (bei Freigabe durch den Datenschutzbeauftragten) bietet **Google Gemini 3** auf [Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) aktuell die leistungsstärksten multimodalen Fähigkeiten für Dokumenten- und Bildverarbeitung:
+
+#### [Gemini — Dokumentenverständnis](https://ai.google.dev/gemini-api/docs/document-processing)
+
+- **Native PDF-Vision**: Versteht PDFs bis 1.000 Seiten mit Layout, Tabellen, Diagramme und Bilder — kein externes OCR nötig
+- **Structured Output**: Extrahiert Informationen direkt als JSON (z.B. Mietvertragsdaten, Lohnabrechnung-Positionen)
+- **Gemini 3 Media Resolution**: Granulare Kontrolle über Bildauflösung pro Seite (low/medium/high) — optimal für gemischte Dokumentenqualität
+- Modell: `gemini-3-flash-preview` (schnell) oder `gemini-3-pro` (präziser)
+
+#### [Gemini — Bildanalyse & Segmentierung](https://ai.google.dev/gemini-api/docs/image-understanding)
+
+- **Object Detection**: Erkennt und lokalisiert Objekte in Bildern mit Bounding Boxes (normalisiert auf 0–1000)
+- **Segmentierung**: Ab Gemini 2.5 — liefert pixelgenaue Konturmasken einzelner Objekte (als Base64-PNG)
+- **Custom Instructions**: "Erkenne alle IBAN-Nummern auf diesem Kontoauszug-Foto und markiere ihre Position"
+- Formate: JPEG, PNG, WEBP, HEIC — bis 3.600 Bilder pro Request
+
+#### [Nano Banana — Bildgenerierung & -bearbeitung](https://ai.google.dev/gemini-api/docs/image-generation) (Gemini Image Models)
+
+- **Inpainting / Semantic Masking**: Schwärzung durch Beschreibung — "Ersetze die IBAN auf diesem Dokument durch einen schwarzen Balken" (ohne manuelles Masking)
+- **Multi-Turn Editing**: Konversationelle Bearbeitung — iteratives Schwärzen verschiedener PII-Typen im Dialog
+- **Bis 4K Auflösung**: Generiert Bilder in 512, 1K, 2K und 4K — relevant für hochauflösende Scan-Redaktion
+- **Thinking Mode**: Nutzt "Thinking Process" für komplexe Bearbeitungsaufgaben mit Zwischenergebnissen
+- **14 Referenzbilder**: Kann bis zu 14 Referenzbilder gleichzeitig verarbeiten (Character Consistency, Object Fidelity)
+- Modelle: [`gemini-3.1-flash-image-preview`](https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image-preview) (Nano Banana 2, schnell) oder [`gemini-3-pro-image-preview`](https://ai.google.dev/gemini-api/docs/models/gemini-3-pro-image-preview) (Nano Banana Pro, höchste Qualität)
+
+#### Relevanz für RELIEF
+
+| Szenario | Lokaler Stack | Gemini/Vertex AI |
+| --- | --- | --- |
+| OCR (Handyfoto) | Granite-Docling-258M | Gemini 3 Flash (Document Understanding) |
+| PII-Erkennung | GLiNER + Presidio | Gemini 3 + Structured Output (JSON) |
+| Schwärzung (PDF) | Presidio Anonymizer | Nano Banana Inpainting |
+| Segmentierung | — | Gemini 2.5+ Segmentation |
+| DSGVO-Konformität | ✅ Lokal, keine Cloud | ⚠️ Erfordert Cloud-Freigabe + DPA |
+
+**Empfehlung**: Der **lokale Open-Source-Stack** (Granite-Docling + GLiNER + Presidio) bleibt die **Primärlösung** für RELIEF, da §67 SGB X eine lokale Verarbeitung von Sozialdaten erfordert. Gemini/Vertex AI dient als **Benchmark** für Qualitätsvergleiche und als **Fallback** für Szenarien, in denen eine Cloud-Freigabe besteht (z.B. anonymisierte Test-Dokumente, Schulungsmaterialien).
