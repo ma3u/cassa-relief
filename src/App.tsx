@@ -62,6 +62,7 @@ function App() {
   const [showIntroGuide, setShowIntroGuide] = useState<boolean>(true)
   const [isPlayingNarration, setIsPlayingNarration] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [activeMigrationStep, setActiveMigrationStep] = useState<number>(0)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [narrationStatus, setNarrationStatus] = useState('')
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -408,6 +409,51 @@ function App() {
       url: "https://neo4j.com/",
       color: "#3b82f6"
     }
+  ]
+
+  const migrationSteps = [
+    {
+      text: 'VB/COBOL Legacy',
+      color: 'bg-red-600',
+      sub: 'Ist-Zustand',
+      detail: 'Bestandsverfahren in monolithischen Legacy-Systemen mit begrenzter Nachvollziehbarkeit.',
+    },
+    {
+      text: 'Prozess-Mining',
+      color: 'bg-amber-600',
+      sub: 'Analyse',
+      detail: 'Ist-Abläufe werden aus Logdaten rekonstruiert und Engpässe sowie Regelpfade sichtbar gemacht.',
+    },
+    {
+      text: 'BPMN-Modell',
+      color: 'bg-blue-600',
+      sub: 'Ablauflogik',
+      detail: 'Fachprozesse werden als verständliche BPMN-Modelle formalisiert und versionierbar gemacht.',
+    },
+    {
+      text: 'DMN-Tabellen',
+      color: 'bg-purple-600',
+      sub: 'Rechenregeln',
+      detail: 'Berechnungs- und Entscheidungslogik wird transparent in DMN-Regeltabellen dokumentiert.',
+    },
+    {
+      text: 'Fachliche Validierung',
+      color: 'bg-slate-600',
+      sub: 'Prüfung',
+      detail: 'Fachbereich und Recht prüfen Prozesse und Regeln gegen SGB-II-Vorgaben und Praxisfälle.',
+    },
+    {
+      text: 'Parallelbetrieb',
+      color: 'bg-slate-600',
+      sub: 'Vergleich',
+      detail: 'Alt- und Neusystem laufen parallel; Ergebnisse werden fallweise verglichen und Abweichungen bewertet.',
+    },
+    {
+      text: 'Transparenter Bescheid',
+      color: 'bg-primary',
+      sub: 'Ergebnis',
+      detail: 'Bescheide werden nachvollziehbar begründet: Regel, Datenbasis und Rechenschritt sind prüfbar.',
+    },
   ]
 
   return (
@@ -1630,27 +1676,45 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="w-full overflow-x-auto pb-2">
-                  <div className="flex w-full min-w-max md:min-w-0 flex-nowrap items-start justify-between gap-4 text-base">
-                  {[
-                    { text: 'VB/COBOL Legacy', color: 'bg-red-600', sub: 'Ist-Zustand' },
-                    { text: 'Prozess-Mining', color: 'bg-amber-600', sub: 'Analyse' },
-                    { text: 'BPMN-Modell', color: 'bg-blue-600', sub: 'Ablauflogik' },
-                    { text: 'DMN-Tabellen', color: 'bg-purple-600', sub: 'Rechenregeln' },
-                    { text: 'Fachliche Validierung', color: 'bg-slate-600', sub: 'Prüfung' },
-                    { text: 'Parallelbetrieb', color: 'bg-slate-600', sub: 'Vergleich' },
-                    { text: 'Transparenter Bescheid', color: 'bg-primary', sub: 'Ergebnis' },
-                  ].map((step, i) => (
+                  <div className="inline-flex min-w-max items-start gap-4 pr-4 xl:w-full xl:min-w-0 xl:justify-between text-base">
+                  {migrationSteps.map((step, i) => (
                     <div key={i} className="flex items-center gap-3 flex-shrink-0">
-                      <div className="text-center min-w-[130px]">
-                        <Badge className={`${step.color} text-white border-0 text-sm px-3 py-1`}>
-                          {step.text}
-                        </Badge>
+                      <div className="text-center min-w-[145px]">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={() => setActiveMigrationStep(i)}
+                                className={`rounded-full transition-all ${activeMigrationStep === i ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+                                aria-pressed={activeMigrationStep === i}
+                                aria-label={`Schritt ${i + 1}: ${step.text}`}
+                              >
+                                <Badge className={`${step.color} text-white border-0 text-sm px-3 py-1`}>
+                                  {step.text}
+                                </Badge>
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {step.detail}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <div className="text-sm text-muted-foreground mt-1">{step.sub}</div>
                       </div>
-                      {i < 6 && <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />}
+                      {i < migrationSteps.length - 1 && <ArrowRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />}
                     </div>
                   ))}
                   </div>
+                </div>
+
+                <div className="mt-5 rounded-lg border border-border bg-muted/30 px-4 py-3">
+                  <div className="text-sm font-semibold text-foreground mb-1">
+                    Interaktive Erklärung: {migrationSteps[activeMigrationStep].text}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {migrationSteps[activeMigrationStep].detail}
+                  </p>
                 </div>
               </CardContent>
             </Card>
