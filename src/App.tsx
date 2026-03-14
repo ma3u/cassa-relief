@@ -859,16 +859,16 @@ function App() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { period: '12×', label: 'Kontoauszüge', color: 'bg-blue-500', type: 'Fotos, unsortiert, 3 Monate' },
-                      { period: '15×', label: 'Mietvertrag', color: 'bg-indigo-500', type: 'Einzelseiten, Fotoaufnahmen' },
-                      { period: '3×', label: 'Lohnabrechnungen', color: 'bg-sky-400', type: 'Leila, schwankendes Layout' },
-                      { period: '2/4', label: 'NK-Abrechnung', color: 'bg-amber-500', type: 'Unvollständig! 2 Seiten fehlen' },
-                      { period: '1×', label: 'Kindergeldbescheid', color: 'bg-green-500', type: 'Veraltet (2024 statt 2026)' },
-                      { period: '1×', label: 'Unterhaltsurkunde', color: 'bg-pink-500', type: 'Sensible Daten sichtbar!' },
-                      { period: '1×', label: 'Arztbrief', color: 'bg-red-500', type: 'Gesundheitsdaten! Nicht in Akte!' },
-                      { period: '1×', label: 'Insolvenz-Screenshot', color: 'bg-purple-500', type: 'Screenshot statt Dokument' },
-                      { period: '0×', label: 'AG-Bescheinigung', color: 'bg-red-600', type: 'FEHLT! §60 SGB I' },
-                      { period: '3×', label: '„Sonstiges“', color: 'bg-gray-500', type: 'Fehlklassifiziert' },
+                      { period: '12×', label: 'Kontoauszüge', color: 'bg-slate-600', type: 'Fotos, unsortiert, 3 Monate' },
+                      { period: '15×', label: 'Mietvertrag', color: 'bg-slate-600', type: 'Einzelseiten, Fotoaufnahmen' },
+                      { period: '3×', label: 'Lohnabrechnungen', color: 'bg-slate-600', type: 'Leila, schwankendes Layout' },
+                      { period: '2/4', label: 'NK-Abrechnung', color: 'bg-amber-700', type: 'Unvollständig! 2 Seiten fehlen' },
+                      { period: '1×', label: 'Kindergeldbescheid', color: 'bg-amber-700', type: 'Veraltet (2024 statt 2026)' },
+                      { period: '1×', label: 'Unterhaltsurkunde', color: 'bg-amber-700', type: 'Sensible Daten sichtbar!' },
+                      { period: '1×', label: 'Arztbrief', color: 'bg-red-700', type: 'Gesundheitsdaten! Nicht in Akte!' },
+                      { period: '1×', label: 'Insolvenz-Screenshot', color: 'bg-slate-600', type: 'Screenshot statt Dokument' },
+                      { period: '0×', label: 'AG-Bescheinigung', color: 'bg-red-700', type: 'FEHLT! §60 SGB I' },
+                      { period: '3×', label: '„Sonstiges“', color: 'bg-slate-500', type: 'Fehlklassifiziert' },
                     ].map((item, i) => (
                       <TooltipProvider key={i}>
                         <Tooltip>
@@ -911,14 +911,14 @@ function App() {
                 <CardContent>
                   <div className="flex flex-wrap items-center gap-2 text-sm">
                     {[
-                      { text: 'E-AKTE Becker', color: 'bg-red-500' },
-                      { text: 'Klassifikation', color: 'bg-indigo-500' },
-                      { text: 'OCR & Extraktion', color: 'bg-purple-500' },
-                      { text: 'Metadaten-Zuordnung', color: 'bg-blue-500' },
-                      { text: 'Schwärzung (§67 SGB X)', color: 'bg-pink-500' },
-                      { text: 'Sortierung & Zusammenführung', color: 'bg-green-500' },
-                      { text: 'Vollständigkeitsprüfung', color: 'bg-amber-500' },
-                      { text: 'Freitextgenerierung', color: 'bg-cyan-500' },
+                      { text: 'E-AKTE Becker', color: 'bg-slate-600' },
+                      { text: 'Klassifikation', color: 'bg-slate-600' },
+                      { text: 'OCR & Extraktion', color: 'bg-slate-600' },
+                      { text: 'Metadaten-Zuordnung', color: 'bg-slate-600' },
+                      { text: 'Schwärzung (§67 SGB X)', color: 'bg-slate-600' },
+                      { text: 'Sortierung & Zusammenführung', color: 'bg-slate-600' },
+                      { text: 'Vollständigkeitsprüfung', color: 'bg-slate-600' },
+                      { text: 'Freitextgenerierung', color: 'bg-slate-600' },
                     ].map((node, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <Badge className={`${node.color} text-white border-0`}>
@@ -1547,9 +1547,9 @@ function App() {
                     { text: 'Prozess-Mining', color: 'bg-amber-600', sub: 'Analyse' },
                     { text: 'BPMN-Modell', color: 'bg-blue-600', sub: 'Ablauflogik' },
                     { text: 'DMN-Tabellen', color: 'bg-purple-600', sub: 'Rechenregeln' },
-                    { text: 'Fachliche Validierung', color: 'bg-cyan-600', sub: 'Prüfung' },
-                    { text: 'Parallelbetrieb', color: 'bg-orange-600', sub: 'Vergleich' },
-                    { text: 'Transparenter Bescheid', color: 'bg-green-600', sub: 'Ergebnis' },
+                    { text: 'Fachliche Validierung', color: 'bg-slate-600', sub: 'Prüfung' },
+                    { text: 'Parallelbetrieb', color: 'bg-slate-600', sub: 'Vergleich' },
+                    { text: 'Transparenter Bescheid', color: 'bg-primary', sub: 'Ergebnis' },
                   ].map((step, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="text-center">
@@ -1832,16 +1832,16 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="flex flex-nowrap items-center gap-2 text-sm overflow-x-auto pb-1">
                   {[
-                    { text: 'Foto / Scan / PDF', color: 'bg-gray-500', sub: 'Eingang' },
-                    { text: 'Granite-Docling', color: 'bg-emerald-600', sub: 'OCR + Layout' },
+                    { text: 'Foto / Scan / PDF', color: 'bg-slate-500', sub: 'Eingang' },
+                    { text: 'Granite-Docling', color: 'bg-slate-600', sub: 'OCR + Layout' },
                     { text: 'GLiNER + Presidio', color: 'bg-amber-600', sub: 'PII-Erkennung' },
                     { text: 'spaCy (deutsch)', color: 'bg-blue-600', sub: 'Namen & Orte' },
                     { text: 'Presidio Anonymizer', color: 'bg-pink-600', sub: 'Schwärzung' },
                     { text: 'Llama 3 / Granite', color: 'bg-purple-600', sub: 'Freitext' },
                     { text: 'Neo4j Graph', color: 'bg-indigo-600', sub: 'Verknüpfung' },
-                    { text: 'E-AKTE (xdomea)', color: 'bg-green-700', sub: 'Ergebnis' },
+                    { text: 'E-AKTE (xdomea)', color: 'bg-primary', sub: 'Ergebnis' },
                   ].map((step, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="text-center">
