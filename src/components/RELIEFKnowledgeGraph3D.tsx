@@ -43,6 +43,8 @@ interface GraphData {
   links: GraphLink[]
 }
 
+const START_NODE_ID = 'case_becker'
+
 // ────────────────────────────────────────────
 // Color palette per node type
 // ────────────────────────────────────────────
@@ -349,6 +351,17 @@ export function RELIEFKnowledgeGraph3D() {
 
   const graphData = useMemo(() => buildCaseData(), [])
 
+  const getNodeId = useCallback((ref: string | { id: string }) => {
+    return typeof ref === 'string' ? ref : ref.id
+  }, [])
+
+  const isLinkConnectedToSelected = useCallback((link: GraphLink) => {
+    if (!selectedNode) return false
+    const src = getNodeId(link.source)
+    const tgt = getNodeId(link.target)
+    return src === selectedNode.id || tgt === selectedNode.id
+  }, [getNodeId, selectedNode])
+
   useEffect(() => {
     const updateSize = () => {
       if (containerRef.current) {
@@ -429,6 +442,8 @@ export function RELIEFKnowledgeGraph3D() {
 
   const nodeThreeObject = useCallback((node: GraphNode) => {
     const group = new THREE.Group()
+    const isSelected = selectedNode?.id === node.id
+    const isStartNode = node.id === START_NODE_ID
     const color = NODE_COLORS[node.type] || '#999'
     const size = node.type === 'case' ? 11
       : node.type === 'law' ? 10
@@ -448,6 +463,36 @@ export function RELIEFKnowledgeGraph3D() {
     })
     const sphere = new THREE.Mesh(geometry, material)
     group.add(sphere)
+
+    if (isStartNode) {
+      const startRingGeo = new THREE.TorusGeometry(size * 1.45, 0.75, 16, 64)
+      const startRingMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#facc15') })
+      const startRing = new THREE.Mesh(startRingGeo, startRingMat)
+      startRing.rotation.x = Math.PI / 2
+      group.add(startRing)
+
+      const startTag = new SpriteText('START') as any
+      startTag.color = '#0f172a'
+      startTag.textHeight = 3.6
+      startTag.backgroundColor = 'rgba(250, 204, 21, 0.98)'
+      startTag.padding = [1.8, 4]
+      startTag.borderRadius = 3
+      startTag.position.y = size + 7
+      if (startTag.material) {
+        startTag.material.depthTest = false
+        startTag.material.depthWrite = false
+      }
+      startTag.renderOrder = 1001
+      group.add(startTag)
+    }
+
+    if (isSelected) {
+      const selectedRingGeo = new THREE.TorusGeometry(size * 1.65, 0.7, 16, 64)
+      const selectedRingMat = new THREE.MeshBasicMaterial({ color: new THREE.Color('#ffffff') })
+      const selectedRing = new THREE.Mesh(selectedRingGeo, selectedRingMat)
+      selectedRing.rotation.x = Math.PI / 2
+      group.add(selectedRing)
+    }
 
     // Glow effect for case, law, and ai nodes
     if (node.type === 'law' || node.type === 'case' || node.type === 'ai') {
@@ -470,7 +515,12 @@ export function RELIEFKnowledgeGraph3D() {
     group.add(label)
 
     return group
-  }, [])
+  }, [selectedNode])
+
+  const linkWidth = useCallback((link: GraphLink) => {
+    if (!selectedNode) return 1.5
+    return isLinkConnectedToSelected(link) ? 4.8 : 1.2
+  }, [isLinkConnectedToSelected, selectedNode])
 
   const linkColor = useCallback((link: GraphLink) => {
     switch (link.type) {
@@ -588,7 +638,7 @@ export function RELIEFKnowledgeGraph3D() {
         nodeThreeObject={nodeThreeObject}
         onNodeClick={handleNodeClick}
         linkColor={linkColor}
-        linkWidth={1.5}
+        linkWidth={linkWidth}
         linkOpacity={0.7}
         linkDirectionalArrowLength={4}
         linkDirectionalArrowRelPos={0.85}
