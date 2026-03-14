@@ -604,7 +604,7 @@ function App() {
                                 {challenge.statLabel}
                               </div>
                             </div>
-                            <Badge variant="secondary" className="text-sm font-semibold">
+                            <Badge variant="secondary" className="text-sm font-semibold" style={{ display: 'none' }}>
                               <TrendingUp className="h-3 w-3 mr-1" />
                               {challenge.trend}
                             </Badge>
@@ -612,6 +612,9 @@ function App() {
                         </div>
                       </div>
                     </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground leading-relaxed">{challenge.description}</p>
+                    </CardContent>
                   </Card>
                 </motion.div>
               )
