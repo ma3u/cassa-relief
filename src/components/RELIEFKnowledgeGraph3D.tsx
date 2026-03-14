@@ -577,14 +577,27 @@ export function RELIEFKnowledgeGraph3D() {
     return label
   }, [isLinkConnectedToSelected, selectedNode])
 
-  const linkPositionUpdate = useCallback((sprite: THREE.Object3D | undefined, coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } } | undefined) => {
-    if (!sprite || !coords?.start || !coords?.end || !(sprite as any).position) return
-    const middlePos = {
-      x: coords.start.x + (coords.end.x - coords.start.x) * 0.5,
-      y: coords.start.y + (coords.end.y - coords.start.y) * 0.5,
-      z: coords.start.z + (coords.end.z - coords.start.z) * 0.5,
-    }
-    Object.assign(sprite.position, middlePos)
+  const linkPositionUpdate = useCallback((sprite: unknown, coords: unknown) => {
+    const object3d = sprite as { position?: { set?: (x: number, y: number, z: number) => void } } | null | undefined
+    const pos = object3d?.position
+    if (!pos || typeof pos.set !== 'function') return
+
+    const c = coords as { start?: { x?: number; y?: number; z?: number }; end?: { x?: number; y?: number; z?: number } } | null | undefined
+    if (!c?.start || !c?.end) return
+
+    const x1 = Number(c.start.x)
+    const y1 = Number(c.start.y)
+    const z1 = Number(c.start.z)
+    const x2 = Number(c.end.x)
+    const y2 = Number(c.end.y)
+    const z2 = Number(c.end.z)
+    if (![x1, y1, z1, x2, y2, z2].every(Number.isFinite)) return
+
+    pos.set(
+      x1 + (x2 - x1) * 0.5,
+      y1 + (y2 - y1) * 0.5,
+      z1 + (z2 - z1) * 0.5
+    )
   }, [])
 
   // Build adjacency for detail panel
