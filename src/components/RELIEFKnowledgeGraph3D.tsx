@@ -670,6 +670,7 @@ export function RELIEFKnowledgeGraph3D() {
         linkColor={linkColor}
         linkWidth={linkWidth}
         linkOpacity={0.7}
+        linkThreeObjectExtend={true}
         linkThreeObject={linkThreeObject}
         linkPositionUpdate={linkPositionUpdate}
         linkDirectionalArrowLength={4}
