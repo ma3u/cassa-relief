@@ -83,3 +83,31 @@
     repeating-linear-gradient(0deg, oklch(0.88 0.005 60 / 0.5) 0px, transparent 1px, transparent 40px),
     repeating-linear-gradient(90deg, oklch(0.88 0.005 60 / 0.5) 0px, transparent 1px, transparent 40px);
 }
+
+/* ── WCAG 2.2 — prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all CSS transitions and animations */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Framer-motion outputs inline transform/opacity transitions;
+     set transition to instant so whileInView fade-ins still work
+     but don't animate */
+  [style*="transform"],
+  [style*="opacity"] {
+    transition: none !important;
+  }
+}
+
+/* ── WCAG 2.2 — focus-visible ring ── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

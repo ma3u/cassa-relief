@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
+import { motion, useScroll, useTransform, AnimatePresence, useReducedMotion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -65,6 +65,7 @@ function App() {
 
   const { scrollYProgress } = useScroll()
   const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0.3])
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const timer = setTimeout(() => setShowIntroGuide(false), 5000)
@@ -100,7 +101,12 @@ function App() {
   }, [isMuted])
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    const el = document.getElementById(id)
+    if (!el) return
+    el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' })
+    // Move focus to the section for keyboard/screen-reader users
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1')
+    el.focus({ preventScroll: true })
   }
 
   // ── Side navigation sections ──
@@ -389,6 +395,13 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background relative">
+      {/* ── WCAG: Skip-to-content ── */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg focus:shadow-xl focus:outline-2 focus:outline-offset-2 focus:outline-primary-foreground"
+      >
+        Zum Hauptinhalt springen
+      </a>
       <AnimatePresence>
         {showIntroGuide && (
           <motion.div
@@ -400,10 +413,10 @@ function App() {
             <Card className="shadow-2xl border-2 border-accent">
               <CardContent className="p-6 flex items-center gap-4">
                 <motion.div
-                  animate={{ y: [0, 10, 0] }}
+                  animate={prefersReducedMotion ? {} : { y: [0, 10, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 >
-                  <ArrowDown className="h-6 w-6 text-accent" />
+                  <ArrowDown className="h-6 w-6 text-accent" aria-hidden="true" />
                 </motion.div>
                 <div>
                   <p className="font-semibold text-foreground">Scrollen Sie, um mehr zu erfahren</p>
@@ -423,7 +436,7 @@ function App() {
             <Separator orientation="vertical" className="h-8 hidden md:block" />
             <span className="text-sm font-medium text-muted-foreground hidden md:block">CASSA · RELIEF</span>
           </div>
-          <div className="flex items-center gap-4">
+          <nav aria-label="Hauptnavigation" className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-becker')} className="hidden md:flex">
               Fall Becker
             </Button>
@@ -445,15 +458,15 @@ function App() {
             <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
                 Mehr erfahren
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </a>
             </Button>
-          </div>
+          </nav>
         </div>
       </header>
 
       {/* ── SIDE NAVIGATION (desktop only, top-right below header) ── */}
-      <nav className="hidden xl:block fixed right-6 top-20 z-50">
+      <nav aria-label="Seitennavigation" className="hidden xl:block fixed right-6 top-20 z-50">
         <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl shadow-lg px-4 py-5 max-h-[calc(100vh-6rem)] overflow-y-auto">
           {(() => {
             let lastGroup = ''
@@ -471,8 +484,9 @@ function App() {
                   )}
                   <button
                     onClick={() => scrollToSection(section.id)}
+                    aria-current={activeSection === section.id ? 'location' : undefined}
                     className={`
-                      flex items-center gap-2.5 w-full text-left text-sm px-2.5 py-2 rounded-lg transition-all duration-200
+                      flex items-center gap-2.5 w-full text-left text-sm px-2.5 py-2 rounded-lg transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
                       ${activeSection === section.id 
                         ? 'bg-primary/15 text-primary font-semibold border-l-3 border-primary pl-3' 
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}
@@ -495,8 +509,15 @@ function App() {
         </div>
       </nav>
 
+      <main>
+
       {/* ── HERO ── */}
-      <motion.section style={{ opacity: heroOpacity }} className="hero-pattern py-32 md:py-40 relative overflow-hidden">
+      <motion.section
+        id="main-content"
+        aria-label="Einleitung"
+        style={{ opacity: heroOpacity }}
+        className="hero-pattern py-32 md:py-40 relative overflow-hidden"
+      >
         <AnimatedBackground />
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <motion.div
@@ -528,7 +549,7 @@ function App() {
                 className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-10 h-14 shadow-lg hover:shadow-xl transition-shadow"
               >
                 <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
-                  <BrainCircuit className="mr-2 h-5 w-5" />
+                  <BrainCircuit className="mr-2 h-5 w-5" aria-hidden="true" />
                   CASSA entdecken
                 </a>
               </Button>
@@ -539,7 +560,7 @@ function App() {
                 onClick={() => scrollToSection('challenges')}
               >
                 Herausforderungen verstehen
-                <ArrowDown className="ml-2 h-5 w-5" />
+                <ArrowDown className="ml-2 h-5 w-5" aria-hidden="true" />
               </Button>
             </div>
           </motion.div>
@@ -726,9 +747,11 @@ function App() {
                 <div className="flex items-center gap-4">
                   <button
                     onClick={toggleNarration}
-                    className="flex-shrink-0 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg"
+                    aria-label={isPlayingNarration ? 'Narration pausieren' : 'Narration abspielen'}
+                    aria-pressed={isPlayingNarration}
+                    className="flex-shrink-0 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
-                    {isPlayingNarration ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6 ml-0.5" />}
+                    {isPlayingNarration ? <Pause className="h-6 w-6" aria-hidden="true" /> : <Play className="h-6 w-6 ml-0.5" aria-hidden="true" />}
                   </button>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-foreground">Fall Becker — Narration</p>
@@ -738,9 +761,11 @@ function App() {
                   </div>
                   <button
                     onClick={toggleMute}
-                    className="flex-shrink-0 p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors"
+                    aria-label={isMuted ? 'Ton einschalten' : 'Ton ausschalten'}
+                    aria-pressed={isMuted}
+                    className="flex-shrink-0 p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
-                    {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+                    {isMuted ? <VolumeX className="h-5 w-5" aria-hidden="true" /> : <Volume2 className="h-5 w-5" aria-hidden="true" />}
                   </button>
                 </div>
               </CardContent>
@@ -1049,17 +1074,21 @@ function App() {
               <div className="absolute bottom-5 right-5 z-30 flex items-center gap-3">
                 <button
                   onClick={toggleNarration}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all hover:scale-105 backdrop-blur-sm"
+                  aria-label={isPlayingNarration ? 'Narration pausieren' : 'Fall Becker Narration abspielen'}
+                  aria-pressed={isPlayingNarration}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all hover:scale-105 backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-foreground"
                 >
-                  {isPlayingNarration ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 ml-0.5" />}
+                  {isPlayingNarration ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4 ml-0.5" aria-hidden="true" />}
                   <span className="text-sm font-medium">{isPlayingNarration ? 'Pause' : 'Fall Becker anhören'}</span>
                 </button>
                 {isPlayingNarration && (
                   <button
                     onClick={toggleMute}
-                    className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm"
+                    aria-label={isMuted ? 'Ton einschalten' : 'Ton ausschalten'}
+                    aria-pressed={isMuted}
+                    className="p-2 rounded-full bg-slate-800/80 text-slate-300 hover:bg-slate-700/80 hover:text-white transition-colors backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                    {isMuted ? <VolumeX className="h-4 w-4" aria-hidden="true" /> : <Volume2 className="h-4 w-4" aria-hidden="true" />}
                   </button>
                 )}
               </div>
@@ -1231,7 +1260,7 @@ function App() {
                       <CardTitle className="text-base">
                       <a href={api.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
                         {api.name}
-                        <ExternalLink className="h-3 w-3 opacity-50" />
+                        <ExternalLink className="h-3 w-3 opacity-50" aria-hidden="true" />
                       </a>
                     </CardTitle>
                     </div>
@@ -1500,7 +1529,7 @@ function App() {
                         <CardTitle className="text-lg leading-tight">
                           <a href={card.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
                             {card.title}
-                            <ExternalLink className="h-3.5 w-3.5 opacity-40" />
+                            <ExternalLink className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
                           </a>
                         </CardTitle>
                       </div>
@@ -1629,7 +1658,7 @@ function App() {
                     <h4 className="font-semibold text-sm mb-1">
                       <a href={tool.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
                         {tool.name}
-                        <ExternalLink className="h-3 w-3 opacity-40" />
+                        <ExternalLink className="h-3 w-3 opacity-40" aria-hidden="true" />
                       </a>
                     </h4>
                     <p className="text-xs text-muted-foreground">{tool.desc}</p>
@@ -1944,7 +1973,7 @@ function App() {
                           <CardTitle className="text-lg leading-tight">
                             <a href={model.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1.5">
                               {model.name}
-                              <ExternalLink className="h-3.5 w-3.5 opacity-40" />
+                              <ExternalLink className="h-3.5 w-3.5 opacity-40" aria-hidden="true" />
                             </a>
                           </CardTitle>
                           <p className="text-xs text-muted-foreground font-medium mt-1">{model.role}</p>
@@ -2078,7 +2107,7 @@ function App() {
                             {std.url ? (
                               <a href={std.url} target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
                                 {std.name}
-                                <ExternalLink className="h-3 w-3 opacity-40" />
+                                <ExternalLink className="h-3 w-3 opacity-40" aria-hidden="true" />
                               </a>
                             ) : std.name}
                           </div>
@@ -2174,6 +2203,8 @@ function App() {
           </div>
         </div>
       </footer>
+
+      </main>
     </div>
   )
 }
