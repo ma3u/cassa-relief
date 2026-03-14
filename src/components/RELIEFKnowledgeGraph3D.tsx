@@ -577,7 +577,8 @@ export function RELIEFKnowledgeGraph3D() {
     return label
   }, [isLinkConnectedToSelected, selectedNode])
 
-  const linkPositionUpdate = useCallback((sprite: THREE.Object3D, coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } }) => {
+  const linkPositionUpdate = useCallback((sprite: THREE.Object3D | undefined, coords: { start: { x: number; y: number; z: number }; end: { x: number; y: number; z: number } } | undefined) => {
+    if (!sprite || !coords?.start || !coords?.end || !(sprite as any).position) return
     const middlePos = {
       x: coords.start.x + (coords.end.x - coords.start.x) * 0.5,
       y: coords.start.y + (coords.end.y - coords.start.y) * 0.5,
