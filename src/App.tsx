@@ -612,9 +612,6 @@ function App() {
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">{challenge.description}</p>
-                    </CardContent>
                   </Card>
                 </motion.div>
               )
