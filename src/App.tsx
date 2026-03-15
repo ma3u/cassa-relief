@@ -179,10 +179,10 @@ function App() {
     },
     {
       icon: AlertTriangle,
-      title: "Fehlklassifikation & fehlende Metadaten",
-      stat: "30%",
-      statLabel: "falsch zugeordnet",
-      description: "Dokumente werden als „Sonstiges“ klassifiziert, Metadaten fehlen, Freitexte existieren nicht. Sachbearbeitende müssen jedes Dokument einzeln sichten, um den Inhalt zu verstehen.",
+      title: "Nicht durchsuchbar — kein Volltext",
+      stat: "80%",
+      statLabel: "Fotos & Scans ohne OCR",
+      description: "Eingereichte Nachweise sind Fotos, Scans oder Screenshots — der Inhalt ist nicht durchsuchbar. Sachbearbeitende müssen jedes Dokument einzeln öffnen und sichten, weil kein Volltext existiert.",
       trend: "Kritisch",
       color: "oklch(0.55 0.20 55)"
     },
@@ -221,12 +221,12 @@ function App() {
     },
     {
       number: 2,
-      title: "Dokumenten-Schicht",
-      subtitle: "Klassifikation & Extraktion",
-      description: "KI-gestützte Dokumentenerkennung: Kontoauszüge, Mietverträge, Lohnabrechnungen werden automatisch klassifiziert. OCR extrahiert Text aus Fotos und Scans, Metadaten werden zugeordnet.",
+      title: "OCR & Indizierung",
+      subtitle: "Volltexterschließung im Hintergrund",
+      description: "OCR wandelt Fotos, Scans und Screenshots in durchsuchbaren Volltext um. Dieser wird automatisch indiziert — Datum, Person, Beträge werden extrahiert und im Suchindex gespeichert. Keine Klassifizierung durch den Bürger nötig.",
       icon: FileText,
       color: "oklch(0.45 0.15 200)",
-      examples: ["Dokumentenklassifikation", "OCR/Texterkennung", "Metadaten-Extraktion", "Qualitätsbewertung"]
+      examples: ["OCR (Granite-Docling)", "Volltextindizierung", "Metadaten-Extraktion", "Suchindex"]
     },
     {
       number: 3,
@@ -253,30 +253,30 @@ function App() {
   // ────────────────────────────────────────────
   const scenarios = [
     {
-      title: "Aktenerschließung",
-      description: "Sachbearbeiterin öffnet E-AKTE mit 47 Dokumenten — RELIEF klassifiziert, sortiert und beschriftet automatisch. Statt 45 Minuten manuellem Sichten sind alle Dokumente in Sekunden erschlossen.",
+      title: "Intelligente Suche",
+      description: "Sachbearbeiterin sucht „Mietvertrag Becker“ — RELIEF findet das Dokument sofort im Volltext. Kein Navigieren durch Ordner, kein manuelles Sichten von 47 Dokumenten.",
       benefits: [
-        "Automatische Klassifikation: Kontoauszüge, Mietvertrag, Lohnabrechnungen, Kindergeldbescheid sofort erkannt",
-        "OCR-Texterkennung für Fotos und Scans — auch handschriftliche Notizen",
-        "Metadaten-Extraktion: Datum, Absender, zugehörige Person der BG automatisch zugeordnet",
-        "Freitextgenerierung: „Kontoauszug Sparkasse Dortmund, Thomas Becker, Jan. 2026, S. 1/3“"
+        "Volltextsuche: „Mietvertrag Becker 2026“ findet den Mietvertrag in Millisekunden",
+        "OCR im Hintergrund: Fotos und Scans sind automatisch durchsuchbar — auch Handyfotos",
+        "Metadaten-Extraktion: Datum, Person, Beträge automatisch im Suchindex",
+        "Kurzbeschreibung für Suchergebnisse: „Kontoauszug Sparkasse Dortmund, Jan. 2026, S. 1/3“"
       ],
-      icon: FileText,
+      icon: Search,
       color: "oklch(0.45 0.15 245)",
-      impact: "Aktenerschließung von 45 Min. auf Sekunden"
+      impact: "Dokument in Sekunden gefunden statt 45 Min. Suche"
     },
     {
-      title: "Aktenpflege",
-      description: "Unsortierte Einzelseiten, falsche Dokumententypen, fehlende Seiten — RELIEF bereinigt die E-AKTE und stellt eine sachlogische Ordnung her.",
+      title: "Kontextbereitstellung",
+      description: "Bei jedem Prüfschritt liefert RELIEF automatisch die relevanten Dokumente — der Knowledge Graph verknüpft §§, Personen und Nachweise.",
       benefits: [
-        "Einzelseiten-Zusammenführung: 15 Mietvertrag-Fotos → ein vollständiges Dokument",
-        "Chronologische und sachliche Sortierung: Dokumente nach Prüfschritt und Zeitraum geordnet",
-        "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung automatisch erkannt → Mitwirkungsanforderung",
-        "Reklassifikation: „Sonstiges“-Dokumente werden korrekt als Nebenkostenabrechnung, Insolvenzbekanntmachung etc. erkannt"
+        "Automatischer Kontext: Bei KdU-Prüfung (§22 SGB II) werden Mietvertrag und NK-Abrechnung angezeigt",
+        "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung sofort erkannt → Mitwirkungsanforderung",
+        "Seitenzusammenführung: 15 Mietvertrag-Fotos automatisch als ein Dokument erkannt",
+        "Knowledge Graph: Dokument → Person → Prüfschritt → § — Zusammenhänge auf einen Blick"
       ],
       icon: Workflow,
       color: "oklch(0.50 0.18 160)",
-      impact: "Geordnete, vollständige Akte in Minuten statt Stunden"
+      impact: "Relevante Dokumente sofort im richtigen Kontext"
     },
     {
       title: "Datenschutz-Compliance",
@@ -324,15 +324,15 @@ function App() {
   // ────────────────────────────────────────────
   const ragComparisons = [
     {
-      title: "Dokumentenklassifikation: 47 Eingänge",
-      question: "Wie werden 47 eingereichte Dokumente (Fotos, Scans, PDFs) korrekt klassifiziert und der Akte zugeordnet?",
+      title: "Dokumentensuche: 47 Nachweise finden",
+      question: "Wie findet die Sachbearbeiterin den Mietvertrag unter 47 eingereichten Dokumenten (Fotos, Scans, PDFs)?",
       graphAnswer: {
-        result: "Automatisch klassifiziert in Sekunden",
-        explanation: "RELIEF traversiert den Knowledge Graph: Bildanalyse → OCR → Dokumententyp-Erkennung → Person-Zuordnung via BG-Graph (§7 SGB II). 12 Kontoauszüge werden als zusammengehörig erkannt, dem richtigen BG-Mitglied zugeordnet und chronologisch sortiert. 3 „Sonstiges“-Dokumente werden als Nebenkostenabrechnung, Insolvenzbekanntmachung und Arbeitgeberbescheinigung reklassifiziert."
+        result: "Volltextsuche findet sofort",
+        explanation: "RELIEF hat alle 47 Dokumente per OCR verarbeitet und im Volltext indiziert. Suche nach „Mietvertrag Becker“ liefert sofort den 15-seitigen Mietvertrag — automatisch zusammengeführt. Der Knowledge Graph liefert den Kontext: Mietvertrag → KdU-Prüfung (§22 SGB II) → Familie Becker. Kein Ordner-Navigieren, kein manuelles Sichten."
       },
       vectorAnswer: {
-        result: "Manuelle Sichtung: 45+ Minuten",
-        explanation: "Sachbearbeiterin muss jedes der 47 Dokumente einzeln öffnen, den Inhalt lesen, den Dokumententyp im System auswählen und die zugehörige Person manuell zuordnen. Bei Fotos von Kontoauszügen ist die Reihenfolge unklar, Zusammenhänge fehlen. 3 Dokumente bleiben als „Sonstiges“ liegen."
+        result: "Manuelles Suchen: 45+ Minuten",
+        explanation: "Ohne Volltextindizierung muss die Sachbearbeiterin jedes der 47 Dokumente einzeln öffnen und den Inhalt lesen. Fotos und Scans sind nicht durchsuchbar. Der Mietvertrag liegt als 15 Einzelfotos vor — ohne erkennbaren Zusammenhang. Navigation durch Ordner statt Suche."
       }
     },
     {
@@ -378,10 +378,10 @@ function App() {
   // ────────────────────────────────────────────
   const chatApiStandards = [
     {
-      name: "Dokumenten-Klassifikation & OCR",
-      endpoint: "POST /api/v1/classify",
-      description: "IBM Granite-Docling-258M: Spezialisiertes Vision-Language-Modell (258M Parameter) wandelt Fotos, Scans und Screenshots in strukturierten Text um. Erkennt Dokumententyp, Layout und Tabellenstruktur — auch bei Handyfotos von Kontoauszügen.",
-      adoptedBy: "IBM Granite-Docling-258M, Docling Framework, RapidOCR",
+      name: "OCR & Volltextsuche",
+      endpoint: "POST /api/v1/search",
+      description: "Volltextsuche über alle indizierten Dokumente. OCR (Granite-Docling-258M) verarbeitet Fotos, Scans und Screenshots im Hintergrund. Der Suchindex (Elasticsearch/Meilisearch) liefert Ergebnisse in Millisekunden — auch bei Handyfotos von Kontoauszügen.",
+      adoptedBy: "IBM Granite-Docling-258M, Elasticsearch/Meilisearch, RapidOCR",
       url: "https://github.com/DS4SD/docling",
       color: "#10b981"
     },
@@ -622,17 +622,17 @@ function App() {
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
               <Badge className="mb-6 bg-accent text-accent-foreground text-base px-4 py-2">
                 <Zap className="h-4 w-4 mr-2" />
-                KI-gestützte E-AKTE-Erschließung + Knowledge Graph
+                KI als unsichtbarer Helfer: OCR, Indizierung &amp; intelligente Suche
               </Badge>
             </motion.div>
             
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-foreground leading-tight">
-              KI-Assistent für die E-AKTE der Grund&shy;sicherung
+              KI als unsichtbarer Helfer für die E-AKTE
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed">
-              Wie RELIEF mit Document AI und einem Knowledge Graph die Aktenarbeit in den gemeinsamen Einrichtungen 
-              transformiert — automatische Klassifikation, Schwärzung und Sortierung statt manueller Sichtung.
+              RELIEF erschließt Nachweise im Hintergrund — OCR, Volltextindizierung und intelligente Suche.
+              Der Bürger lädt hoch, die KI macht Dokumente auffindbar. Keine Ordner, keine Kategorisierung.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -768,8 +768,8 @@ function App() {
                 icon: FileText
               },
               {
-                title: "Fehlklassifikation verschleiert Inhalte",
-                description: "Dokumente als „Sonstiges“ klassifiziert — Sachbearbeitende müssen jedes Dokument öffnen, um den Inhalt zu erkennen. Bei 47 Eingängen summiert sich das zu erheblichem Zeitverlust.",
+                title: "Nicht indiziert — nicht auffindbar",
+                description: "Ohne OCR und Volltextindizierung bleiben Fotos und Scans unsichtbar für die Suche. Sachbearbeitende müssen jedes Dokument einzeln öffnen, um den Inhalt zu erkennen.",
                 icon: AlertTriangle
               },
               {
@@ -945,7 +945,7 @@ function App() {
                       { label: 'Arztbrief Sophie = Gesundheitsdaten', desc: 'Darf nicht in Leistungsakte → §67 SGB X, DSGVO Art. 9', color: 'text-purple-500' },
                       { label: 'Mietvertrag: 15 Einzelseiten', desc: 'Fotoaufnahmen ohne automatische Zusammenführung', color: 'text-blue-500' },
                       { label: 'Arbeitgeberbescheinigung fehlt', desc: 'Vollständigkeitsprüfung → §60 SGB I Mitwirkungspflicht', color: 'text-amber-500' },
-                      { label: '3 Dokumente als „Sonstiges“', desc: 'Fehlklassifikation verhindert sachgerechte Aktenführung', color: 'text-green-500' },
+                      { label: '3 Dokumente nicht durchsuchbar', desc: 'Ohne OCR bleibt der Inhalt von Fotos und Screenshots unsichtbar', color: 'text-green-500' },
                     ].map((item, i) => (
                       <div key={i} className="flex items-start gap-3 text-sm">
                         <span className={`${item.color} font-bold text-lg leading-none mt-0.5`}>!</span>
@@ -1030,13 +1030,13 @@ function App() {
                   <div className="flex flex-wrap items-center gap-2 text-sm">
                     {[
                       { text: 'E-AKTE Becker', color: 'bg-slate-600' },
-                      { text: 'Klassifikation', color: 'bg-slate-600' },
-                      { text: 'OCR & Extraktion', color: 'bg-slate-600' },
-                      { text: 'Metadaten-Zuordnung', color: 'bg-slate-600' },
-                      { text: 'Schwärzung (§67 SGB X)', color: 'bg-slate-600' },
-                      { text: 'Sortierung & Zusammenführung', color: 'bg-slate-600' },
+                      { text: 'OCR (Granite-Docling)', color: 'bg-slate-600' },
+                      { text: 'Volltextindizierung', color: 'bg-slate-600' },
+                      { text: 'Suchindex', color: 'bg-slate-600' },
+                      { text: 'PII-Erkennung & Schwärzung', color: 'bg-slate-600' },
+                      { text: 'Kontextbereitstellung', color: 'bg-slate-600' },
                       { text: 'Vollständigkeitsprüfung', color: 'bg-slate-600' },
-                      { text: 'Freitextgenerierung', color: 'bg-slate-600' },
+                      { text: 'Intelligente Suche', color: 'bg-slate-600' },
                     ].map((node, i) => (
                       <div key={i} className="flex items-center gap-2">
                         <Badge className={`${node.color} text-white border-0`}>
@@ -1047,9 +1047,9 @@ function App() {
                     ))}
                   </div>
                   <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                    Manuelle Aktenarbeit erfordert sequenzielles Sichten aller 47 Dokumente. RELIEF parallelisiert die Verarbeitung: 
-                    Klassifikation und OCR laufen gleichzeitig, der Knowledge Graph verknüpft jedes Dokument automatisch mit 
-                    dem zugehörigen Prüfschritt und der betroffenen Person — und prüft dabei DSGVO-Compliance in Echtzeit.
+                    Bürger laden Nachweise hoch — ohne Kategorisierung. RELIEF verarbeitet im Hintergrund: 
+                    OCR erzeugt Volltext, der Suchindex macht alles auffindbar, der Knowledge Graph liefert automatisch 
+                    den Kontext zum aktuellen Prüfschritt. Sensible Daten werden erkannt und markiert.
                   </p>
                 </CardContent>
               </Card>
@@ -1075,8 +1075,8 @@ function App() {
               Document AI Pipeline + Knowledge Graph
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-              RELIEF kombiniert Document AI (Klassifikation, OCR, Schwärzung) mit einem Neo4j-Wissensgraphen — 
-              Gesetze, Prozesse, Dokumente und KI-Funktionen als navigierbarer Knowledge Graph.
+              RELIEF kombiniert OCR, Volltextindizierung und intelligente Suche mit einem Neo4j-Wissensgraphen — 
+              die KI arbeitet unsichtbar im Hintergrund und liefert Dokumente im richtigen Kontext.
             </p>
             <p className="text-base text-primary font-semibold">
               👆 Klicken Sie auf die Schichten, um mehr zu erfahren
@@ -1207,7 +1207,7 @@ function App() {
               RELIEF KI vs. manuelle Aktenarbeit
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Manuelle Aktenarbeit ist zeitaufwändig und fehleranfällig — RELIEF automatisiert die <strong>Aktenerschließung und Aktenpflege</strong>.
+              Manuelle Aktenarbeit ist zeitaufwändig und fehleranfällig — RELIEF automatisiert <strong>OCR, Indizierung und Kontextbereitstellung</strong>.
               Hier sind konkrete Beispiele aus dem Fall Familie Becker.
             </p>
           </motion.div>
@@ -1223,8 +1223,8 @@ function App() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  "Jedes Dokument einzeln öffnen, lesen, zuordnen — 47 Dokumente = 45+ Minuten",
-                  "Zusammengehörige Einzelseiten (Mietvertrag: 15 Fotos) werden nicht automatisch erkannt",
+                  "Nicht durchsuchbar: Fotos und Scans haben keinen Volltext — 47 Dokumente einzeln öffnen = 45+ Minuten",
+                  "Keine Volltextsuche: Mietvertrag nur durch manuelles Durchklicken aller 47 Dokumente findbar",
                   "Sensible Daten (Gesundheit, Kontonummern) werden bei Zeitdruck leicht übersehen",
                   "Fehlende Nachweise fallen erst bei der Bearbeitung auf — Wochen nach Antragseingang",
                   "Kein systematischer DSGVO-Check: §67 SGB X und Art. 9 DSGVO nicht automatisch geprüft"
@@ -1246,8 +1246,8 @@ function App() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  "Automatische Klassifikation aller 47 Dokumente in Sekunden — mit Confidence-Score",
-                  "Einzelseiten-Erkennung: 15 Mietvertrag-Fotos → ein zusammengeführtes Dokument",
+                  "Volltextsuche über alle 47 Dokumente in Millisekunden — OCR und Indizierung im Hintergrund",
+                  "Seitenzusammenführung: 15 Mietvertrag-Fotos automatisch als ein Dokument erkannt und auffindbar",
                   "Datenschutz-Flags: Arztbrief, Kontonummern, Geburtsdaten sofort erkannt und markiert",
                   "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung sofort identifiziert",
                   "Knowledge Graph verknüpft jedes Dokument mit §§, Prüfschritten und Personen der BG"
@@ -1326,14 +1326,14 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <MessageSquare className="h-4 w-4 mr-2" />
-              Schritt 6: RELIEF Document AI API
+              Schritt 6: RELIEF Document AI & Such-API
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Document AI API für die E-AKTE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              RELIEF implementiert eine modulare API-Architektur: Dokumentenklassifikation, OCR-Extraktion, 
-              automatische Schwärzung und Knowledge-Graph-Abfragen — als REST-Endpunkte für die gE-Systeme.
+              RELIEF implementiert eine modulare API-Architektur: OCR, Volltextindizierung, 
+              intelligente Suche, automatische Schwärzung und Knowledge-Graph-Abfragen — als REST-Endpunkte für die gE-Systeme.
             </p>
           </motion.div>
 
@@ -1381,10 +1381,10 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Bot className="h-6 w-6 text-primary" />
-                  RELIEF Document AI — Klassifikation + Knowledge Graph
+                  RELIEF Document AI — Suche + Kontext via Knowledge Graph
                 </CardTitle>
                 <CardDescription>
-                  Die RELIEF API verarbeitet Dokumente und verknüpft sie automatisch mit dem Knowledge Graph der gE.
+                  Die RELIEF API indiziert Dokumente, macht sie durchsuchbar und verknüpft sie automatisch im Knowledge Graph.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1392,7 +1392,7 @@ function App() {
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2">
                       <Search className="h-4 w-4" />
-                      POST /api/v1/classify
+                      POST /api/v1/search
                     </h4>
                     <div className="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto">
                       <pre>{`{
@@ -1436,7 +1436,7 @@ function App() {
 
                 <div className="grid md:grid-cols-3 gap-4">
                   {[
-                    { label: "POST /api/v1/classify", desc: "Dokumentenklassifikation mit Confidence-Score" },
+                    { label: "POST /api/v1/search", desc: "Volltextsuche über alle indizierten Dokumente" },
                     { label: "POST /api/v1/extract", desc: "OCR + strukturierte Datenextraktion" },
                     { label: "POST /api/v1/redact", desc: "Automatische Schwärzung sensibler Daten" },
                     { label: "POST /api/v1/graph/query", desc: "Knowledge Graph Abfrage (Cypher)" },
@@ -1958,10 +1958,10 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Workflow className="h-5 w-5 text-primary" />
-                  RELIEF-Pipeline: Vom Foto zur strukturierten E-AKTE
+                  RELIEF-Pipeline: Vom Foto zum durchsuchbaren Volltext
                 </CardTitle>
                 <CardDescription>
-                  Vollständig automatisiert, nachvollziehbar und ohne Cloud-Abhängigkeit
+                  Upload → OCR → Indizierung → Suche — vollständig lokal und DSGVO-konform
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1969,6 +1969,7 @@ function App() {
                   {[
                     { text: 'Foto / Scan / PDF', color: 'bg-slate-500', sub: 'Eingang' },
                     { text: 'Granite-Docling', color: 'bg-slate-600', sub: 'OCR + Layout' },
+                    { text: 'Volltextindex', color: 'bg-green-600', sub: 'Indizierung' },
                     { text: 'GLiNER + Presidio', color: 'bg-amber-600', sub: 'PII-Erkennung' },
                     { text: 'spaCy (deutsch)', color: 'bg-blue-600', sub: 'Namen & Orte' },
                     { text: 'Presidio Anonymizer', color: 'bg-pink-600', sub: 'Schwärzung' },
@@ -2185,7 +2186,7 @@ function App() {
                   { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
                   { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de" },
                   { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
-                  { name: "RELIEF Document AI", desc: "KI-Pipeline: Klassifikation → OCR → Metadaten → Schwärzung → Sortierung → Freitext" },
+                  { name: "RELIEF Document AI", desc: "KI-Pipeline: OCR → Indizierung → Suche → Kontext → Schwärzung → Vollständigkeit" },
                 ]
               }
             ].map((category, catIndex) => {
@@ -2266,11 +2267,11 @@ function App() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-              Bereit für KI-gestützte Aktenarbeit?
+              Bereit für intelligente Suche in der E-AKTE?
             </h2>
             <p className="text-xl text-primary-foreground/90 max-w-3xl mx-auto mb-12 leading-relaxed">
               Erfahren Sie, wie CASSA RELIEF mit Document AI und Knowledge Graph 
-              die E-AKTE-Bearbeitung in der Grundsicherung revolutioniert — compliant, transparent und effizient.
+              die Aktenarbeit in der Grundsicherung transformiert — OCR, Indizierung und intelligente Suche statt Ordner-Navigation.
             </p>
             <Button 
               asChild 

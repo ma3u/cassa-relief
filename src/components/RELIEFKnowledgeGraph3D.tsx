@@ -114,8 +114,8 @@ function buildCaseData(): GraphData {
     { id: 'proc_einkommen', label: 'Einkommensprüfung', type: 'process', description: 'Anrechnung aller Einkommen der BG — §11, §11b SGB II', details: { 'Leilas Lohn': '850€ brutto → Netto abzgl. Freibeträge', 'Unterhalt': '230€ Sophie', 'Kindergeld': '3× 250€' } },
     { id: 'proc_vermoegen', label: 'Vermögensprüfung', type: 'process', description: 'Prüfung des Vermögens der BG — §12 SGB II', details: { 'LV Thomas': '12.500€ Rückkaufwert', 'Kfz': 'VW Touran, Wert ~8.500€' } },
     { id: 'proc_kdu', label: 'KdU-Prüfung', type: 'process', description: 'Prüfung der Angemessenheit der Unterkunftskosten', details: { 'Miete': '780€ kalt + 220€ NK = 1.000€ warm', 'Haushalt': '5 Personen, 90m²', 'Angemessenheit': 'Kommunale Richtlinie Dortmund prüfen' } },
-    { id: 'proc_aktenerschliessung', label: 'Aktenerschließung', type: 'process', description: 'Sichtung und Verstehen aller Dokumente in der E-AKTE', details: { 'Dokumente': '47 Stück', 'Zeitaufwand manuell': '~2–3 Stunden', 'RELIEF-Ziel': '<15 Minuten' } },
-    { id: 'proc_aktenpflege', label: 'Aktenpflege', type: 'process', description: 'Klassifikation, Sortierung, Schwärzung, Freitexte der E-AKTE', details: { 'Aufgaben': 'Klassifizieren, Sortieren, Schwärzen, Freitexte, Zusammenführen', 'Zeitaufwand manuell': '~1–2 Stunden pro Fall', 'RELIEF-Ziel': 'Automatisch mit manueller Freigabe' } },
+    { id: 'proc_aktenerschliessung', label: 'Aktenerschließung', type: 'process', description: 'Volltextsuche statt manuelles Sichten — alle 47 Dokumente nach OCR sofort durchsuchbar', details: { 'Dokumente': '47 Stück', 'Zeitaufwand manuell': '~2–3 Stunden', 'RELIEF-Ziel': 'Suche in Sekunden' } },
+    { id: 'proc_aktenpflege', label: 'Aktenpflege', type: 'process', description: 'OCR, Indizierung, Schwärzung, Vollständigkeitsprüfung der E-AKTE', details: { 'Aufgaben': 'OCR, Indizieren, Schwärzen, Vollständigkeit prüfen, Zusammenführen', 'Zeitaufwand manuell': '~1–2 Stunden pro Fall', 'RELIEF-Ziel': 'Automatisch im Hintergrund' } },
 
     // ── PERSONEN (PERSON) ──
     { id: 'thomas', label: 'Thomas Becker', type: 'person', description: 'Antragsteller, 45 Jahre, arbeitslos seit 15.01.2026 (Insolvenz Arbeitgeber)', details: { 'Alter': '45', 'Status': 'Arbeitslos seit 15.01.2026', 'Grund': 'Insolvenz Möbel-Zentrum GmbH, Dortmund', 'Rolle': 'Antragsteller / Hauptperson BG' } },
@@ -137,7 +137,7 @@ function buildCaseData(): GraphData {
     { id: 'doc_arztbrief', label: 'Arztbrief Sophie', type: 'document', description: 'Arztbrief Sophie — Gesundheitsdaten! Gehört NICHT in die Leistungsakte (§67 SGB X, Art. 9 DSGVO)', details: { 'Typ': 'Arztbrief (Gesundheitsdaten)', 'Person': 'Sophie Becker', 'Problem': 'Gehört nicht in Leistungsakte!', 'Rechtsgrund': '§67 SGB X, Art. 9 DSGVO', 'Aktion': 'KI-Fehlklassifikations-Flag → Entfernen' } },
     { id: 'doc_insolvenz', label: 'Insolvenzbekanntmachung', type: 'document', description: 'Insolvenzbekanntmachung Möbel-Zentrum GmbH — eingereicht als Screenshot', details: { 'Typ': 'Insolvenzbekanntmachung', 'Firma': 'Möbel-Zentrum GmbH, Dortmund', 'Problem': 'Screenshot statt Dokument — Qualitätsbewertung', 'Quelle': 'insolvenzbekanntmachungen.de' } },
     { id: 'doc_ag_bescheinigung', label: 'Arbeitgeberbescheinigung', type: 'document', description: 'Arbeitgeberbescheinigung Thomas — FEHLT! Muss per Mitwirkungsanforderung nachgefordert werden.', details: { 'Typ': 'Arbeitgeberbescheinigung', 'Status': 'FEHLT', 'Pflicht': '§60 SGB I — Mitwirkungspflicht', 'Aktion': 'Mitwirkungsanforderung an Thomas' } },
-    { id: 'doc_sonstige', label: '3× „Sonstiges"', type: 'document', description: 'Drei Dokumente als „Sonstiges" klassifiziert — KI-Reklassifikation nötig', details: { 'Typ': 'Falsch klassifiziert', 'Anzahl': '3 Dokumente', 'Problem': 'Keine verwertbare Klassifikation', 'KI-Aktion': 'Automatische Reklassifikation' } },
+    { id: 'doc_sonstige', label: '3× nicht erkannt', type: 'document', description: 'Drei Dokumente ohne OCR-Volltext — Inhalt nur nach manuellem Öffnen sichtbar', details: { 'Typ': 'Nicht indiziert', 'Anzahl': '3 Dokumente', 'Problem': 'Kein durchsuchbarer Text', 'KI-Aktion': 'OCR + Indizierung nachholen' } },
 
     // ── FACHENTITÄTEN (ENTITY) ──
     { id: 'ent_bg', label: 'Bedarfsgemeinschaft', type: 'entity', description: 'Bedarfsgemeinschaft gem. §7 Abs. 3 SGB II — 5 Personen', details: { 'Mitglieder': '5 (Thomas, Leila, Sophie, Can, Emma)', 'Typ': 'Unverheiratete Partner mit Kindern' } },
@@ -147,15 +147,15 @@ function buildCaseData(): GraphData {
     { id: 'ent_regelbedarf', label: 'Regelbedarf BG', type: 'entity', description: 'Regelbedarfe der 5-Personen-BG nach Stufen', details: { 'Thomas (St. 1/2)': '506€', 'Leila (St. 2)': '506€', 'Sophie 14J (St. 4)': '471€', 'Can 6J (St. 5)': '390€', 'Emma <6J (St. 6)': '357€' } },
     { id: 'ent_but', label: 'BuT-Leistungen', type: 'entity', description: 'Bildung und Teilhabe: Schulbedarf Sophie, Mittagessen Can', details: { 'Sophie': 'Schulbedarf (§28 Abs. 3)', 'Can': 'Mittagessen Kita (§28 Abs. 6)' } },
     { id: 'ent_vorlaeufig', label: 'Vorläufiger Bescheid', type: 'entity', description: 'Vorläufige Entscheidung wegen schwankendem Einkommen Leila', details: { 'Grund': 'Schwankendes Einkommen Leila (Midijob)', 'Rechtsgrund': '§41a SGB II', 'Folge': 'Endgültige Festsetzung nach Bewilligungszeitraum' } },
-    { id: 'ent_eakte', label: 'E-AKTE', type: 'entity', description: 'Elektronische Fallakte im Jobcenter — 47 Dokumente, strukturierungsbedürftig', details: { 'Dokumente gesamt': '47', 'Probleme': '12 identifizierte E-AKTE-Probleme', 'Status': 'Unstrukturiert — RELIEF-KI-Unterstützung benötigt' } },
+    { id: 'ent_eakte', label: 'E-AKTE', type: 'entity', description: 'Elektronische Fallakte im Jobcenter — 47 Dokumente, nicht durchsuchbar ohne OCR + Indizierung', details: { 'Dokumente gesamt': '47', 'Probleme': '80% Fotos/Scans ohne Volltext', 'Status': 'RELIEF-OCR und Indizierung benötigt' } },
 
     // ── KI-FUNKTIONEN (AI) ──
-    { id: 'ai_klassifikation', label: 'Dokumentenklassifikation', type: 'ai', description: 'Automatische Zuordnung: Kontoauszug, Mietvertrag, Lohnabrechnung etc.', details: { 'Technologie': 'Document AI, trainierte Modelle', 'Genauigkeit': '>95% Zielwert', 'Aktion': 'Reklassifikation falsch zugeordneter Dokumente' } },
+    { id: 'ai_indizierung', label: 'Volltextindizierung', type: 'ai', description: 'OCR-Ergebnisse werden indiziert und durchsuchbar gemacht — unsichtbar im Hintergrund', details: { 'Technologie': 'Elasticsearch / Meilisearch', 'Geschwindigkeit': 'Suche in Millisekunden', 'Aktion': 'Alle 47 Dokumente automatisch im Suchindex' } },
     { id: 'ai_ocr', label: 'OCR & Texterkennung', type: 'ai', description: 'Textextraktion aus Fotos, Scans und Screenshots', details: { 'Technologie': 'Tesseract OCR, Azure Form Recognizer', 'Formate': 'JPEG, PNG, PDF (Scan)', 'Qualitätsprüfung': 'Konfidenzwert pro Feld' } },
-    { id: 'ai_metadaten', label: 'Metadaten-Extraktion', type: 'ai', description: 'Datum, Absender, Dokumententyp, zugehörige Person automatisch erkennen', details: { 'Technologie': 'NER, regelbasierte Extraktion', 'Felder': 'Datum, Absender, Person, Betreff' } },
+    { id: 'ai_kontext', label: 'Kontextbereitstellung', type: 'ai', description: 'Bei jedem Prüfschritt liefert der Knowledge Graph automatisch die relevanten Dokumente', details: { 'Technologie': 'Knowledge Graph Traversal', 'Beispiel': 'KdU-Prüfung → Mietvertrag + NK automatisch', 'Prinzip': 'Dokument → Person → Prüfschritt → §' } },
     { id: 'ai_schwaerzung', label: 'Automatische Schwärzung', type: 'ai', description: 'Kontonummern, Geburtsdaten, Gesundheitsdaten erkennen und schwärzen', details: { 'Technologie': 'Pattern-Matching + KI-Erkennung', 'Muster': 'IBAN, Geburtsdaten, Diagnosen, Kontonummern', 'Datenschutz': '§67 SGB X, Art. 9 DSGVO' } },
-    { id: 'ai_sortierung', label: 'Sortierung & Zusammenführung', type: 'ai', description: 'Einzelseiten → Dokument, chronologische und sachliche Ordnung herstellen', details: { 'Technologie': 'Sequenzanalyse, Seitenerkennung', 'Aktion': 'Kontoauszüge chronologisch, Mietvertrag-Seiten zusammenführen' } },
-    { id: 'ai_freitext', label: 'Freitextgenerierung', type: 'ai', description: 'Beschreibende Texte für jedes Dokument generieren', details: { 'Technologie': 'LLM-Zusammenfassung', 'Beispiel': '„Kontoauszug Sparkasse, Thomas Becker, Feb. 2026, Saldo 412,80€"' } },
+    { id: 'ai_suche', label: 'Intelligente Suche', type: 'ai', description: 'Volltextsuche über alle Dokumente — „Mietvertrag Becker 2026“ findet sofort', details: { 'Technologie': 'Volltextindex + Fuzzy-Matching', 'Geschwindigkeit': 'Ergebnisse in Millisekunden', 'Aktion': 'Kein Ordner-Navigieren, kein manuelles Sichten' } },
+    { id: 'ai_vollstaendigkeit', label: 'Freitextgenerierung', type: 'ai', description: 'Beschreibende Texte für jedes Dokument generieren', details: { 'Technologie': 'LLM-Zusammenfassung', 'Beispiel': '„Kontoauszug Sparkasse, Thomas Becker, Feb. 2026, Saldo 412,80€"' } },
 
     // ── STANDARDS (STANDARD) ──
     { id: 'std_resiscan', label: 'BSI TR-RESISCAN', type: 'standard', description: 'Technische Richtlinie für ersetzendes Scannen — Beweiswert', details: { 'Herausgeber': 'BSI', 'Nummer': 'TR-03138', 'Relevanz': 'Beweiswert gescannter Dokumente in der E-AKTE' } },
@@ -166,11 +166,11 @@ function buildCaseData(): GraphData {
 
     // ── AKTENPROBLEME (RISK) ──
     { id: 'risk_unsortiert', label: 'Unsortierte Einzelseiten', type: 'risk', description: 'Kontoauszüge und Mietvertrag als Einzelfotos ohne Ordnung eingereicht', details: { 'Betroffene Docs': 'Kontoauszüge (12), Mietvertrag (15)', 'Folge': 'Zeitaufwand Aktenerschließung', 'RELIEF': 'KI-Sortierung + Zusammenführung' } },
-    { id: 'risk_fehlklassifikation', label: 'Fehlklassifikation', type: 'risk', description: '3 Dokumente als „Sonstiges" klassifiziert, 1 Arztbrief fälschlich in Leistungsakte', details: { 'Anzahl': '4 Dokumente', 'Kritisch': 'Arztbrief = Gesundheitsdaten!', 'RELIEF': 'KI-Reklassifikation + Datenschutz-Flag' } },
+    { id: 'risk_nicht_suchbar', label: 'Nicht durchsuchbar', type: 'risk', description: '80% der Dokumente sind Fotos oder Scans ohne Volltext — ohne OCR nicht auffindbar', details: { 'Betroffene': '~38 von 47 Dokumenten', 'Kritisch': 'Ohne OCR nicht auffindbar', 'RELIEF': 'OCR + Indizierung macht alle durchsuchbar' } },
     { id: 'risk_unvollstaendig', label: 'Unvollständige Dokumente', type: 'risk', description: 'Nebenkostenabrechnung nur 2/4 Seiten, Arbeitgeberbescheinigung fehlt ganz', details: { 'NK': '2 von 4 Seiten', 'AG-Bescheinigung': 'Fehlt komplett', 'RELIEF': 'Vollständigkeitsprüfung + Mitwirkungsanforderung' } },
     { id: 'risk_datenschutz', label: 'Datenschutzverletzung', type: 'risk', description: 'Unterhaltsurkunde mit offenen Kontonummern, Arztbrief mit Gesundheitsdaten in Leistungsakte', details: { 'Kontonummern': 'Sichtbar in Unterhaltsurkunde', 'Gesundheitsdaten': 'Arztbrief Sophie', 'Rechtsverstoß': '§67 SGB X, Art. 9 DSGVO', 'RELIEF': 'Schwärzung + Entfernung' } },
     { id: 'risk_qualitaet', label: 'Niedrige Dokumentenqualität', type: 'risk', description: 'Screenshot statt Dokument (Insolvenzbekanntmachung), Handyfotos statt Scans', details: { 'Betroffene': 'Insolvenzbekanntmachung, Kontoauszüge', 'Problem': 'OCR-Qualität unzureichend', 'RELIEF': 'Qualitätsbewertung + OCR-Optimierung' } },
-    { id: 'risk_freitext', label: 'Fehlende Freitexte', type: 'risk', description: 'Alle 47 Dokumente ohne beschreibende Freitexte — Aktenerschließung erschwert', details: { 'Betroffene': 'Alle 47 Dokumente', 'Folge': 'Jedes Dokument muss einzeln geöffnet werden', 'RELIEF': 'Automatische Freitextgenerierung' } },
+    { id: 'risk_kein_kontext', label: 'Fehlender Kontext', type: 'risk', description: 'Dokumente ohne Verknüpfung zum Prüfschritt — Sachbearbeiterin muss Zusammenhänge selbst herstellen', details: { 'Betroffene': 'Alle 47 Dokumente', 'Folge': 'Kein automatischer Bezug zu §§ und Prüfschritten', 'RELIEF': 'Knowledge Graph liefert Kontext automatisch' } },
 
     // ── EREIGNISSE (EVENT) ──
     { id: 'evt_insolvenz', label: 'Insolvenz 15.01.2026', type: 'event', description: 'Insolvenz Möbel-Zentrum GmbH — Thomas erhält betriebsbedingte Kündigung', details: { 'Datum': '15.01.2026', 'Firma': 'Möbel-Zentrum GmbH, Dortmund', 'Folge': 'Arbeitslosigkeit Thomas, kein Sperrzeitgrund' } },
@@ -239,8 +239,8 @@ function buildCaseData(): GraphData {
     // ── Dokumente → Risiken ──
     { source: 'doc_kontoauszuege', target: 'risk_unsortiert', type: 'SR_HAT_PROBLEM', description: 'unsortiert' },
     { source: 'doc_mietvertrag', target: 'risk_unsortiert', type: 'SR_HAT_PROBLEM', description: 'Einzelseiten' },
-    { source: 'doc_sonstige', target: 'risk_fehlklassifikation', type: 'SR_HAT_PROBLEM', description: 'falsch klassifiziert' },
-    { source: 'doc_arztbrief', target: 'risk_fehlklassifikation', type: 'SR_HAT_PROBLEM', description: 'gehört nicht in Akte' },
+    { source: 'doc_sonstige', target: 'risk_nicht_suchbar', type: 'SR_HAT_PROBLEM', description: 'nicht durchsuchbar' },
+    { source: 'doc_arztbrief', target: 'risk_datenschutz', type: 'SR_HAT_PROBLEM', description: 'gehört nicht in Akte' },
     { source: 'doc_arztbrief', target: 'risk_datenschutz', type: 'SR_HAT_PROBLEM', description: 'Gesundheitsdaten!' },
     { source: 'doc_nk', target: 'risk_unvollstaendig', type: 'SR_HAT_PROBLEM', description: 'nur 2/4 Seiten' },
     { source: 'doc_ag_bescheinigung', target: 'risk_unvollstaendig', type: 'SR_HAT_PROBLEM', description: 'fehlt ganz' },
@@ -249,28 +249,28 @@ function buildCaseData(): GraphData {
     { source: 'doc_kontoauszuege', target: 'risk_qualitaet', type: 'SR_HAT_PROBLEM', description: 'Handyfotos' },
 
     // ── KI-Funktionen → Risiken (LÖST) ──
-    { source: 'ai_sortierung', target: 'risk_unsortiert', type: 'SR_LOEST', description: 'löst' },
-    { source: 'ai_klassifikation', target: 'risk_fehlklassifikation', type: 'SR_LOEST', description: 'löst' },
+    { source: 'ai_suche', target: 'risk_nicht_suchbar', type: 'SR_LOEST', description: 'macht durchsuchbar' },
+    { source: 'ai_indizierung', target: 'risk_unsortiert', type: 'SR_LOEST', description: 'indiziert und ordnet' },
     { source: 'ai_ocr', target: 'risk_qualitaet', type: 'SR_LOEST', description: 'löst' },
     { source: 'ai_schwaerzung', target: 'risk_datenschutz', type: 'SR_LOEST', description: 'löst' },
-    { source: 'ai_metadaten', target: 'risk_unvollstaendig', type: 'SR_LOEST', description: 'erkennt' },
-    { source: 'ai_freitext', target: 'risk_freitext', type: 'SR_LOEST', description: 'löst' },
+    { source: 'ai_kontext', target: 'risk_kein_kontext', type: 'SR_LOEST', description: 'liefert Kontext' },
+    { source: 'ai_vollstaendigkeit', target: 'risk_unvollstaendig', type: 'SR_LOEST', description: 'erkennt fehlende Nachweise' },
 
     // ── KI-Funktionen → Standards (COMPLIANT) ──
     { source: 'ai_ocr', target: 'std_resiscan', type: 'SR_COMPLIANT', description: 'konform mit' },
     { source: 'ai_schwaerzung', target: 'sec_67', type: 'SR_REFERENCES', description: 'gem. §67 SGB X' },
     { source: 'ai_schwaerzung', target: 'sec_art9', type: 'SR_REFERENCES', description: 'gem. Art. 9 DSGVO' },
-    { source: 'ai_klassifikation', target: 'std_xdomea', type: 'SR_COMPLIANT', description: 'konform mit' },
-    { source: 'ai_sortierung', target: 'std_iso15489', type: 'SR_COMPLIANT', description: 'konform mit' },
-    { source: 'ai_metadaten', target: 'std_xdomea', type: 'SR_COMPLIANT', description: 'konform mit' },
+    { source: 'ai_indizierung', target: 'std_xdomea', type: 'SR_COMPLIANT', description: 'Metadaten-Schema' },
+    { source: 'ai_suche', target: 'std_iso15489', type: 'SR_COMPLIANT', description: 'Retrieval konform' },
+    { source: 'ai_kontext', target: 'std_xdomea', type: 'SR_COMPLIANT', description: 'Aktenplan-Kontext' },
 
     // ── KI → Prozesse (UNTERSTÜTZT) ──
-    { source: 'ai_klassifikation', target: 'proc_aktenpflege', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
+    { source: 'ai_indizierung', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'indiziert Dokumente' },
     { source: 'ai_ocr', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
-    { source: 'ai_sortierung', target: 'proc_aktenpflege', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
+    { source: 'ai_suche', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'ermöglicht Suche' },
     { source: 'ai_schwaerzung', target: 'proc_aktenpflege', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
-    { source: 'ai_freitext', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
-    { source: 'ai_metadaten', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'unterstützt' },
+    { source: 'ai_vollstaendigkeit', target: 'proc_aktenpflege', type: 'SR_UNTERSTUETZT', description: 'prüft Vollständigkeit' },
+    { source: 'ai_kontext', target: 'proc_aktenerschliessung', type: 'SR_UNTERSTUETZT', description: 'liefert Prüfschritt-Kontext' },
 
     // ── Entitäten → Paragraphen ──
     { source: 'ent_bg', target: 'sec_7', type: 'SR_DEFINIERT_DURCH', description: 'definiert durch' },
@@ -331,9 +331,9 @@ function buildCaseData(): GraphData {
     { source: 'std_esor', target: 'ent_eakte', type: 'SR_APPLIES_TO', description: 'Beweiswerterhaltung' },
 
     // ── Freitext-Risiko zu allen Docs ──
-    { source: 'doc_kontoauszuege', target: 'risk_freitext', type: 'SR_HAT_PROBLEM', description: 'kein Freitext' },
-    { source: 'doc_mietvertrag', target: 'risk_freitext', type: 'SR_HAT_PROBLEM', description: 'kein Freitext' },
-    { source: 'doc_lohn', target: 'risk_freitext', type: 'SR_HAT_PROBLEM', description: 'kein Freitext' },
+    { source: 'doc_kontoauszuege', target: 'risk_kein_kontext', type: 'SR_HAT_PROBLEM', description: 'kein Prüfschritt-Kontext' },
+    { source: 'doc_mietvertrag', target: 'risk_kein_kontext', type: 'SR_HAT_PROBLEM', description: 'kein Prüfschritt-Kontext' },
+    { source: 'doc_lohn', target: 'risk_kein_kontext', type: 'SR_HAT_PROBLEM', description: 'kein Prüfschritt-Kontext' },
   ]
 
   return { nodes, links }

@@ -1,27 +1,42 @@
 # CASSA Demo Plan — RELIEF
 
-## Projekt RELIEF gE
+## Projekt RELIEF gE — KI als unsichtbarer Helfer
+
+### Leitprinzip
+
+> **Strategischer Fokus (Expertenfeedback 03/2026):** Weg von „KI klassifiziert beim Upload" hin zu **„KI als unsichtbarer Helfer für Suche und Kontext"**. RELIEF fungiert als **Übersetzer zwischen Bürger und Amt** — der Bürger reicht Nachweise ein, ohne Verwaltungslogik verstehen zu müssen. Die KI erschließt, indiziert und verknüpft im Hintergrund.
+
+### Problemstellung
 
 Die Bearbeitung von Vorgängen (Anträgen, Veränderungsmitteilungen, endgültige Festsetzungen etc.) bei der Grundsicherung für Arbeitsuchende nach dem SGB II durch die gemeinsamen Einrichtungen bedarf einer umfassenden Prüfung der Lebensumstände des Antragstellenden und oftmals weiterer Personen. Basis hierfür sind umfangreiche Formulare sowie zu vielen Sachverhalten einzureichende Nachweise, sowohl in Papierform als auch elektronisch über jobcenter.digital.
 
-Zur Wahrung der Nachvollziehbarkeit des Verwaltungshandelns und der Kassensicherheit sind alle anspruchs- und zahlungsbegründenden Unterlagen in der E-AKTE abzulegen. Damit die Entscheidungen gründlich und fehlerfrei vorbereitet, angeordnet und nachgeprüft werden können, müssen diese Unterlagen in der E-AKTE strukturiert geführt werden.
+Alle anspruchs- und zahlungsbegründenden Unterlagen sind in der E-AKTE abzulegen. Die Kernherausforderung ist dabei nicht die Ablagestruktur, sondern die **Auffindbarkeit und Kontextualisierung** der Dokumente:
 
-Ungeachtet diverser Mechanismen zur Dokumentenklassifikation und Aktenzuordnung gelangen in erheblichem Umfang Dokumente in die elektronische Fallakte,
+- Dokumente werden eingereicht, aber ihre Inhalte sind nicht durchsuchbar (Fotos, Scans)
+- Zusammenhänge zwischen Dokumenten und Prüfschritten sind nicht automatisch herstellbar
+- Sensible Daten (Gesundheitsdaten, Kontonummern) werden nicht automatisch erkannt
+- Fehlende Nachweise fallen erst bei der manuellen Bearbeitung auf — Wochen nach Eingang
 
-- die dort nicht oder nicht so abzulegen sind,
-- bei denen wichtige Metadaten (Dokumententyp/-art) fehlen oder falsch ausgeprägt sind,
-- denen Freitexte zur schnellen Erfassung der wesentlichen Dokumenteninhalte fehlen,
-- denen als (abfotografierten) Einzelseiten der Dokumentenzusammenhang fehlt,
-- bei denen spezifische Informationen aus Datenschutzgründen zu schwärzen sind,
-- die nicht in einer sachlich oder chronologisch korrekten Reihenfolge abliegen usw.
+### Paradigmenwechsel: Flache Struktur + intelligente Suche
 
-Dies betrifft in besonderer Weise eingereichte Nachweise zu den Anspruchsvoraussetzungen, z. B. Kontoauszüge, Lohnabrechnungen, Mietverträge und Nebenkostenabrechnungen, so dass sich trotz strukturierter Abfragen auf Formularen und in den Online-Services eine natürliche Ordnung und Reihenfolge in den Fallakten nicht von selbst aufbaut.
+**Alte Denkweise:** Tiefe Ordnerhierarchien, Bürger muss Dokumententyp wählen, Navigation durch Aktenplan.
 
-Die Sichtung der Einzeldokumente einer Fallakte, das Verstehen der jeweiligen Inhalte und das gedankliche Zusammenfügen der Informationsbausteine zu geordneten Sachverhalten (Aktenerschließung) sowie die Herstellung eines geordneten und anschließend leichter erschließbaren Aktenzustands durch Freitextbeschriftung, Klassifikation, Sortierung, Löschung, Schwärzung etc. (Aktenpflege) sind tägliche Praxis der manuellen Aktenarbeit in den Leistungsbereichen der gemeinsamen Einrichtungen (gE).
+**Neue Denkweise:** Maximal 2 Ebenen (Kunde → Dokumente). Ein Nachweis ist ein Nachweis. Die KI übernimmt OCR, Indizierung und Volltextsuche im Hintergrund. Dokumente werden nicht durch Navigieren in Ordnern gefunden, sondern durch **intelligente Suche** über den indizierten Volltext.
 
-Diese Aktenarbeit bindet als Arbeitsvorbereitung und Begleitaufgabe erhebliche Arbeitszeit der Fachkräfte in den gE. Sie ist zwar Voraussetzung aber nicht eigenständiger Gegenstand der Wertschöpfung der Verwaltungstätigkeit, der Bemessung der Grundsicherung.
+| Prinzip | Alt | Neu (RELIEF) |
+|---------|-----|--------------|
+| **Upload** | Bürger wählt Akten-Art, Dokumententyp | Bürger lädt Nachweis hoch — fertig („idiotensicher") |
+| **Struktur** | Tiefe Ordnerhierarchie, Aktenplan | Flach: Kunde → Dokumente (max. 2 Ebenen) |
+| **Erschließung** | Manuelles Sichten, Klassifizieren, Sortieren | KI: OCR → Indizierung → Volltextsuche |
+| **Auffindbarkeit** | Ordner-Navigation, Dokumententyp-Filter | Semantische Suche: „Mietvertrag Becker 2026" |
+| **Kontext** | Sachbearbeiterin stellt Zusammenhänge manuell her | KI: Dokument → §§ → Prüfschritt → Person |
+| **Bürger** | Muss Verwaltungslogik verstehen | Reicht Nachweis ein, KI übersetzt |
 
-Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in den Leistungsbereichen der gE reduzieren und damit eine effektive Entlastung der Mitarbeitenden bewirken. Das Vorhaben kann im Erfolgsfall einen wirksamen Beitrag zur Mitigation des demografischen Fachkräftemangels in den gE leisten.
+### Ziel
+
+Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in den Leistungsbereichen der gE reduzieren. Der Schlüssel ist nicht bessere Ordner, sondern **bessere Suche und automatischer Kontext**. Die KI minimiert den manuellen Aufwand im Amt, indem sie Daten im richtigen Kontext bereitstellt — ohne dass der Bürger die Verwaltungslogik verstehen muss.
+
+Das Vorhaben kann im Erfolgsfall einen wirksamen Beitrag zur Mitigation des demografischen Fachkräftemangels in den gE leisten.
 
 ---
 
@@ -70,31 +85,35 @@ Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in
 
 ### E-AKTE-Probleme (die 47 eingereichten Dokumente)
 
-| Nr. | Problem | Betroffenes Dokument | RELIEF-Lösung |
-|-----|---------|---------------------|---------------|
-| 1 | Einzelseiten, nicht chronologisch | 12 Kontoauszüge als Fotos | KI-Sortierung + Zusammenführung |
-| 2 | Einzelseiten ohne Zusammenhang | Mietvertrag (15 Fotoaufnahmen) | KI-Einzelseitenzusammenführung |
-| 3 | Schwankendes Layout | 3 Lohnabrechnungen Leila | KI-Klassifikation + OCR |
-| 4 | Unvollständig | Nebenkostenabrechnung (2 von 4 Seiten) | KI erkennt fehlende Seiten |
-| 5 | Veraltete Fassung | Kindergeldbescheid | KI-Metadaten-Check (Datum) |
+**Ausgangspunkt:** Familie Becker lädt 47 Nachweise hoch — ohne Kategorisierung, ohne Sortierung, einfach als Sammlung. RELIEF verarbeitet diese im Hintergrund:
+
+| Nr. | Problem | Betroffenes Dokument | RELIEF-Lösung (unsichtbar im Hintergrund) |
+|-----|---------|---------------------|-------------------------------------------|
+| 1 | Einzelseiten, nicht chronologisch | 12 Kontoauszüge als Fotos | OCR → Indizierung → per Suche findbar |
+| 2 | Einzelseiten ohne Zusammenhang | Mietvertrag (15 Fotoaufnahmen) | OCR erkennt Zusammenhang, indiziert als Einheit |
+| 3 | Schwankendes Layout | 3 Lohnabrechnungen Leila | OCR + Volltextindizierung → suchbar |
+| 4 | Unvollständig | Nebenkostenabrechnung (2 von 4 Seiten) | KI erkennt fehlende Seiten bei Kontextanalyse |
+| 5 | Veraltete Fassung | Kindergeldbescheid | KI-Metadaten-Check bei Kontextbereitstellung |
 | 6 | Sensible Daten sichtbar | Unterhaltsurkunde (Kontonummern, Geburtsdaten) | Automatische Schwärzungsvorschläge |
-| 7 | Gehört nicht in Akte | Arztbrief Sophie (Gesundheitsdaten!) | KI-Fehlklassifikations-Flag |
-| 8 | Fehlt komplett | Arbeitgeberbescheinigung Thomas | KI-Vollständigkeitsprüfung |
-| 9 | Screenshot statt Dokument | Insolvenzbekanntmachung | KI-Qualitätsbewertung |
-| 10 | Falscher Dokumententyp | 3 Dokumente als „Sonstiges" klassifiziert | KI-Reklassifikation |
-| 11 | Fehlende Freitexte | Alle 47 Dokumente | KI-Freitextgenerierung |
-| 12 | Keine sachliche Ordnung | Dokumente in Eingangsreihenfolge | KI-Sachlogische Sortierung |
+| 7 | Gehört nicht in Akte | Arztbrief Sophie (Gesundheitsdaten!) | KI flaggt bei Kontextanalyse — nicht bei Upload |
+| 8 | Fehlt komplett | Arbeitgeberbescheinigung Thomas | KI-Vollständigkeitsprüfung im Bearbeitungskontext |
+| 9 | Screenshot statt Dokument | Insolvenzbekanntmachung | OCR verarbeitet auch Screenshots |
+| 10 | Nicht suchbar | 3 Dokumente ohne Textinhalt | OCR erzeugt durchsuchbaren Volltext |
+| 11 | Keine Beschreibung | Alle 47 Dokumente | KI generiert Kurzbeschreibung für Suchergebnisse |
+| 12 | Nur per Ordner-Navigation auffindbar | Dokumente in Eingangsreihenfolge | Volltextsuche statt Ordner-Navigation |
 
 ### RELIEF-KI-Kernfunktionen
 
-| Funktion | Beschreibung | Technologie |
+> **Prinzip: KI arbeitet unsichtbar im Hintergrund** — nicht als Gatekeeper beim Upload, sondern als intelligenter Assistent, der Dokumente erschließt und im richtigen Kontext bereitstellt.
+
+| Funktion | Beschreibung | Wann aktiv? |
 |----------|-------------|-------------|
-| **Dokumentenklassifikation** | Automatische Zuordnung: Kontoauszug, Mietvertrag, Lohnabrechnung etc. | Document AI, trainierte Modelle |
-| **OCR & Texterkennung** | Extraktion aus Fotos, Scans, Screenshots | Tesseract OCR, Azure Form Recognizer |
-| **Metadaten-Extraktion** | Datum, Absender, Dokumententyp, zugehörige Person | NER, regelbasierte Extraktion |
-| **Automatische Schwärzung** | Kontonummern, Geburtsdaten, Gesundheitsdaten markieren | Pattern-Matching + KI-Erkennung |
-| **Sortierung & Zusammenführung** | Einzelseiten → Dokument, chronologische/sachliche Ordnung | Sequenzanalyse, Seitenerkennung |
-| **Freitextgenerierung** | Beschreibende Texte für jedes Dokument (z. B. „Kontoauszug Sparkasse, Thomas Becker, Feb. 2026") | LLM-Zusammenfassung |
+| **OCR & Volltextindizierung** | Fotos, Scans, Screenshots → durchsuchbarer Volltext | Sofort nach Upload (Hintergrund) |
+| **Automatische Indizierung** | Datum, Person, Beträge, Adressen extrahiert → Suchindex | Sofort nach OCR (Hintergrund) |
+| **Intelligente Suche** | „Mietvertrag Becker" findet den Mietvertrag in 47 Dokumenten | Bei Sachbearbeiter-Anfrage |
+| **Kontextbereitstellung** | Bei Prüfschritt X werden automatisch relevante Dokumente angezeigt | Bei Fallbearbeitung |
+| **PII-Erkennung & Schwärzung** | IBAN, Geburtsdaten, Gesundheitsdaten erkennen und schwärzen | Hintergrund + bei Prüfung |
+| **Vollständigkeitsprüfung** | Fehlende Nachweise im Kontext des aktuellen Prüfschritts melden | Bei Fallbearbeitung |
 
 ---
 
@@ -131,6 +150,8 @@ Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in
 
 ## Knowledge Graph — Knotentypen
 
+> Der Knowledge Graph dient nicht der Ordner-Navigation, sondern der **Kontextualisierung**: Wenn die Sachbearbeiterin einen Prüfschritt bearbeitet, liefert der Graph automatisch alle relevanten Dokumente, §§ und KI-Ergebnisse.
+
 | Typ | Emoji | Beschreibung | Anzahl (Demo) |
 |-----|-------|-------------|---------------|
 | `law` | 📘 | Gesetze (SGB II, SGB I, SGB X, DSGVO) | 5 |
@@ -140,9 +161,9 @@ Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in
 | `case` | 📁 | Fallknoten (BG-Antrag Familie Becker) | 1 |
 | `document` | 📝 | Dokumenttypen (Kontoauszug, Mietvertrag, Lohnabrechnung, …) | 12 |
 | `entity` | 🏛️ | Fachliche Entitäten (Bedarfsgemeinschaft, Einkommen, Vermögen, …) | 8 |
-| `ai` | 🤖 | KI-Fähigkeiten (Klassifikation, OCR, Schwärzung, …) | 6 |
+| `ai` | 🤖 | KI-Fähigkeiten (OCR, Indizierung, Suche, Schwärzung, Kontext) | 6 |
 | `standard` | 🛡️ | Standards (TR-RESISCAN, xdomea, ISO 15489, BSI) | 5 |
-| `risk` | ⚠️ | Aktenprobleme (Fehlklassifikation, fehlende Metadaten, …) | 6 |
+| `risk` | ⚠️ | Aktenprobleme (Nicht suchbar, fehlende Indizierung, …) | 6 |
 | `event` | ⚡ | Ereignisse (Insolvenz, Antragstellung) | 2 |
 | **Gesamt** | | | **75** |
 
@@ -153,10 +174,11 @@ Das Vorhaben RELIEF gE soll die erhebliche Arbeitszeitbindung der Aktenarbeit in
 Die Erzählung beschreibt den Fall Familie Becker aus der Perspektive einer Sachbearbeiterin im Jobcenter. Sie erklärt:
 
 1. Die Ausgangssituation (Insolvenz, Bürgergeld-Antrag)
-2. Die Komplexität der Bedarfsgemeinschaft (5 Personen, Unterhalt, schwankendes Einkommen)
-3. Die E-AKTE-Probleme (47 Dokumente, Chaos)
-4. Wie RELIEF die Aktenarbeit transformiert (KI-Klassifikation, Schwärzung, Sortierung)
-5. Die Verknüpfung im Knowledge Graph (Gesetze → Prozesse → Dokumente → KI-Lösungen)
+2. Den vereinfachten Upload: Familie reicht Nachweise ein — ohne Kategorisierung
+3. Wie RELIEF im Hintergrund arbeitet: OCR, Indizierung, Volltexterschließung
+4. Wie die Sachbearbeiterin per Suche sofort das richtige Dokument findet
+5. Wie der Knowledge Graph automatisch den Kontext liefert (§§ → Dokument → Person)
+6. Die automatische Erkennung sensibler Daten und fehlender Nachweise
 
 Voice: **Alice** (ElevenLabs, professional female educator, multilingual v2)
 
@@ -164,9 +186,11 @@ Voice: **Alice** (ElevenLabs, professional female educator, multilingual v2)
 
 ## Umsetzungsdetails — Technologie-Stack (2025/2026)
 
+> **Technologie-Fokus: OCR und Indizierung sind die Schlüsseltechnologien.** Die Demo zeigt, dass man Dokumente durch intelligente KI-Suche findet, nicht durch Navigieren in Ordnern. Der Upload ist „idiotensicher" — ein Nachweis ist ein Nachweis, keine Kategorisierung durch den Bürger.
+
 Bezogen auf den konkreten CASSA RELIEF Use Case — 47 Dokumente (Fotos, Scans, Screenshots) mit IBAN-Nummern, Geburtsdaten, Gesundheitsdaten — ergibt sich folgende Tool-Empfehlung. Der gesamte Stack läuft lokal auf Kubernetes ohne Cloud-Abhängigkeit — eine zentrale Anforderung für §67 SGB X (Sozialdatenschutz) und BSI IT-Grundschutz im Jobcenter-Kontext.
 
-### Phase 1: Textextraktion (OCR & Parsing)
+### Phase 1: OCR & Volltextindizierung (Kernstück)
 
 #### [IBM Granite-Docling-258M](https://github.com/DS4SD/docling) (Sep 2025, Apache 2.0)
 
@@ -228,21 +252,28 @@ Für Personennamen (Thomas Becker, Leila Kaya) in deutschen Verwaltungstexten li
 
 ### Empfohlene RELIEF-Pipeline (vollständig lokal, DSGVO-konform)
 
+> **Kernidee:** Upload → OCR → Indizierung → Suche. Die KI arbeitet unsichtbar im Hintergrund. Kein Klassifizierungszwang für den Bürger.
+
 ```text
 Eingang (Foto/Scan/PDF/Screenshot)
+  — Bürger lädt Nachweis hoch, keine Kategorisierung nötig —
         ↓
-[Granite-Docling-258M]  → DocTags / Markdown-Text
+[Granite-Docling-258M]  → Volltext (Layout-erhalten)
         ↓
+[Volltextindex]         → Durchsuchbar in Millisekunden
+        ↓                   (Elasticsearch / Meilisearch)
 [Presidio Analyzer]
    ├─ GLiNER-PII-Large  → IBAN, Geburtsdatum, Gesundheitsdaten
    ├─ spaCy de_core_news_lg  → Namen, Orte
    └─ Regex-Recognizer  → Deutsche Steuernummer, KV-Nr., Aktenzeichen
         ↓
-[Presidio Anonymizer]   → Geschwärztes Dokument / JSON mit Positionen
+[Presidio Anonymizer]   → Schwärzungsvorschläge (nicht automatisch angewendet)
         ↓
-[LLM (Llama 3 / Granite)] → Freitextgenerierung (Demo-Fall #11)
+[LLM (Llama 3 / Granite)] → Kurzbeschreibung für Suchergebnisse
         ↓
-Strukturierte E-AKTE (xdomea 3.0-konform)
+[Neo4j Knowledge Graph] → Kontext: Dokument ↔ §§ ↔ Prüfschritt ↔ Person
+        ↓
+Sachbearbeiterin sucht: „Mietvertrag Becker" → sofort gefunden
 ```
 
 ### Modellvergleich für RELIEF
@@ -297,6 +328,50 @@ Als **Benchmark und optionale Cloud-Alternative** (bei Freigabe durch den Datens
 | DSGVO-Konformität | ✅ Lokal, keine Cloud | ⚠️ Erfordert Cloud-Freigabe + DPA |
 
 **Empfehlung**: Der **lokale Open-Source-Stack** (Granite-Docling + GLiNER + Presidio) bleibt die **Primärlösung** für RELIEF, da §67 SGB X eine lokale Verarbeitung von Sozialdaten erfordert. Gemini/Vertex AI dient als **Benchmark** für Qualitätsvergleiche und als **Fallback** für Szenarien, in denen eine Cloud-Freigabe besteht (z.B. anonymisierte Test-Dokumente, Schulungsmaterialien).
+
+---
+
+## User Stories
+
+### Bürger-Perspektive (Upload)
+
+| ID | User Story | Akzeptanzkriterium |
+|----|-----------|-------------------|
+| **US-B1** | Als Antragsteller möchte ich meine Nachweise hochladen, ohne einen Dokumententyp auswählen zu müssen, damit ich keinen Verwaltungsjargon verstehen muss. | Upload-Formular hat **kein** Pflichtfeld für Dokumententyp. |
+| **US-B2** | Als Antragsteller möchte ich mehrere Fotos auf einmal hochladen, damit ich nicht jeden Kontoauszug einzeln einreichen muss. | Batch-Upload (Drag & Drop oder Multi-Select) funktioniert. |
+| **US-B3** | Als Antragsteller möchte ich eine Bestätigung erhalten, dass meine Nachweise eingegangen sind, damit ich sicher bin, dass alles übermittelt wurde. | Eingangsbestätigung mit Anzahl der hochgeladenen Dateien. |
+
+### Sachbearbeiter-Perspektive (Suche & Kontext)
+
+| ID | User Story | Akzeptanzkriterium |
+|----|-----------|-------------------|
+| **US-S1** | Als Sachbearbeiterin möchte ich per Freitextsuche nach Dokumenten suchen (z.B. „Mietvertrag Becker"), damit ich nicht durch Ordner navigieren muss. | Volltextsuche liefert Ergebnisse in < 1 Sekunde. |
+| **US-S2** | Als Sachbearbeiterin möchte ich bei einem Prüfschritt automatisch die relevanten Dokumente angezeigt bekommen, damit ich keine Nachweise übersehe. | Kontextleiste zeigt Dokumente passend zum aktuellen § an. |
+| **US-S3** | Als Sachbearbeiterin möchte ich sofort sehen, welche Nachweise noch fehlen, damit ich frühzeitig Mitwirkungsanforderungen stellen kann. | Vollständigkeitsprüfung zeigt fehlende Dokumente pro Prüfschritt. |
+| **US-S4** | Als Sachbearbeiterin möchte ich Schwärzungsvorschläge für sensible Daten erhalten, damit ich DSGVO-konform arbeiten kann, ohne jedes Dokument manuell zu prüfen. | PII-Erkennung markiert IBAN, Geburtsdaten, Gesundheitsdaten. |
+| **US-S5** | Als Sachbearbeiterin möchte ich zusammengehörige Seiten (z.B. 15 Mietvertrag-Fotos) automatisch gruppiert sehen, damit ich den Überblick behalte. | OCR-basierte Seitenzusammenführung mit Konfidenzanzeige. |
+
+### System-Perspektive (Hintergrundverarbeitung)
+
+| ID | User Story | Akzeptanzkriterium |
+|----|-----------|-------------------|
+| **US-X1** | Als System möchte ich hochgeladene Fotos und Scans automatisch per OCR verarbeiten, damit der Volltext im Suchindex verfügbar ist. | OCR startet automatisch nach Upload, Volltext in < 30 Sek. indiziert. |
+| **US-X2** | Als System möchte ich extrahierte Metadaten (Datum, Person, Betrag) im Knowledge Graph speichern, damit Kontextabfragen möglich sind. | Metadaten werden als Graph-Knoten mit Relationen gespeichert. |
+| **US-X3** | Als System möchte ich Dokumente mit den relevanten §§ SGB II verknüpfen, damit die Kontextbereitstellung funktioniert. | Jedes indizierte Dokument hat ≥ 1 Relation zu einem § im Graph. |
+
+---
+
+## Meilensteine
+
+| Phase | Meilenstein | Beschreibung | Lieferobjekte |
+|-------|------------|-------------|---------------|
+| **M0** | Demo-Prototyp | Interaktive Landing Page mit Knowledge Graph, Narration und BPMN-Prozessdiagramm | React-App (diese Demo), RELIEF_DEMO_PLAN.md |
+| **M1** | OCR & Indizierung | Granite-Docling verarbeitet 47 Demo-Dokumente → Volltext im Suchindex (Elasticsearch/Meilisearch) | OCR-Pipeline, Suchindex, API-Endpoint `/api/v1/search` |
+| **M2** | Intelligente Suche | Sachbearbeiterin kann per Freitextsuche Dokumente finden (US-S1) | Such-UI, Ergebnisranking, Snippet-Anzeige |
+| **M3** | Kontextbereitstellung | Knowledge Graph liefert automatisch Dokumente zum aktuellen Prüfschritt (US-S2) | Neo4j-Integration, Kontext-API, Vollständigkeitsprüfung |
+| **M4** | PII & Schwärzung | GLiNER + Presidio erkennen sensible Daten, Schwärzungsvorschläge (US-S4) | PII-Pipeline, Schwärzungs-UI, Audit-Trail |
+| **M5** | Vereinfachter Upload | Bürger-Upload ohne Kategorisierung (US-B1, US-B2) → direkt in OCR-Pipeline | Upload-UI, Eingangsbestätigung, Batch-Verarbeitung |
+| **M6** | Pilotbetrieb | Integration in gE-Systemlandschaft, Pilottest mit echten (anonymisierten) Akten | Betriebskonzept, Schulungsmaterial, Performance-Metriken |
 
 ---
 
