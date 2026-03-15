@@ -1,6 +1,6 @@
-# CASSA RELIEF — KI-gestützte E-AKTE für die Grundsicherung
+# CASSA RELIEF — KI als unsichtbarer Helfer für die E-AKTE
 
-**Compliance-Assured Structured Semantic Analysis** — KI-gestützte Dokumentenklassifikation, Aktenpflege und Prozessmodellierung für die **gemeinsamen Einrichtungen (gE)** nach SGB II.
+**Compliance-Assured Structured Semantic Analysis** — OCR, Volltextindizierung und intelligente Suche für die E-AKTE der **gemeinsamen Einrichtungen (gE)** nach SGB II.
 
 > **[▶ Live-Demo öffnen](https://ma3u.github.io/cassa-relief/)**
 
@@ -12,33 +12,33 @@
 
 **Gemeinsame Einrichtungen (gE)** sind die lokalen Jobcenter, in denen Bundesagentur für Arbeit und kommunale Träger gemeinsam die Grundsicherung für Arbeitsuchende nach SGB II umsetzen. Täglich bearbeiten Fachkräfte Anträge, Veränderungsmitteilungen und endgültige Festsetzungen auf Basis umfangreicher Fallakten.
 
-**Das Problem:** Dokumente gelangen unstrukturiert in die E-AKTE — falsch klassifiziert, ohne Metadaten, in falscher Reihenfolge, mit ungeschwärzten Datenschutzdaten. Die manuelle Aktenerschließung bindet erhebliche Arbeitszeit, die für die eigentliche Leistungsbemessung fehlt.
+**Das Problem:** 80% der eingereichten Dokumente sind Fotos oder Scans ohne Volltext — nicht durchsuchbar, nicht verknüpft, nicht auffindbar. Sachbearbeiter:innen müssen jedes Dokument einzeln öffnen und manuell den richtigen Prüfschritt zuordnen.
 
-**RELIEF löst das** durch KI-gestützte Dokumentenverarbeitung entlang einer 4-stufigen Pipeline:
+**RELIEF löst das** als unsichtbarer Helfer im Hintergrund:
 
 | Schritt | Aufgabe | Technologie |
 |---------|---------|-------------|
-| 1 | **OCR & Parsing** | IBM Granite-Docling-258M — Fotos, Scans, PDFs → strukturierter Text |
-| 2 | **Klassifikation** | Dokumententyp, Metadaten, Aktenzuordnung per NLP |
+| 1 | **OCR & Parsing** | IBM Granite-Docling-258M — Fotos, Scans, PDFs → durchsuchbarer Volltext |
+| 2 | **Volltextindizierung** | Elasticsearch/Meilisearch — alle Dokumente in Millisekunden durchsuchbar |
 | 3 | **PII-Schwärzung** | GLiNER + Presidio — IBAN, Geburtsdaten, Namen (DSGVO-konform) |
-| 4 | **Prozessmodellierung** | BPMN 2.0 + DMN — Rechtsregeln maschinenlesbar, prüfbar, deploybar |
+| 4 | **Kontextbereitstellung** | Knowledge Graph — relevante Dokumente automatisch zum Prüfschritt |
 
 ### Demo-Fall: Familie Becker (BG-Nr. 412K-078263-B)
 
-Fünfköpfige Bedarfsgemeinschaft, 47 eingereichte Dokumente, 6 Rechtsprüfpunkte (§§ 7, 9, 11, 11b, 12 SGB II, vorläufige Entscheidung §41a SGB II). RELIEF klassifiziert alle Dokumente automatisch und erstellt prüfbare BPMN-Modelle für jeden Berechnungsschritt.
+Fünfköpfige Bedarfsgemeinschaft, 47 eingereichte Dokumente, 6 Rechtsprüfpunkte (§§ 7, 9, 11, 11b, 12 SGB II, vorläufige Entscheidung §41a SGB II). RELIEF macht alle Dokumente per OCR durchsuchbar, liefert sie im richtigen Kontext und prüft Vollständigkeit — der Bürger lädt hoch, die KI erschließt im Hintergrund.
 
 ---
 
 ## Features
 
-- **KI-Dokumentenklassifikation** — Kontoauszüge, Mietverträge, Lohnabrechnungen automatisch erkannt und sortiert
-- **BPMN 2.0-Prozessmodellierung** — Rechtsregeln aus SGB II als ausführbare Diagramme, kompatibel mit Camunda, yEd, BPMN.io
-- **DMN-Entscheidungstabellen** — Freibeträge (§11b), Regelbedarfe (§20), KdU (§22) als prüfbare Tabellen
+- **OCR & Volltextindizierung** — Fotos und Scans werden automatisch in durchsuchbaren Volltext umgewandelt
+- **Intelligente Suche** — Sachbearbeiter finden Dokumente nach Inhalt, nicht nach Dateiname oder Klassifikation
+- **Kontextbereitstellung** — Relevante Unterlagen werden zum richtigen Zeitpunkt im Prozess bereitgestellt
 - **PII-Schwärzung** — Automatische Erkennung von Datenschutzdaten (DSGVO Art. 9, §67 SGB X)
+- **Vollständigkeitsprüfung** — KI erkennt fehlende Nachweise und generiert Nachforderungsschreiben
 - **3D-Knowledge-Graph** — Interaktive Visualisierung der SGB-II-Rechtsstruktur mit GraphRAG
-- **Interaktiver BPMN-Viewer** — Prozessdiagramm direkt im Browser bearbeiten und exportieren
+- **BPMN 2.0-Prozessmodellierung** — Rechtsregeln als ausführbare Diagramme, kompatibel mit Camunda, yEd, BPMN.io
 - **Vollständig lokal betreibbar** — Keine Cloud-Abhängigkeit, DSGVO-konform
-- **Praxisszenarien** — 5 konkrete Anwendungsfälle aus der gE-Praxis
 
 ---
 
@@ -107,7 +107,7 @@ CASSA exportiert Prozessmodelle im offenen **BPMN 2.0-Standard (OMG)**. Die gene
 
 | Modell | Aufgabe | Lizenz |
 |--------|---------|--------|
-| [IBM Granite-Docling-258M](https://github.com/DS4SD/docling) | OCR + Layout | Apache 2.0 |
+| [IBM Granite-Docling-258M](https://github.com/DS4SD/docling) | OCR + Layout + Indizierung | Apache 2.0 |
 | [GLiNER-PII-Large](https://huggingface.co/knowledgator/gliner-pii-large-v1.0) | PII-Erkennung | Apache 2.0 |
 | [Presidio](https://microsoft.github.io/presidio/) | Schwärzungs-Framework | MIT |
 | [spaCy de_core_news_lg](https://spacy.io/models/de) | NER Deutsch | MIT |
@@ -120,7 +120,7 @@ CASSA exportiert Prozessmodelle im offenen **BPMN 2.0-Standard (OMG)**. Die gene
 src/
 ├── App.tsx                              # Haupt-SPA mit allen Sektionen
 ├── components/
-│   ├── RELIEFKnowledgeGraph3D.tsx       # 3D-Graph SGB II (Grundsicherung)
+│   ├── RELIEFKnowledgeGraph3D.tsx       # 3D-Graph SGB II (Suche + Kontext)
 │   ├── DRVKnowledgeGraph3D.tsx          # 3D-Graph SGB VI (Referenz)
 │   ├── DataModelGraph3D.tsx             # Ontologie-Schema
 │   └── ui/                             # 45 shadcn/ui-Komponenten
