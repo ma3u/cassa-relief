@@ -1,8 +1,8 @@
 # KI als unsichtbarer Helfer für die E-AKTE
 
-**Compliance-Assured Structured Semantic Analysis** — OCR, Volltextindizierung und intelligente Suche für die E-AKTE der **gemeinsamen Einrichtungen (gE)** nach SGB II.
+**Demo-Projekt** — OCR, Volltextindizierung und intelligente Suche für die E-AKTE der **gemeinsamen Einrichtungen (gE)** nach SGB II. Zeigt den Einsatz von Graph-Datenbanken und GraphRAG für Aktenuntersuchungen.
 
-> **[▶ Live-Demo öffnen](https://ma3u.github.io/cassa-relief/)**
+> **[▶ Live-Demo öffnen](https://ma3u.github.io/graph-eAkte/)**
 
 ![SGB II](https://img.shields.io/badge/SGB_II-Grundsicherung-blue) ![BPMN](https://img.shields.io/badge/BPMN-2.0_konform-green) ![DSGVO](https://img.shields.io/badge/DSGVO-konform-orange) ![AI](https://img.shields.io/badge/KI-lokal_%2B_DSGVO-brightgreen)
 
@@ -61,8 +61,8 @@ Fünfköpfige Bedarfsgemeinschaft, 47 eingereichte Dokumente, 6 Rechtsprüfpunkt
 
 ```bash
 # Repository klonen
-git clone https://github.com/ma3u/cassa-relief.git
-cd cassa-relief
+git clone https://github.com/ma3u/graph-eAkte.git
+cd graph-eAkte
 
 # Abhängigkeiten installieren
 npm ci
@@ -71,7 +71,7 @@ npm ci
 npm run dev
 ```
 
-Öffne [http://localhost:5000/cassa-relief/](http://localhost:5000/cassa-relief/) im Browser.
+Öffne [http://localhost:5000/graph-eAkte/](http://localhost:5000/graph-eAkte/) im Browser.
 
 ## Build & Deploy
 
@@ -85,13 +85,13 @@ npm run lint      # ESLint
 
 Das Projekt wird automatisch via GitHub Actions deployed:
 - Push auf `main` → Build → Deploy auf GitHub Pages
-- URL: `https://ma3u.github.io/cassa-relief/`
+- URL: `https://ma3u.github.io/graph-eAkte/`
 
 ---
 
 ## BPMN 2.0-Kompatibilität
 
-CASSA exportiert Prozessmodelle im offenen **BPMN 2.0-Standard (OMG)**. Die generierten XML-Dateien sind direkt kompatibel mit:
+Die Demo exportiert Prozessmodelle im offenen **BPMN 2.0-Standard (OMG)**. Die generierten XML-Dateien sind direkt kompatibel mit:
 
 | Tool | Typ | Einsatz |
 |------|-----|---------|

@@ -306,7 +306,7 @@ function App() {
     },
     {
       title: "Prozessmodernisierung",
-      description: "Legacy-Systeme in Visual Basic und COBOL berechnen Leistungen als ‚Black Box' — niemand kann erklären, warum ein Bescheid genau diesen Betrag ausweist. CASSA ersetzt diese schrittweise durch transparente, regelbasierte Systeme.",
+      description: "Legacy-Systeme in Visual Basic und COBOL berechnen Leistungen als ‚Black Box' — niemand kann erklären, warum ein Bescheid genau diesen Betrag ausweist. RELIEF ersetzt diese schrittweise durch transparente, regelbasierte Systeme.",
       benefits: [
         "BPMN 2.0: Geschäftsprozesse werden als lesbare Diagramme modelliert — Sachbearbeiter und Juristen können sie prüfen",
         "DMN-Entscheidungstabellen: Freibeträge, Regelbedarfe und Anrechnungsregeln als nachvollziehbare Tabellen statt unlesbarem Code",
@@ -487,9 +487,9 @@ function App() {
       <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            <SopraLogo />
+            <BrandMark />
             <Separator orientation="vertical" className="h-8 hidden md:block" />
-            <span className="text-sm font-medium text-muted-foreground hidden md:block">CASSA · RELIEF</span>
+            <span className="text-sm font-medium text-muted-foreground hidden md:block">Graph & GraphRAG Demo</span>
           </div>
           <nav aria-label="Hauptnavigation" className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('fall-becker')} className="hidden md:flex">
@@ -509,12 +509,6 @@ function App() {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('tech-stack')} className="hidden md:flex">
               Technologie
-            </Button>
-            <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
-                Mehr erfahren
-                <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </a>
             </Button>
             {/* ── Mobile hamburger button ── */}
             <Button
@@ -637,14 +631,12 @@ function App() {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                asChild 
                 size="lg" 
                 className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-10 h-14 shadow-lg hover:shadow-xl transition-shadow"
+                onClick={() => scrollToSection('fall-becker')}
               >
-                <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
-                  <BrainCircuit className="mr-2 h-5 w-5" aria-hidden="true" />
-                  CASSA entdecken
-                </a>
+                <BrainCircuit className="mr-2 h-5 w-5" aria-hidden="true" />
+                Demo-Fall ansehen
               </Button>
               <Button 
                 variant="outline" 
@@ -1370,7 +1362,7 @@ function App() {
             ))}
           </div>
 
-          {/* CASSA API Detail */}
+          {/* RELIEF API Detail */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1473,7 +1465,7 @@ function App() {
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Bestehende Fachverfahren in Visual Basic und COBOL berechnen Leistungen, die niemand nachvollziehen kann. 
-              CASSA überführt diese Logik in transparente, prüfbare Modelle — Schritt für Schritt.
+              RELIEF überführt diese Logik in transparente, prüfbare Modelle — Schritt für Schritt.
             </p>
           </motion.div>
 
@@ -1512,7 +1504,7 @@ function App() {
                     </motion.div>
                     <div className="text-center">
                       <Badge className="bg-primary text-primary-foreground">
-                        CASSA-Analyse
+                        RELIEF-Analyse
                       </Badge>
                       <div className="flex flex-wrap justify-center gap-2 mt-3">
                         <Badge variant="outline" className="text-xs">Prozess-Mining</Badge>
@@ -1719,7 +1711,7 @@ function App() {
                       kennt niemand.
                     </p>
                     <p className="text-muted-foreground leading-relaxed mb-4">
-                      CASSA macht diesen Weg sichtbar: Zuerst analysiert es die bestehenden Programme und erstellt daraus 
+                      RELIEF macht diesen Weg sichtbar: Zuerst analysiert es die bestehenden Programme und erstellt daraus 
                       <strong> verständliche Diagramme</strong> (BPMN) und <strong>übersichtliche Tabellen</strong> (DMN). 
                       Fachkräfte und Juristen können diese prüfen — ohne eine Zeile Code lesen zu müssen.
                     </p>
@@ -1738,7 +1730,7 @@ function App() {
           {/* BPMN 2.0 compliance note + Tool cards for process modernization */}
           <div className="mt-12">
             <p className="text-sm text-muted-foreground text-center mb-6 max-w-3xl mx-auto">
-              CASSA exportiert Prozessmodelle im offenen <strong>BPMN 2.0-Standard (OMG)</strong> — kompatibel mit allen
+              RELIEF exportiert Prozessmodelle im offenen <strong>BPMN 2.0-Standard (OMG)</strong> — kompatibel mit allen
               gängigen Editoren. Die generierten XML-Dateien lassen sich direkt importieren, bearbeiten und als ausführbare
               Workflows deployen.
             </p>
@@ -2254,60 +2246,16 @@ function App() {
           </motion.div>
         </div>
       </section>
-      {/* ── CTA ── */}
-      <section className="py-32 bg-primary text-primary-foreground relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 network-pattern"></div>
-        </div>
-        <div className="container mx-auto px-6 max-w-7xl text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-              Bereit für intelligente Suche in der E-AKTE?
-            </h2>
-            <p className="text-xl text-primary-foreground/90 max-w-3xl mx-auto mb-12 leading-relaxed">
-              Erfahren Sie, wie CASSA RELIEF mit Document AI und Knowledge Graph 
-              die Aktenarbeit in der Grundsicherung transformiert — OCR, Indizierung und intelligente Suche statt Ordner-Navigation.
-            </p>
-            <Button 
-              asChild 
-              size="lg" 
-              variant="secondary"
-              className="text-lg px-12 h-16 text-primary font-semibold shadow-xl hover:shadow-2xl transition-all hover:scale-105"
-            >
-              <a href="https://www.soprasteria.de/products/cassa" target="_blank" rel="noopener noreferrer">
-                Zur offiziellen CASSA-Website
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </a>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── FOOTER ── */}
       <footer className="py-12 border-t border-border bg-muted/30">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
-              <SopraLogo />
+              <BrandMark />
             </div>
-            <div className="flex flex-col md:flex-row items-center gap-4">
-              <p className="text-sm text-muted-foreground text-center">
-                © 2025 Sopra Steria. Alle Rechte vorbehalten.
-              </p>
-              <a
-                href="https://www.soprasteria.de/footer/impressum"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
-              >
-                Impressum
-              </a>
-            </div>
+            <p className="text-sm text-muted-foreground text-center">
+              Demo-Projekt zu Graph & GraphRAG für E-AKTE-Untersuchungen — fiktiver Fall, anonymisierte Daten.
+            </p>
           </div>
         </div>
       </footer>
@@ -2319,13 +2267,11 @@ function App() {
 
 // ── Helper Components ──
 
-function SopraLogo() {
+function BrandMark() {
   return (
-    <img 
-      src="https://www.soprasteria.de/ResourcePackages/Bootstrap4/assets/dist/logos/logo-soprasteria.svg" 
-      alt="Sopra Steria" 
-      className="h-8 md:h-10"
-    />
+    <span className="text-lg md:text-xl font-bold tracking-tight text-foreground">
+      RELIEF
+    </span>
   )
 }
 

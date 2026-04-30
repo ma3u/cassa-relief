@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate ElevenLabs narration audio for CASSA RELIEF — Fall Familie Becker.
+"""Generate ElevenLabs narration audio for RELIEF — Fall Familie Becker.
 
 Uses Alice voice (multilingual v2) — professional, clear female narrator.
 The narration walks through a complex SGB II E-AKTE case (Bedarfsgemeinschaft Becker)
@@ -23,7 +23,7 @@ if not API_KEY:
 # Alice — Clear, Engaging Educator — middle-aged female, professional
 VOICE_ID = "Xb7hH8MSUJpSbSDYk0k2"
 
-NARRATION_TEXT = """Willkommen bei CASSA RELIEF — dem KI-Assistenten für die E-AKTE in der Grundsicherung, entwickelt von Sopra Steria.
+NARRATION_TEXT = """Willkommen bei RELIEF — dem KI-Assistenten für die E-AKTE in der Grundsicherung.
 
 Ich möchte Ihnen anhand eines realistischen Falls zeigen, warum KI-gestützte Aktenarbeit für die gemeinsamen Einrichtungen unverzichtbar ist — und warum manuelle Aktenpflege bei der Komplexität des SGB Zwei an ihre Grenzen stößt.
 
@@ -63,7 +63,7 @@ Denn die rechtliche Komplexität bleibt: Leilas schwankendes Einkommen erfordert
 
 Aber all das kann die Sachbearbeiterin jetzt auf Basis einer sauber strukturierten, vollständigen und datenschutzkonformen Akte tun. Nicht trotz 47 chaotisch eingereichten Dokumenten — sondern weil RELIEF diese Aktenarbeit übernommen hat.
 
-Das ist CASSA RELIEF: Ein System, das die Aktenarbeit nicht vereinfacht, sondern automatisiert — KI-gestützt, rechtskonform und transparent. Für die 75.000 Beschäftigten in den gemeinsamen Einrichtungen, die jeden Tag Fälle wie den der Familie Becker bearbeiten."""
+Das ist RELIEF: Ein System, das die Aktenarbeit nicht vereinfacht, sondern automatisiert — KI-gestützt, rechtskonform und transparent. Für die 75.000 Beschäftigten in den gemeinsamen Einrichtungen, die jeden Tag Fälle wie den der Familie Becker bearbeiten."""
 
 # ── Generate with ElevenLabs ──
 url = f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE_ID}"

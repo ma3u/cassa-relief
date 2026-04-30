@@ -1,6 +1,6 @@
 # Planning Guide
 
-A professional interactive website showcasing Sopra Steria's CASSA solution for German police forces, communicating the value of multi-layered ontology-based knowledge management systems for modern law enforcement.
+A professional interactive website showcasing the demo's solution for German police forces, communicating the value of multi-layered ontology-based knowledge management systems for modern law enforcement.
 
 **Experience Qualities**: 
 1. **Authoritative** - Conveys institutional credibility and technical sophistication befitting a solution for law enforcement agencies
@@ -8,16 +8,16 @@ A professional interactive website showcasing Sopra Steria's CASSA solution for 
 3. **Modern** - Projects cutting-edge innovation through contemporary design while maintaining professional decorum
 
 **Complexity Level**: Light Application (multiple features with basic state) 
-This is an interactive educational landing page that guides German police through CASSA technology with stateful interactions, animated visualizations, and a progressive disclosure user journey. Features include clickable layers, tabbed scenarios, scroll-based animations, and guided navigation.
+This is an interactive educational landing page that guides German police through RELIEF technology with stateful interactions, animated visualizations, and a progressive disclosure user journey. Features include clickable layers, tabbed scenarios, scroll-based animations, and guided navigation.
 
 ## Essential Features
 
-### Hero Section with Sopra Steria Branding
-- **Functionality**: Displays Sopra Steria logo, compelling headline about digital knowledge assistants for police, and primary CTA
+### Hero Section with Graph & GraphRAG Demo Branding
+- **Functionality**: Displays Graph & GraphRAG Demo logo, compelling headline about digital knowledge assistants for police, and primary CTA
 - **Purpose**: Establishes brand identity and immediately communicates the solution's value proposition
 - **Trigger**: Page load
 - **Progression**: Logo animates in → Headline reveals → CTA button appears
-- **Success criteria**: User understands this is a Sopra Steria solution for police within 3 seconds
+- **Success criteria**: User understands this is a Graph & GraphRAG Demo solution for police within 3 seconds
 
 ### Key Challenges Section
 - **Functionality**: Presents the four main challenges facing German police (organized crime, data silos, legal frameworks, personnel shortage)
@@ -38,13 +38,13 @@ This is an interactive educational landing page that guides German police throug
 - **Purpose**: Makes abstract technology concrete through relatable use cases
 - **Trigger**: User clicks scenario card
 - **Progression**: Card selected → Expands with detailed explanation → Illustrations animate → Related benefits highlight
-- **Success criteria**: User can envision CASSA in their daily work
+- **Success criteria**: User can envision RELIEF in their daily work
 
 ### Call-to-Action Section
-- **Functionality**: Prominent link to official Sopra Steria CASSA website with supporting context
+- **Functionality**: Prominent link to official the Graph Graph & GraphRAG Demo RELIEF GraphRAG demo website with supporting context
 - **Purpose**: Convert interest into action by directing to comprehensive information
 - **Trigger**: User clicks CTA button
-- **Progression**: CTA appears → User clicks → Opens official CASSA page in new tab
+- **Progression**: CTA appears → User clicks → Opens official RELIEF page in new tab
 - **Success criteria**: Interested users successfully navigate to full product information
 
 ## Edge Case Handling
@@ -61,9 +61,9 @@ The design should project **institutional authority, technical sophistication, a
 
 ## Color Selection
 
-A sophisticated palette that balances Sopra Steria's corporate identity with associations of trust, security, and German public service.
+A sophisticated palette that balances the demo's corporate identity with associations of trust, security, and German public service.
 
-- **Primary Color (Deep Navy)**: oklch(0.25 0.05 250) - Conveys authority, security, and institutional trust; Sopra Steria's signature dark blue
+- **Primary Color (Deep Navy)**: oklch(0.25 0.05 250) - Conveys authority, security, and institutional trust; the demo's signature dark blue
 - **Secondary Color (Professional Gray)**: oklch(0.45 0.01 240) - Supporting neutral for backgrounds and less prominent elements
 - **Accent Color (Signal Red)**: oklch(0.55 0.22 25) - Attention-grabbing for CTAs and critical information, references German federal colors
 - **Background (Light Warm Gray)**: oklch(0.97 0.005 60) - Soft, professional background that reduces eye strain
@@ -99,7 +99,7 @@ Animations should feel **precise and purposeful**, reflecting German engineering
 
 - **Components**:
   - Card (Shadcn): Challenge cards, scenario cards, architecture layer descriptions with custom styling for depth
-  - Button (Shadcn): Primary CTA to CASSA website, styled with accent color and subtle hover elevation
+  - Button (Shadcn): Primary CTA to RELIEF website, styled with accent color and subtle hover elevation
   - Tabs (Shadcn): Optional navigation between different content sections or scenario types
   - Accordion (Shadcn): Expandable scenario details and FAQ sections
   - Badge (Shadcn): Labels for statistics, technology tags, and feature highlights

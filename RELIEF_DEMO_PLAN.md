@@ -1,4 +1,4 @@
-# CASSA Demo Plan — RELIEF
+# RELIEF Demo Plan — RELIEF
 
 ## Projekt RELIEF gE — KI als unsichtbarer Helfer
 
@@ -188,7 +188,7 @@ Voice: **Alice** (ElevenLabs, professional female educator, multilingual v2)
 
 > **Technologie-Fokus: OCR und Indizierung sind die Schlüsseltechnologien.** Die Demo zeigt, dass man Dokumente durch intelligente KI-Suche findet, nicht durch Navigieren in Ordnern. Der Upload ist „idiotensicher" — ein Nachweis ist ein Nachweis, keine Kategorisierung durch den Bürger.
 
-Bezogen auf den konkreten CASSA RELIEF Use Case — 47 Dokumente (Fotos, Scans, Screenshots) mit IBAN-Nummern, Geburtsdaten, Gesundheitsdaten — ergibt sich folgende Tool-Empfehlung. Der gesamte Stack läuft lokal auf Kubernetes ohne Cloud-Abhängigkeit — eine zentrale Anforderung für §67 SGB X (Sozialdatenschutz) und BSI IT-Grundschutz im Jobcenter-Kontext.
+Bezogen auf den konkreten RELIEF Use Case — 47 Dokumente (Fotos, Scans, Screenshots) mit IBAN-Nummern, Geburtsdaten, Gesundheitsdaten — ergibt sich folgende Tool-Empfehlung. Der gesamte Stack läuft lokal auf Kubernetes ohne Cloud-Abhängigkeit — eine zentrale Anforderung für §67 SGB X (Sozialdatenschutz) und BSI IT-Grundschutz im Jobcenter-Kontext.
 
 ### Phase 1: OCR & Volltextindizierung (Kernstück)
 
@@ -386,9 +386,9 @@ Die Leistungsberechnung in der Grundsicherung (SGB II) wird heute durch **histor
 - **Kein Audit-Trail**: Bei einem Widerspruch (§44 SGB X) fehlt die Spur, welche Rechenregeln in welcher Reihenfolge angewendet wurden
 - **Fachkräftemangel**: Die wenigen verbliebenen COBOL-/VB-Entwickler gehen in Rente — das Wissen geht mit ihnen
 
-### CASSA-Ansatz: Prozessanalyse → formale Modelle → transparente Implementierung
+### Demo-Ansatz: Prozessanalyse → formale Modelle → transparente Implementierung
 
-CASSA analysiert die bestehenden Geschäftsprozesse und extrahiert die darin enthaltenen Regeln und Abläufe in zwei standardisierte Formate:
+RELIEF analysiert die bestehenden Geschäftsprozesse und extrahiert die darin enthaltenen Regeln und Abläufe in zwei standardisierte Formate:
 
 #### 1. [BPMN 2.0](https://www.omg.org/spec/BPMN/2.0.2/) — Geschäftsprozessmodellierung
 
@@ -439,7 +439,7 @@ Die Modernisierung erfolgt **inkrementell** — nicht als Big-Bang-Migration:
 
 | Schritt | Aktion | Ergebnis |
 | --- | --- | --- |
-| 1. Prozess-Mining | CASSA analysiert laufende Systeme und extrahiert tatsächliche Abläufe | Ist-Prozessmodell (BPMN) |
+| 1. Prozess-Mining | RELIEF analysiert laufende Systeme und extrahiert tatsächliche Abläufe | Ist-Prozessmodell (BPMN) |
 | 2. Regel-Extraktion | Geschäftslogik aus VB/COBOL wird als DMN/BRML formalisiert | Maschinenlesbare Regeln |
 | 3. Validierung | Fachexperten prüfen: Stimmen die extrahierten Regeln mit dem Gesetz überein? | Fachliche Freigabe |
 | 4. Parallelbetrieb | Neue transparente Implementierung läuft parallel zur Legacy-Berechnung | Ergebnisvergleich |

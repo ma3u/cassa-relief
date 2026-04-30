@@ -1,11 +1,11 @@
-# Project Guidelines — CASSA DRV / RELIEF
+# Project Guidelines — Graph & GraphRAG E-AKTE Demo
 
 ## Overview
-Sopra Steria CASSA landing page with interactive 3D knowledge graph for the **Deutsche Rentenversicherung (DRV)**. All UI text is **German**. Domain: social law (SGB I–XII), DRV processes, GRA-Anweisungen, Chat-API, GraphRAG.
+Landing page with interactive 3D knowledge graph demonstrating Graph databases and GraphRAG for E-AKTE investigations in the German social-law domain (SGB I–XII), DRV processes, GRA-Anweisungen, Chat-API, GraphRAG. All UI text is **German**. The page serves as a generic demo — not affiliated with or endorsed by any vendor.
 
-Deployed at: `https://ma3u.github.io/cassa-drv/` (base path `/cassa-drv/`)
+Deployed at: `https://ma3u.github.io/graph-eAkte/` (base path `/graph-eAkte/`)
 
-**Next project: CASSA RELIEF** — AI-assisted E-AKTE management for SGB II (Grundsicherung für Arbeitsuchende / gemeinsame Einrichtungen). See `RELIEF_DEMO_PLAN.md` for project brief.
+**Demo case: RELIEF** — AI-assisted E-AKTE management for SGB II (Grundsicherung für Arbeitsuchende / gemeinsame Einrichtungen). See `RELIEF_DEMO_PLAN.md` for context. RELIEF is a fictional demo project name only.
 
 ## Tech Stack
 - **React 19** + **TypeScript 5.7** + **Vite 7** (SWC plugin, `@vitejs/plugin-react-swc`)
@@ -59,7 +59,7 @@ npm run optimize  # vite optimize (pre-bundle deps)
 │   │   └── utils.ts               # cn() = twMerge(clsx(...))
 │   └── styles/
 │       └── theme.css              # Radix color scales, Spark theme vars
-├── RELIEF_DEMO_PLAN.md            # CASSA RELIEF project brief (SGB II / E-AKTE)
+├── RELIEF_DEMO_PLAN.md            # RELIEF demo brief (SGB II / E-AKTE)
 ├── PRD.md                         # Product requirements document
 ├── check-console.mjs             # Playwright: console error/warning logger
 ├── test-graph.mjs                # Playwright: headless screenshot + pixel analysis
@@ -67,7 +67,7 @@ npm run optimize  # vite optimize (pre-bundle deps)
 ├── runtime.config.json           # Spark app ID
 ├── spark.meta.json               # Spark metadata
 ├── tailwind.config.js            # Radix color scale integration, spacing
-├── vite.config.ts                # base: '/cassa-drv/', plugins, path alias
+├── vite.config.ts                # base: '/graph-eAkte/', plugins, path alias
 └── tsconfig.json                 # ES2020, strictNullChecks, bundler resolution
 ```
 
@@ -182,7 +182,7 @@ Key state in `App.tsx`:
 
 ## Domain Knowledge
 
-### CASSA DRV — 4-Layer Ontology
+### DRV demo — 4-Layer Ontology
 | Layer | Name | Content |
 |-------|------|---------|
 | 1 | Normative Schicht | SGB I–XII law hierarchy, EU directives, GRA |
@@ -193,7 +193,7 @@ Key state in `App.tsx`:
 ### GraphRAG vs Vector RAG
 The app demonstrates four concrete failure cases where Vector RAG cannot reliably trace cross-paragraph chains (e.g., §43 → §50 → §53 SGB VI for EM-Rente with Arbeitsunfall). This is the core sales argument for GraphRAG.
 
-### CASSA RELIEF (SGB II — upcoming)
+### RELIEF demo (SGB II)
 - Domain: Grundsicherung für Arbeitsuchende, gemeinsame Einrichtungen (gE)
 - Goal: AI-assisted E-AKTE management — classification, metadata correction, sorting, redaction
 - Key document types: Kontoauszüge, Lohnabrechnungen, Mietverträge, Nebenkostenabrechnungen
@@ -232,7 +232,7 @@ The app demonstrates four concrete failure cases where Vector RAG cannot reliabl
 - `isolatedModules: true`, `noFallthroughCasesInSwitch: true`
 
 ## Vite Configuration
-- **Base**: `/cassa-drv/` (subpath deployment)
+- **Base**: `/graph-eAkte/` (subpath deployment)
 - **Plugins**: react-swc, tailwindcss, Spark icon proxy, Spark plugin
 - **Alias**: `@` → `src/`
 - Use `${import.meta.env.BASE_URL}` prefix for all `public/` asset references (audio, images)
