@@ -1,4 +1,4 @@
-# CASSA RELIEF — KI als unsichtbarer Helfer für die E-AKTE
+# KI als unsichtbarer Helfer für die E-AKTE
 
 **Compliance-Assured Structured Semantic Analysis** — OCR, Volltextindizierung und intelligente Suche für die E-AKTE der **gemeinsamen Einrichtungen (gE)** nach SGB II.
 
@@ -8,7 +8,7 @@
 
 ---
 
-## Was ist CASSA RELIEF?
+## Warum AI und GraphRAG für die e-Akte?
 
 **Gemeinsame Einrichtungen (gE)** sind die lokalen Jobcenter, in denen Bundesagentur für Arbeit und kommunale Träger gemeinsam die Grundsicherung für Arbeitsuchende nach SGB II umsetzen. Täglich bearbeiten Fachkräfte Anträge, Veränderungsmitteilungen und endgültige Festsetzungen auf Basis umfangreicher Fallakten.
 
