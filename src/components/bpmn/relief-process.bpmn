@@ -11,7 +11,7 @@
   <collaboration id="Collaboration_1">
     <participant id="Lane_Antragsteller" name="Antragsteller / Familie Becker" processRef="Process_Antragsteller" />
     <participant id="Lane_Sachbearbeitung" name="Sachbearbeitung (gE / Jobcenter)" processRef="Process_Sachbearbeitung" />
-    <participant id="Lane_RELIEF" name="RELIEF KI-System" processRef="Process_RELIEF" />
+    <participant id="Lane_RELIEF" name="KI-Verarbeitungssystem" processRef="Process_RELIEF" />
     <participant id="Lane_Entscheidung" name="Teamleitung / Entscheidung" processRef="Process_Entscheidung" />
     <messageFlow id="MF_1" sourceRef="Task_Antrag" targetRef="Event_AntragEingang" />
     <messageFlow id="MF_2" sourceRef="Task_DokEingang" targetRef="Event_DokEingang" />
@@ -71,7 +71,7 @@
       <incoming>Flow_S1</incoming>
       <outgoing>Flow_S2</outgoing>
     </task>
-    <task id="Task_SBForwardDocs" name="Dokumente an&#10;RELIEF übergeben">
+    <task id="Task_SBForwardDocs" name="Dokumente an&#10;KI-System übergeben">
       <incoming>Flow_S2</incoming>
       <outgoing>Flow_S3</outgoing>
     </task>
@@ -185,7 +185,7 @@
     <sequenceFlow id="Flow_S12" sourceRef="Task_BescheidErstellen" targetRef="End_Sachbearbeitung" />
   </process>
 
-  <!-- ═══ PROCESS: RELIEF KI-System ═══ -->
+  <!-- ═══ PROCESS: KI-Verarbeitungssystem ═══ -->
   <process id="Process_RELIEF" isExecutable="false">
     <intermediateCatchEvent id="Event_KIStart" name="Dokumente&#10;empfangen">
       <outgoing>Flow_R1</outgoing>

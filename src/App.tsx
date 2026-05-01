@@ -254,7 +254,7 @@ function App() {
   const scenarios = [
     {
       title: "Intelligente Suche",
-      description: "Sachbearbeiterin sucht „Mietvertrag Becker“ — RELIEF findet das Dokument sofort im Volltext. Kein Navigieren durch Ordner, kein manuelles Sichten von 47 Dokumenten.",
+      description: "Eine Sachbearbeiterin sucht nach dem Mietvertrag Becker. Das KI-System findet das Dokument sofort im Volltext, ohne dass 47 Dokumente einzeln geöffnet werden müssen.",
       benefits: [
         "Volltextsuche: „Mietvertrag Becker 2026“ findet den Mietvertrag in Millisekunden",
         "OCR im Hintergrund: Fotos und Scans sind automatisch durchsuchbar — auch Handyfotos",
@@ -267,12 +267,12 @@ function App() {
     },
     {
       title: "Kontextbereitstellung",
-      description: "Bei jedem Prüfschritt liefert RELIEF automatisch die relevanten Dokumente — der Knowledge Graph verknüpft §§, Personen und Nachweise.",
+      description: "Bei jedem Prüfschritt stellt das KI-System automatisch die relevanten Dokumente bereit. Der Knowledge Graph verknüpft Paragrafen, Personen und Nachweise miteinander.",
       benefits: [
-        "Automatischer Kontext: Bei KdU-Prüfung (§22 SGB II) werden Mietvertrag und NK-Abrechnung angezeigt",
-        "Vollständigkeitsprüfung: Fehlende Arbeitgeberbescheinigung sofort erkannt → Mitwirkungsanforderung",
-        "Seitenzusammenführung: 15 Mietvertrag-Fotos automatisch als ein Dokument erkannt",
-        "Knowledge Graph: Dokument → Person → Prüfschritt → § — Zusammenhänge auf einen Blick"
+        "Automatischer Kontext: Bei der KdU-Prüfung nach Paragraf 22 SGB II werden Mietvertrag und NK-Abrechnung angezeigt",
+        "Vollständigkeitsprüfung: Eine fehlende Arbeitgeberbescheinigung wird sofort erkannt und eine Mitwirkungsanforderung vorbereitet",
+        "Seitenzusammenführung: 15 Mietvertrag-Fotos werden automatisch als ein Dokument erkannt und zusammengeführt",
+        "Knowledge Graph: Dokument, Person, Prüfschritt und Paragraf sind als Zusammenhänge sichtbar"
       ],
       icon: Workflow,
       color: "oklch(0.50 0.18 160)",
@@ -280,12 +280,12 @@ function App() {
     },
     {
       title: "Datenschutz-Compliance",
-      description: "DSGVO Art. 9, §67 SGB X — Gesundheitsdaten und sensible Informationen müssen identifiziert und geschützt werden. RELIEF erkennt kritische Inhalte automatisch.",
+      description: "DSGVO Art. 9 und Paragraf 67 SGB X verlangen, dass Gesundheitsdaten und sensible Informationen identifiziert und geschützt werden. Das KI-System erkennt kritische Inhalte vollautomatisch.",
       benefits: [
-        "Arztbrief Sophie als Gesundheitsdaten erkannt → darf nicht in Leistungsakte → automatisches Flag",
-        "Kontonummern und Geburtsdaten auf Unterhaltsurkunde → Schwärzungsvorschlag",
-        "Prüfung gegen §67 SGB X und DSGVO Art. 9 im Knowledge Graph verankert",
-        "Audit-Trail: Jede Schwärzung und jedes Flag wird dokumentiert und ist nachvollziehbar"
+        "Arztbrief Sophie wird als Gesundheitsdaten erkannt. Das Dokument darf nicht in die Leistungsakte und erhält ein automatisches Flag.",
+        "Kontonummern und Geburtsdaten auf der Unterhaltsurkunde werden erkannt und ein Schwärzungsvorschlag erstellt.",
+        "Die Prüfung gegen Paragraf 67 SGB X und DSGVO Art. 9 ist direkt im Knowledge Graph verankert.",
+        "Audit-Trail: Jede Schwärzung und jedes Flag wird dokumentiert und ist später nachvollziehbar."
       ],
       icon: Shield,
       color: "oklch(0.55 0.20 55)",
@@ -295,10 +295,10 @@ function App() {
       title: "Onboarding",
       description: "Neue Mitarbeitende in der gE verstehen Aktenstrukturen, Dokumententypen und Prüfschritte — interaktiv im Knowledge Graph statt mit 200-Seiten-Handbüchern.",
       benefits: [
-        "Navigierbarer Wissensgraph: Von §7 BG-Definition über Prüfschritte bis zum konkreten Dokument explorieren",
-        "Verknüpfung sichtbar: Warum braucht die KdU-Prüfung den Mietvertrag? Graph zeigt die Verbindung",
-        "E-AKTE-Probleme und deren RELIEF-Lösungen als verknüpfte Knoten — Lerneffekt bei der Arbeit",
-        "Standards (TR-RESISCAN, xdomea) als Kontext — warum bestimmte Qualitätsanforderungen gelten"
+        "Navigierbarer Wissensgraph: Von der BG-Definition aus Paragraf 7 über Prüfschritte bis zum konkreten Dokument explorieren",
+        "Zusammenhänge sichtbar machen: Warum benötigt die KdU-Prüfung den Mietvertrag? Der Graph zeigt die Verbindung direkt.",
+        "E-AKTE-Probleme und deren Lösungen als verknüpfte Knoten im Wissensgraphen zeigen den Zusammenhang und erzeugen Lerneffekte bei der täglichen Arbeit",
+        "Standards wie TR-RESISCAN und xdomea als Kontext, damit Qualitätsanforderungen verständlich werden"
       ],
       icon: Users,
       color: "oklch(0.45 0.12 200)",
@@ -306,7 +306,7 @@ function App() {
     },
     {
       title: "Prozessmodernisierung",
-      description: "Legacy-Systeme in Visual Basic und COBOL berechnen Leistungen als ‚Black Box' — niemand kann erklären, warum ein Bescheid genau diesen Betrag ausweist. RELIEF ersetzt diese schrittweise durch transparente, regelbasierte Systeme.",
+      description: "Legacy-Systeme in Visual Basic und COBOL berechnen Leistungen als Black Box, ohne dass jemand erklären kann, warum ein Bescheid genau diesen Betrag ausweist. Das KI-System ersetzt diese schrittweise durch transparente und regelbasierte Systeme.",
       benefits: [
         "BPMN 2.0: Geschäftsprozesse werden als lesbare Diagramme modelliert — Sachbearbeiter und Juristen können sie prüfen",
         "DMN-Entscheidungstabellen: Freibeträge, Regelbedarfe und Anrechnungsregeln als nachvollziehbare Tabellen statt unlesbarem Code",
@@ -328,7 +328,7 @@ function App() {
       question: "Wie findet die Sachbearbeiterin den Mietvertrag unter 47 eingereichten Dokumenten (Fotos, Scans, PDFs)?",
       graphAnswer: {
         result: "Volltextsuche findet sofort",
-        explanation: "RELIEF hat alle 47 Dokumente per OCR verarbeitet und im Volltext indiziert. Suche nach „Mietvertrag Becker“ liefert sofort den 15-seitigen Mietvertrag — automatisch zusammengeführt. Der Knowledge Graph liefert den Kontext: Mietvertrag → KdU-Prüfung (§22 SGB II) → Familie Becker. Kein Ordner-Navigieren, kein manuelles Sichten."
+        explanation: "Das KI-System verarbeitet alle 47 Dokumente per OCR und indiziert sie im Volltext. Eine Suche nach 'Mietvertrag Becker' liefert sofort das 15-seitige Dokument, das automatisch zusammengeführt wurde. Der Knowledge Graph liefert den Kontext: Mietvertrag verweist auf die KdU-Prüfung nach Paragraf 22 SGB II und auf Familie Becker."
       },
       vectorAnswer: {
         result: "Manuelles Suchen: 45+ Minuten",
@@ -340,7 +340,7 @@ function App() {
       question: "Arztbrief Sophie (14) wurde mit den Unterlagen eingereicht — enthält Gesundheitsdaten. Darf er in die Leistungsakte?",
       graphAnswer: {
         result: "Automatisch erkannt und geflaggt",
-        explanation: "RELIEF erkennt via OCR + NER: „Arztbrief“, „Diagnose“, Personenname Sophie. Knowledge Graph: Dokument → Typ „Arztbrief“ → verknüpft mit §67 SGB X (Sozialdatenschutz) + DSGVO Art. 9 (besondere Kategorien). Ergebnis: Automatisches Flag „Gesundheitsdaten — nicht in Leistungsakte“. Schwärzungsvorschlag für sensible Daten auf der Unterhaltsurkunde (Kontonummern, Geburtsdaten)."
+        explanation: "Das KI-System erkennt per OCR und Named-Entity-Recognition den Dokumenttyp 'Arztbrief', die Entität 'Diagnose' sowie den Personennamen Sophie. Der Knowledge Graph verknüpft das Dokument mit Paragraf 67 SGB X (Sozialdatenschutz) und DSGVO Art. 9 (besondere Kategorien). Das Ergebnis ist ein automatisches Flag mit dem Hinweis 'Gesundheitsdaten gehören nicht in die Leistungsakte'. Für sensible Daten auf der Unterhaltsurkunde wird eine Schwärzung vorgeschlagen."
       },
       vectorAnswer: {
         result: "Risiko: Verstoß übersehen",
@@ -352,7 +352,7 @@ function App() {
       question: "Wurden alle für die Leistungsbemessung erforderlichen Nachweise eingereicht?",
       graphAnswer: {
         result: "Fehlende Dokumente sofort identifiziert",
-        explanation: "RELIEF traversiert den Prüfgraph: §11 SGB II (Einkommen) → benötigt Arbeitgeberbescheinigung → nicht in 47 Dokumenten vorhanden → automatische Mitwirkungsanforderung nach §60 SGB I. Nebenkostenabrechnung unvollständig (2 von 4 Seiten) → KI erkennt fehlende Seiten. Kindergeldbescheid mit veraltetem Datum → Aktualisierung angefordert."
+        explanation: "Das KI-System traversiert den Prüfgraphen. Paragraf 11 SGB II erfordert eine Arbeitgeberbescheinigung zum Einkommensnachweis. Da dieses Dokument unter den 47 eingereichten Nachweisen fehlt, wird automatisch eine Mitwirkungsanforderung nach Paragraf 60 SGB I vorbereitet. Die Nebenkostenabrechnung ist unvollständig: nur 2 von 4 Seiten wurden erkannt. Der Kindergeldbescheid enthält ein veraltetes Datum und muss aktualisiert werden."
       },
       vectorAnswer: {
         result: "Lücken erst bei Bearbeitung entdeckt",
@@ -364,7 +364,7 @@ function App() {
       question: "15 Fotoaufnahmen eines Mietvertrags — wie werden sie zu einem Dokument?",
       graphAnswer: {
         result: "Automatische Erkennung und Zusammenführung",
-        explanation: "RELIEF analysiert: Ähnliches Layout, fortlaufende Seitenzahlen, gleicher Briefkopf → gehören zusammen. OCR extrahiert Vertragsbeginn, Kaltmiete (780 €), Nebenkosten (220 €) → Metadaten für KdU-Prüfung (§22 SGB II) automatisch zugeordnet. Freitext: „Mietvertrag, Wohnung Dortmund-Hörde, 90m², 1.000 € warm, Familie Becker“."
+        explanation: "Das KI-System analysiert Layout, fortlaufende Seitenzahlen und identischen Briefkopf und erkennt, dass die 15 Fotos zusammengehören. Per OCR werden Vertragsbeginn, Kaltmiete (780 Euro) und Nebenkosten (220 Euro) extrahiert und automatisch der KdU-Prüfung nach Paragraf 22 SGB II zugeordnet. Der generierte Freitext lautet: Mietvertrag, Wohnung Dortmund-Hörde, 90 Quadratmeter, 1.000 Euro warm, Familie Becker."
       },
       vectorAnswer: {
         result: "15 Einzelseiten bleiben lose in der Akte",
@@ -510,6 +510,9 @@ function App() {
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('tech-stack')} className="hidden md:flex">
               Technologie
             </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('neo4j-graphrag')} className="hidden md:flex">
+              Neo4j GraphRAG
+            </Button>
             {/* ── Mobile hamburger button ── */}
             <Button
               variant="ghost"
@@ -625,8 +628,8 @@ function App() {
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-10 leading-relaxed">
-              RELIEF erschließt Nachweise im Hintergrund — OCR, Volltextindizierung und intelligente Suche.
-              Der Bürger lädt hoch, die KI macht Dokumente auffindbar. Keine Ordner, keine Kategorisierung.
+              Das KI-System erschliesst Nachweise automatisch im Hintergrund durch OCR, Volltextindizierung und intelligente Suche.
+              Bürgerinnen und Bürger laden ihre Dokumente hoch. Die Künstliche Intelligenz macht sie sofort auffindbar, ohne dass eine manuelle Klassifizierung oder Ordnerzuweisung notwendig wäre.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -1012,10 +1015,10 @@ function App() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Network className="h-5 w-5 text-primary" />
-                    RELIEF-Pipeline: Die Verarbeitungskette im Knowledge Graph
+                    KI-Verarbeitungspipeline im Knowledge Graph
                   </CardTitle>
                   <CardDescription>
-                    So verarbeitet RELIEF die 47 Dokumente — automatisch, nachvollziehbar und DSGVO-konform
+                    So verarbeitet das KI-System die 47 Dokumente: automatisch, nachvollziehbar und DSGVO-konform.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1039,9 +1042,7 @@ function App() {
                     ))}
                   </div>
                   <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                    Bürger laden Nachweise hoch — ohne Kategorisierung. RELIEF verarbeitet im Hintergrund: 
-                    OCR erzeugt Volltext, der Suchindex macht alles auffindbar, der Knowledge Graph liefert automatisch 
-                    den Kontext zum aktuellen Prüfschritt. Sensible Daten werden erkannt und markiert.
+                    Bürgerinnen und Bürger laden Nachweise hoch, ohne eine Kategorisierung vornehmen zu müssen. Das KI-System verarbeitet die Dokumente vollautomatisch im Hintergrund. OCR erzeugt durchsuchbaren Volltext, der Suchindex macht alle Inhalte in Millisekunden auffindbar und der Knowledge Graph stellt automatisch den richtigen Kontext zum aktuellen Prüfschritt bereit. Sensible personenbezogene Daten werden erkannt und zur Schwärzung markiert.
                   </p>
                 </CardContent>
               </Card>
@@ -1061,14 +1062,14 @@ function App() {
           >
             <Badge className="mb-4 bg-primary text-primary-foreground text-base px-4 py-2">
               <BrainCircuit className="h-4 w-4 mr-2" />
-              Schritt 4: Die RELIEF-Lösung
+              Schritt 4: Die KI-Lösung
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Document AI Pipeline + Knowledge Graph
+              Document AI Pipeline und Knowledge Graph
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
-              RELIEF kombiniert OCR, Volltextindizierung und intelligente Suche mit einem Neo4j-Wissensgraphen — 
-              die KI arbeitet unsichtbar im Hintergrund und liefert Dokumente im richtigen Kontext.
+              Das KI-System kombiniert OCR, Volltextindizierung und intelligente Suche mit einem Neo4j-Wissensgraphen.
+              Die Künstliche Intelligenz arbeitet unsichtbar im Hintergrund und stellt Dokumente im jeweils richtigen Kontext bereit.
             </p>
             <p className="text-base text-primary font-semibold">
               👆 Klicken Sie auf die Schichten, um mehr zu erfahren
@@ -1196,11 +1197,11 @@ function App() {
               Schritt 5: Warum KI-gestützte Aktenarbeit?
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              RELIEF KI vs. manuelle Aktenarbeit
+              KI-Unterstützung im Vergleich zur manuellen Aktenarbeit
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Manuelle Aktenarbeit ist zeitaufwändig und fehleranfällig — RELIEF automatisiert <strong>OCR, Indizierung und Kontextbereitstellung</strong>.
-              Hier sind konkrete Beispiele aus dem Fall Familie Becker.
+              Manuelle Aktenarbeit ist zeitaufwändig und fehleranfällig. Das KI-System automatisiert OCR, Indizierung und Kontextbereitstellung.
+              Konkrete Beispiele aus dem Demo-Fall Familie Becker zeigen den Unterschied.
             </p>
           </motion.div>
 
@@ -1233,7 +1234,7 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <CircleCheck className="h-5 w-5 text-green-600" />
-                  RELIEF KI — Vorteile
+                  KI-gestützte Aktenarbeit: die Vorteile
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -1254,7 +1255,7 @@ function App() {
           </div>
 
           {/* Concrete failure examples */}
-          <h3 className="text-2xl font-bold text-center mb-8">Konkrete Beispiele: RELIEF vs. manuelle Bearbeitung</h3>
+          <h3 className="text-2xl font-bold text-center mb-8">Konkrete Beispiele: KI-Unterstützung im Vergleich zur manuellen Bearbeitung</h3>
           <div className="space-y-8 max-w-5xl mx-auto">
             {ragComparisons.map((comp, index) => (
               <motion.div
@@ -1280,11 +1281,11 @@ function App() {
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-                      {/* RELIEF KI */}
+                      {/* KI-System */}
                       <div className="p-6">
                         <div className="flex items-center gap-2 mb-3">
                           <CircleCheck className="h-5 w-5 text-green-600" />
-                          <span className="font-bold text-green-700">RELIEF KI</span>
+                          <span className="font-bold text-green-700">KI-System</span>
                           <Badge className="bg-green-100 text-green-800 text-xs">{comp.graphAnswer.result}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground leading-relaxed">{comp.graphAnswer.explanation}</p>
@@ -1318,14 +1319,14 @@ function App() {
           >
             <Badge className="mb-4 text-base px-4 py-2">
               <MessageSquare className="h-4 w-4 mr-2" />
-              Schritt 6: RELIEF Document AI & Such-API
+              Schritt 6: Document AI und Such-API
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Document AI API für die E-AKTE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              RELIEF implementiert eine modulare API-Architektur: OCR, Volltextindizierung, 
-              intelligente Suche, automatische Schwärzung und Knowledge-Graph-Abfragen — als REST-Endpunkte für die gE-Systeme.
+              Das System implementiert eine modulare API-Architektur aus OCR, Volltextindizierung, intelligenter Suche,
+              automatischer Schwärzung und Knowledge-Graph-Abfragen als REST-Endpunkte für die gE-Systeme.
             </p>
           </motion.div>
 
@@ -1362,7 +1363,7 @@ function App() {
             ))}
           </div>
 
-          {/* RELIEF API Detail */}
+  {/* Document AI API Detail */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1373,10 +1374,10 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Bot className="h-6 w-6 text-primary" />
-                  RELIEF Document AI — Suche + Kontext via Knowledge Graph
+                  Document AI: Suche und Kontext via Knowledge Graph
                 </CardTitle>
                 <CardDescription>
-                  Die RELIEF API indiziert Dokumente, macht sie durchsuchbar und verknüpft sie automatisch im Knowledge Graph.
+                  Die Document AI API indiziert Dokumente, macht sie durchsuchbar und verknüpft sie automatisch im Knowledge Graph.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1465,7 +1466,7 @@ function App() {
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Bestehende Fachverfahren in Visual Basic und COBOL berechnen Leistungen, die niemand nachvollziehen kann. 
-              RELIEF überführt diese Logik in transparente, prüfbare Modelle — Schritt für Schritt.
+              Das KI-System überführt diese Logik in transparente und prüfbare Modelle. Schritt für Schritt werden Legacy-Verfahren durch verständliche Prozessmodelle ersetzt.
             </p>
           </motion.div>
 
@@ -1504,7 +1505,7 @@ function App() {
                     </motion.div>
                     <div className="text-center">
                       <Badge className="bg-primary text-primary-foreground">
-                        RELIEF-Analyse
+                        KI-Prozessanalyse
                       </Badge>
                       <div className="flex flex-wrap justify-center gap-2 mt-3">
                         <Badge variant="outline" className="text-xs">Prozess-Mining</Badge>
@@ -1711,7 +1712,7 @@ function App() {
                       kennt niemand.
                     </p>
                     <p className="text-muted-foreground leading-relaxed mb-4">
-                      RELIEF macht diesen Weg sichtbar: Zuerst analysiert es die bestehenden Programme und erstellt daraus 
+                      Das KI-System macht diesen Weg sichtbar: Zuerst analysiert es die bestehenden Programme und erstellt daraus 
                       <strong> verständliche Diagramme</strong> (BPMN) und <strong>übersichtliche Tabellen</strong> (DMN). 
                       Fachkräfte und Juristen können diese prüfen — ohne eine Zeile Code lesen zu müssen.
                     </p>
@@ -1730,7 +1731,7 @@ function App() {
           {/* BPMN 2.0 compliance note + Tool cards for process modernization */}
           <div className="mt-12">
             <p className="text-sm text-muted-foreground text-center mb-6 max-w-3xl mx-auto">
-              RELIEF exportiert Prozessmodelle im offenen <strong>BPMN 2.0-Standard (OMG)</strong> — kompatibel mit allen
+              Das System exportiert Prozessmodelle im offenen <strong>BPMN 2.0-Standard (OMG)</strong> und ist kompatibel mit allen
               gängigen Editoren. Die generierten XML-Dateien lassen sich direkt importieren, bearbeiten und als ausführbare
               Workflows deployen.
             </p>
@@ -1784,7 +1785,7 @@ function App() {
               Praxisszenarien für die gE
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Konkrete Anwendungsfälle zeigen, wie RELIEF die tägliche Aktenarbeit in den gemeinsamen Einrichtungen unterstützt.
+              Konkrete Anwendungsfälle zeigen, wie das KI-System die tägliche Aktenarbeit in den gemeinsamen Einrichtungen unterstützt.
             </p>
           </motion.div>
 
@@ -1837,7 +1838,7 @@ function App() {
                       </CardHeader>
                       <CardContent>
                         <Separator className="mb-6" />
-                        <h4 className="font-semibold text-lg mb-4">RELIEF-Funktionen für diesen Fall:</h4>
+                        <h4 className="font-semibold text-lg mb-4">KI-Funktionen für diesen Anwendungsfall:</h4>
                         <div className="grid md:grid-cols-2 gap-4">
                           {scenario.benefits.map((benefit, i) => (
                             <motion.div
@@ -1879,7 +1880,7 @@ function App() {
               Knowledge Graph — Datenmodell
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die RELIEF-Graphstruktur: von Dokumententypen über §§ SGB II bis zu KI-Verarbeitungsschritten und Compliance-Regeln.
+              Die Graphstruktur des Wissensgraphen verbindet Dokumententypen mit Paragrafen des SGB II, KI-Verarbeitungsschritten und Compliance-Regeln.
             </p>
           </motion.div>
 
@@ -1950,10 +1951,10 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Workflow className="h-5 w-5 text-primary" />
-                  RELIEF-Pipeline: Vom Foto zum durchsuchbaren Volltext
+                  KI-Verarbeitungspipeline: Vom Foto zum durchsuchbaren Volltext
                 </CardTitle>
                 <CardDescription>
-                  Upload → OCR → Indizierung → Suche — vollständig lokal und DSGVO-konform
+                  Upload, OCR, Indizierung und Suche laufen vollständig lokal und DSGVO-konform.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -2120,6 +2121,423 @@ function App() {
           </motion.div>
         </div>
       </section>
+      {/* ── SECTION: Neo4j GraphRAG mit APOC und GDS ── */}
+      <section id="neo4j-graphrag" className="py-32 bg-background relative">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-4 text-base px-4 py-2">
+              <Network className="h-4 w-4 mr-2" />
+              Schritt 12: Technische Implementierung
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Neo4j GraphRAG mit APOC und GDS
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              GraphRAG (Graph Retrieval-Augmented Generation) erweitert klassisches RAG um explizites Graphwissen.
+              Neo4j bildet die Grundlage, APOC stellt Datenverarbeitungs-Prozeduren bereit und die Graph Data Science Bibliothek
+              (GDS) berechnet Embeddings und Ähnlichkeiten direkt im Graphen.
+            </p>
+          </motion.div>
+
+          {/* Architekturübersicht */}
+          <div className="grid lg:grid-cols-3 gap-6 mb-12">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+              <Card className="h-full border-2 border-blue-500/30 bg-blue-500/5">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-3 rounded-xl bg-blue-500/15">
+                      <Database className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">
+                        <a href="https://neo4j.com/" target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                          Neo4j Graphdatenbank
+                          <ExternalLink className="h-3 w-3 opacity-40" aria-hidden="true" />
+                        </a>
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground font-medium mt-1">Kern der GraphRAG-Architektur</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    Neo4j speichert alle Entitäten als Knoten und ihre Beziehungen als Kanten.
+                    Für die E-AKTE bedeutet das: Dokumente, Personen der Bedarfsgemeinschaft, Paragrafen des SGB II,
+                    Prüfschritte und KI-Verarbeitungsschritte bilden ein direkt traversierbares Netzwerk.
+                    Cypher, die Abfragesprache von Neo4j, ermöglicht Pfadabfragen, die kein relationaler Ansatz
+                    in vergleichbarer Eleganz leisten kann.
+                  </p>
+                  <p className="text-sm font-semibold mb-2">Kernfähigkeiten</p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>Native Graphspeicherung mit Index-Free Adjacency</li>
+                    <li>HNSW-Vektorindex für Dokumentenembeddings (ab Version 5.x)</li>
+                    <li>Hybridsuche: Vektornähe und Graphtraversierung in einer Abfrage</li>
+                    <li>ACID-Transaktionen und Clustering-Unterstützung</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
+              <Card className="h-full border-2 border-green-500/30 bg-green-500/5">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-3 rounded-xl bg-green-500/15">
+                      <Workflow className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">
+                        <a href="https://neo4j.com/labs/apoc/" target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                          APOC: Awesome Procedures on Cypher
+                          <ExternalLink className="h-3 w-3 opacity-40" aria-hidden="true" />
+                        </a>
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground font-medium mt-1">Erweiterungsbibliothek für Neo4j</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    APOC stellt über 450 Prozeduren und Funktionen bereit, die Cypher um fehlende Fähigkeiten erweitern.
+                    Für GraphRAG sind besonders die NLP-Funktionen, die Embedding-Erzeugung über externe Modelle,
+                    die Batch-Verarbeitung mit apoc.periodic.iterate sowie der Export und Import von Graphdaten relevant.
+                    APOC ist das Standard-Plugin in jeder produktiven Neo4j-Installation.
+                  </p>
+                  <p className="text-sm font-semibold mb-2">Relevante Prozeduren</p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>apoc.ml.openai.embedding für Vektorerzeugung</li>
+                    <li>apoc.text.levenshteinSimilarity für Fuzzy-Matching</li>
+                    <li>apoc.periodic.iterate für Batch-Indizierung</li>
+                    <li>apoc.cypher.run für dynamische Abfragen</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
+              <Card className="h-full border-2 border-purple-500/30 bg-purple-500/5">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="p-3 rounded-xl bg-purple-500/15">
+                      <BrainCircuit className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">
+                        <a href="https://neo4j.com/product/graph-data-science/" target="_blank" rel="noopener noreferrer" className="hover:underline inline-flex items-center gap-1">
+                          GDS: Graph Data Science
+                          <ExternalLink className="h-3 w-3 opacity-40" aria-hidden="true" />
+                        </a>
+                      </CardTitle>
+                      <p className="text-xs text-muted-foreground font-medium mt-1">Graphalgorithmen und ML-Embeddings</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    Die Graph Data Science Bibliothek bringt Algorithmen für Zentralitätsmessung, Community-Erkennung
+                    und Graph-Embeddings direkt in Neo4j. Für GraphRAG ist vor allem FastRP wichtig, das kompakte
+                    Vektorrepräsentationen jedes Knotens berechnet und dabei die Graphstruktur miteinbezieht.
+                    KNN-Abfragen auf diesen Embeddings finden ähnliche Knoten ohne externe Vektordatenbank.
+                  </p>
+                  <p className="text-sm font-semibold mb-2">Relevante Algorithmen</p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>gds.fastRP für strukturbasierte Graphembeddings</li>
+                    <li>gds.node2vec für kontextuelle Knotenrepräsentationen</li>
+                    <li>gds.knn.mutate für K-Nearest-Neighbor-Suche</li>
+                    <li>gds.louvain für Community-Erkennung</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Datenmodell */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8">
+            <Card className="border-2 border-primary/20 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Layers className="h-5 w-5 text-primary" />
+                  Graphdatenmodell für die E-AKTE
+                </CardTitle>
+                <CardDescription>
+                  Knotentypen und Beziehungen bilden die Grundlage für alle GraphRAG-Abfragen.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm font-semibold mb-3">Knotentypen (Labels)</p>
+                    <div className="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto">
+                      <pre>{`// Fallbezogene Knoten
+(:Document {id, type, text, embedding})
+(:Person   {name, role, bgId})
+(:BG       {id, status, members})
+
+// Rechtliche Knoten
+(:Law      {name, code, version})
+(:Section  {paragraph, title, text})
+(:Rule     {id, condition, action})
+
+// Prozessknoten
+(:Step     {name, required_docs[]})
+(:AIResult {type, confidence, flags[]})
+
+// Relationen
+(d:Document)-[:BELONGS_TO]->(p:Person)
+(d:Document)-[:RELEVANT_FOR]->(s:Step)
+(s:Step)-[:REQUIRES]->(sec:Section)
+(d:Document)-[:SIMILAR_TO {score}]->(d2)`}</pre>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold mb-3">Vektorindex für Dokumentenembeddings</p>
+                    <div className="bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300 overflow-x-auto">
+                      <pre>{`// Vektorindex anlegen (Neo4j 5.x)
+CREATE VECTOR INDEX doc_embeddings
+FOR (d:Document)
+ON d.embedding
+OPTIONS {
+  indexConfig: {
+    'vector.dimensions': 768,
+    'vector.similarity_function': 'cosine'
+  }
+}
+
+// Embeddings per APOC befüllen
+CALL apoc.periodic.iterate(
+  "MATCH (d:Document) 
+   WHERE d.text IS NOT NULL 
+     AND d.embedding IS NULL 
+   RETURN d",
+  "CALL apoc.ml.openai.embedding(
+     [d.text], $apiKey, {}
+   ) YIELD value
+   SET d.embedding = value.embedding",
+  {batchSize: 50, params: {apiKey: $k}}
+)`}</pre>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* GraphRAG-Abfragen */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+              <Card className="h-full border-2 border-blue-500/20">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Search className="h-5 w-5 text-blue-600" />
+                    Hybridsuche: Vektor und Graph kombiniert
+                  </CardTitle>
+                  <CardDescription>
+                    Vektornähe findet semantisch ähnliche Dokumente. Die Graphtraversierung liefert den rechtlichen Kontext.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-900 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-x-auto">
+                    <pre>{`// Schritt 1: Ähnliche Dokumente per Vektor finden
+CALL db.index.vector.queryNodes(
+  'doc_embeddings', 10, $queryEmbedding
+) YIELD node AS doc, score
+
+// Schritt 2: Graphkontext erweitern
+MATCH (doc)-[:RELEVANT_FOR]->(step:Step)
+MATCH (step)-[:REQUIRES]->(sec:Section)
+MATCH (doc)-[:BELONGS_TO]->(person:Person)
+
+// Schritt 3: Ergebnis mit Kontext zurückgeben
+RETURN doc.text       AS inhalt,
+       score          AS vektornähe,
+       step.name      AS prüfschritt,
+       sec.paragraph  AS rechtsgrundlage,
+       person.name    AS person
+ORDER BY score DESC
+LIMIT 5`}</pre>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
+              <Card className="h-full border-2 border-green-500/20">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    Vollständigkeitsprüfung per Graphtraversierung
+                  </CardTitle>
+                  <CardDescription>
+                    APOC-Pfadsuche prüft, welche Pflichtdokumente für die Leistungsberechnung noch fehlen.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-900 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-x-auto">
+                    <pre>{`// Pflichtdokumente ermitteln und Fehlendes melden
+MATCH (bg:BG {id: $bgId})
+MATCH (step:Step)-[:REQUIRES]->(sec:Section)
+WHERE sec.code STARTS WITH 'SGB2'
+
+// Prüfen welche Dokumente bereits vorhanden
+OPTIONAL MATCH (doc:Document)
+  WHERE doc.bgId = bg.id
+    AND doc.type = step.requiredDocType
+
+// Nur fehlende Schritte zurückgeben
+WITH step, sec, doc
+WHERE doc IS NULL
+
+RETURN step.name        AS prüfschritt,
+       sec.paragraph    AS rechtsgrundlage,
+       step.requiredDocType AS fehlendes_dokument
+
+// APOC: Mitwirkungsschreiben automatisch erstellen
+CALL apoc.cypher.run(
+  "MATCH (s:Step {name: $step}) 
+   RETURN s.letterTemplate AS vorlage",
+  {step: step.name}
+) YIELD value
+RETURN value.vorlage AS anschreiben`}</pre>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.1 }}>
+              <Card className="h-full border-2 border-purple-500/20">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <BrainCircuit className="h-5 w-5 text-purple-600" />
+                    GDS FastRP: Graphembeddings berechnen
+                  </CardTitle>
+                  <CardDescription>
+                    FastRP erzeugt Vektoren, die nicht nur den Dokumentinhalt, sondern auch die Graphnachbarschaft
+                    eines Knotens widerspiegeln.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-900 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-x-auto">
+                    <pre>{`// Graphprojekt anlegen
+CALL gds.graph.project(
+  'eakte-graph',
+  ['Document','Section','Person'],
+  {
+    RELEVANT_FOR: {orientation: 'UNDIRECTED'},
+    BELONGS_TO:   {orientation: 'UNDIRECTED'},
+    REQUIRES:     {orientation: 'UNDIRECTED'}
+  }
+)
+
+// FastRP-Embeddings berechnen und speichern
+CALL gds.fastRP.write(
+  'eakte-graph',
+  {
+    embeddingDimension: 256,
+    iterationWeights: [0.0, 1.0, 1.0, 0.5],
+    writeProperty: 'frpEmbedding'
+  }
+)
+YIELD nodePropertiesWritten
+
+// KNN auf Graphembeddings ausführen
+CALL gds.knn.mutate(
+  'eakte-graph',
+  {
+    nodeProperties: ['frpEmbedding'],
+    topK: 5,
+    mutateRelationshipType: 'SIMILAR_TO',
+    mutateProperty: 'score'
+  }
+)`}</pre>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}>
+              <Card className="h-full border-2 border-amber-500/20">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-amber-600" />
+                    APOC: Datenschutzprüfung als Graphregel
+                  </CardTitle>
+                  <CardDescription>
+                    APOC-Trigger reagieren automatisch auf neue Dokumente und prüfen sie gegen Datenschutzregeln im Graphen.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-slate-900 rounded-lg p-4 text-xs font-mono text-slate-300 overflow-x-auto">
+                    <pre>{`// APOC-Trigger: beim Anlegen eines Dokuments prüfen
+CALL apoc.trigger.add(
+  'datenschutz-check',
+  'UNWIND $createdNodes AS doc
+   WITH doc
+   WHERE doc:Document
+   MATCH (rule:Rule)-[:APPLIES_TO]->
+         (:DocType {name: doc.type})
+   MATCH (rule)-[:REFERENCES]->(law:Section)
+
+   // Flag setzen wenn Datenschutzregel greift
+   CALL apoc.do.when(
+     rule.action = "FLAG_SENSITIVE",
+     "SET doc.datenschutzFlag = true
+      SET doc.flagReason = law.paragraph
+      CREATE (doc)-[:VIOLATES {
+        detected: datetime()
+      }]->(law)",
+     "",
+     {doc: doc, law: law}
+   ) YIELD value
+   RETURN value',
+  {phase: 'after'}
+)`}</pre>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+
+          {/* Zusammenfassung des GraphRAG-Vorteils */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+            <Card className="border-2 border-primary/30 bg-primary/5">
+              <CardContent className="p-8">
+                <div className="flex items-start gap-4">
+                  <Network className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="text-xl font-bold mb-3">Warum GraphRAG besser ist als reines Vektor-RAG</h3>
+                    <p className="text-muted-foreground leading-relaxed mb-4">
+                      Klassisches Vektor-RAG findet semantisch ähnliche Textstellen, kennt aber keine expliziten Beziehungen.
+                      Im Kontext der Grundsicherung bedeutet das: Eine Vektorsuche nach "Einkommensnachweis" findet
+                      zwar relevante Paragrafen, kann aber nicht automatisch den Pfad
+                      von Paragraf 11 SGB II über die Vollständigkeitsprüfung bis zur fehlenden Arbeitgeberbescheinigung traversieren.
+                      GraphRAG verbindet beides: die semantische Nähe durch Embeddings und das strukturelle Wissen durch Graphpfade.
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-4 mt-4">
+                      {[
+                        { label: "Vektorsuche", desc: "Findet semantisch ähnliche Dokumente und Paragrafen anhand des Textinhalts", color: "text-blue-600" },
+                        { label: "Graphtraversierung", desc: "Verfolgt explizite Beziehungen: Paragraf 11 erfordert Einkommensnachweis erfordert Arbeitgeberbescheinigung", color: "text-green-600" },
+                        { label: "GDS-Embeddings", desc: "FastRP berechnet Vektoren, die auch die Graphnachbarschaft widerspiegeln, nicht nur den Textinhalt", color: "text-purple-600" },
+                      ].map((item, i) => (
+                        <div key={i} className="p-4 rounded-lg bg-background border">
+                          <p className={`font-semibold text-sm mb-2 ${item.color}`}>{item.label}</p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ── SECTION: Standards & Compliance ── */}
       <section id="standards" className="py-32 bg-muted/30 relative">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -2138,8 +2556,8 @@ function App() {
               Gesetzliche Grundlagen im Knowledge Graph
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Die Grundsicherung nach SGB II basiert auf einem komplexen Geflecht aus Sozialgesetzbüchern, 
-              Datenschutzregulierung und E-AKTE-Standards. RELIEF bildet sie alle als Graph ab.
+              Die Grundsicherung nach SGB II basiert auf einem komplexen Geflecht aus Sozialgesetzbüchern,
+              Datenschutzregulierung und E-AKTE-Standards. Der Wissensgraph bildet sie alle als navigierbare Struktur ab.
             </p>
           </motion.div>
 
@@ -2178,7 +2596,7 @@ function App() {
                   { name: "ISO 15489 — Records Management", desc: "Internationale Norm für Aktenführung, Klassifikation und Aufbewahrungsfristen", url: "https://www.iso.org/standard/62542.html" },
                   { name: "DIN 31647 — Beweiswerterhaltung", desc: "Kryptographische Langzeitsicherung — Hashbäume und Zeitstempel für die E-AKTE", url: "https://www.din.de/de" },
                   { name: "jobcenter.digital", desc: "Online-Portal der gE — digitaler Dokumenteneingang und Antragstellung", url: "https://www.jobcenter.digital/" },
-                  { name: "RELIEF Document AI", desc: "KI-Pipeline: OCR → Indizierung → Suche → Kontext → Schwärzung → Vollständigkeit" },
+                  { name: "Document AI Pipeline", desc: "KI-Pipeline: OCR, Indizierung, Suche, Kontext, Schwärzung und Vollständigkeitsprüfung" },
                 ]
               }
             ].map((category, catIndex) => {
@@ -2232,11 +2650,11 @@ function App() {
                 <div className="flex items-start gap-4">
                   <ShieldCheck className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="text-xl font-bold mb-2">RELIEF-Integration</h3>
+                    <h3 className="text-xl font-bold mb-2">Knowledge Graph Integration</h3>
                     <p className="text-muted-foreground leading-relaxed">
-                      Alle genannten Gesetze und Standards sind direkt im Knowledge Graph verankert. 
-                      Jeder Paragraph definiert Regeln für Dokumententypen und Prüfschritte — die KI-Pipeline 
-                      verknüpft jedes eingereichte Dokument automatisch mit den relevanten §§ und Complianceanforderungen.
+                      Alle genannten Gesetze und Standards sind direkt im Knowledge Graph verankert.
+                      Jeder Paragraf definiert Regeln für Dokumententypen und Prüfschritte. Die KI-Pipeline
+                      verknüpft jedes eingereichte Dokument automatisch mit den relevanten Paragrafen und Compliance-Anforderungen.
                       BSI-Richtlinien und xdomea-Standards gewährleisten die Beweiswerterhaltung und interoperable Aktenführung.
                     </p>
                   </div>
@@ -2254,7 +2672,7 @@ function App() {
               <BrandMark />
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              Demo-Projekt zu Graph & GraphRAG für E-AKTE-Untersuchungen — fiktiver Fall, anonymisierte Daten.
+              Demo-Projekt zu Graph und GraphRAG für E-AKTE-Untersuchungen. Fiktiver Fall, anonymisierte Daten.
             </p>
           </div>
         </div>
@@ -2270,7 +2688,7 @@ function App() {
 function BrandMark() {
   return (
     <span className="text-lg md:text-xl font-bold tracking-tight text-foreground">
-      RELIEF
+      E-AKTE KI
     </span>
   )
 }

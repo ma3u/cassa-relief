@@ -622,7 +622,7 @@ export function RELIEFKnowledgeGraph3D() {
     <div
       ref={containerRef}
       role="img"
-      aria-label={`Interaktiver 3D Knowledge Graph: RELIEF E-AKTE — ${graphData.nodes.length} Knoten, ${graphData.links.length} Beziehungen. Zeigt SGB-II-Rechtsstruktur der Bedarfsgemeinschaft Becker mit Dokumenten, Gesetzen und KI-Verarbeitungsschritten.`}
+      aria-label={`Interaktiver 3D Knowledge Graph: E-AKTE Demo — ${graphData.nodes.length} Knoten, ${graphData.links.length} Beziehungen. Zeigt SGB-II-Rechtsstruktur der Bedarfsgemeinschaft Becker mit Dokumenten, Gesetzen und KI-Verarbeitungsschritten.`}
       className={`relative rounded-xl overflow-hidden border-2 border-border bg-[#0f172a] ${
         isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'w-full h-full'
       }`}
@@ -669,7 +669,7 @@ export function RELIEFKnowledgeGraph3D() {
         <div className="text-base text-slate-300">
           {graphData.nodes.length} Knoten · {graphData.links.length} Beziehungen
         </div>
-        <div className="text-base text-blue-300 font-medium">RELIEF E-AKTE Knowledge Graph</div>
+        <div className="text-base text-blue-300 font-medium">E-AKTE Knowledge Graph Demo</div>
       </div>
 
       {/* Graph */}
